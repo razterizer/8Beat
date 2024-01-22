@@ -61,6 +61,9 @@ public:
     audio_thread = std::thread([this] {
         play_tune();
     });
+    
+    // Detach the audio thread, allowing it to run independently
+    audio_thread.detach();
   }
 
   // Stop the audio playback thread
