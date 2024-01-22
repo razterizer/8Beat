@@ -15,7 +15,7 @@
 /* Begin PBXFileReference section */
 		07A763282B5BC85300705D31 /* AudioSourceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
 		07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngine.h; sourceTree = "<group>"; };
-		07A7633D2B5DF15900705D31 /* lib8-Bit Audio Emulator Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "lib8-Bit Audio Emulator Lib.a"; path = "/Users/rasmusanthin/Documents/xcode/lib/8-Bit Audio Emulator Lib/build/Debug/lib8-Bit Audio Emulator Lib.a"; sourceTree = "<absolute>"; };
+		07A7633F2B5E006100705D31 /* lib8-Bit Audio Emulator Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "lib8-Bit Audio Emulator Lib.a"; path = "/Users/rasmusanthin/Documents/xcode/lib/8-Bit Audio Emulator Lib/build/Debug/lib8-Bit Audio Emulator Lib.a"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +67,7 @@
 			);
 			name = "8-Bit Audio Emulator Lib";
 			productName = "8-Bit Audio Emulator Lib";
-			productReference = 07A7633D2B5DF15900705D31 /* lib8-Bit Audio Emulator Lib.a */;
+			productReference = 07A7633F2B5E006100705D31 /* lib8-Bit Audio Emulator Lib.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
