@@ -7,17 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07A763272B5BC57300705D31 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07A763262B5BC57300705D31 /* OpenAL.framework */; };
 		07A763292B5BC85300705D31 /* AudioSourceHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 07A763282B5BC85300705D31 /* AudioSourceHandler.h */; };
 		07A7632A2B5BDE4E00705D31 /* AudioSourceHandler.h in Sources */ = {isa = PBXBuildFile; fileRef = 07A763282B5BC85300705D31 /* AudioSourceHandler.h */; };
-		07A7632D2B5BDE6100705D31 /* AudioSourceHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07A7632B2B5BDE6100705D31 /* AudioSourceHandler.cpp */; };
+		07A7633B2B5DAA8A00705D31 /* ChipTuneEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		07A7631B2B5B225500705D31 /* lib8-Bit Audio Emulator Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "lib8-Bit Audio Emulator Lib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		07A763262B5BC57300705D31 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		07A7631B2B5B225500705D31 /* lib8-Bit Audio Emulator Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "lib8-Bit Audio Emulator Lib.a"; path = "/Users/rasmusanthin/Documents/xcode/lib/8-Bit Audio Emulator Lib/build/Debug/lib8-Bit Audio Emulator Lib.a"; sourceTree = "<absolute>"; };
 		07A763282B5BC85300705D31 /* AudioSourceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
-		07A7632B2B5BDE6100705D31 /* AudioSourceHandler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AudioSourceHandler.cpp; sourceTree = "<group>"; };
+		07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngine.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,7 +23,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07A763272B5BC57300705D31 /* OpenAL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -35,27 +32,9 @@
 		07A763122B5B225500705D31 = {
 			isa = PBXGroup;
 			children = (
-				07A7632B2B5BDE6100705D31 /* AudioSourceHandler.cpp */,
+				07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */,
 				07A763282B5BC85300705D31 /* AudioSourceHandler.h */,
-				07A7631C2B5B225500705D31 /* Products */,
-				07A763252B5BC57300705D31 /* Frameworks */,
 			);
-			sourceTree = "<group>";
-		};
-		07A7631C2B5B225500705D31 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				07A7631B2B5B225500705D31 /* lib8-Bit Audio Emulator Lib.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		07A763252B5BC57300705D31 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				07A763262B5BC57300705D31 /* OpenAL.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +44,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07A7633B2B5DAA8A00705D31 /* ChipTuneEngine.h in Headers */,
 				07A763292B5BC85300705D31 /* AudioSourceHandler.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -79,6 +59,7 @@
 				07A763172B5B225500705D31 /* Headers */,
 				07A763182B5B225500705D31 /* Sources */,
 				07A763192B5B225500705D31 /* Frameworks */,
+				07A7632F2B5C0B7C00705D31 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -112,7 +93,7 @@
 				Base,
 			);
 			mainGroup = 07A763122B5B225500705D31;
-			productRefGroup = 07A7631C2B5B225500705D31 /* Products */;
+			productRefGroup = 07A763122B5B225500705D31;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -121,12 +102,31 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		07A7632F2B5C0B7C00705D31 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#!/bin/bash\n\nlib_name=\"${EXECUTABLE_NAME}\"\n#lib_name=\"lib8-Bit Audio Emulator Lib.a\"\n\ndst_dir=\"${PROJECT_DIR}/build/${CONFIGURATION}\"\nsrc_dir=\"${BUILT_PRODUCTS_DIR}\"\n\necho \"Copying static library: ${lib_name}\"\necho \"Source directory: ${src_dir}\"\necho \"Destination directory: ${dst_dir}\"\n\n# Create the entire path if it doesn't exist\nmkdir -p \"${dst_dir}\"\n\n# Copy the built static library to the destination directory\ncp \"${src_dir}/${lib_name}\" \"${dst_dir}\"\n\necho \"Copy completed.\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		07A763182B5B225500705D31 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07A7632D2B5BDE6100705D31 /* AudioSourceHandler.cpp in Sources */,
 				07A7632A2B5BDE4E00705D31 /* AudioSourceHandler.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -255,7 +255,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HFL2Q84SZB;
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "/opt/homebrew/opt/openal-soft/include/**";
+				HEADER_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -267,7 +267,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HFL2Q84SZB;
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "/opt/homebrew/opt/openal-soft/include/**";
+				HEADER_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
