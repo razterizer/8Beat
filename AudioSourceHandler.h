@@ -17,61 +17,61 @@
 class AudioSource
 {
 public:
-    AudioSource(ALuint sourceID)
-        : m_sourceID(sourceID)
-    {
-    }
+  AudioSource(ALuint sourceID)
+    : m_sourceID(sourceID)
+  {
+  }
 
-    ~AudioSource()
-    {
-        // Clean up OpenAL source
-        alDeleteSources(1, &m_sourceID);
-    }
+  ~AudioSource()
+  {
+    // Clean up OpenAL source
+    alDeleteSources(1, &m_sourceID);
+  }
 
-    void play()
-    {
-        alSourcePlay(m_sourceID);
-    }
-    
-    bool is_playing() const
-    {
-      ALint source_state = 0;
-      alGetSourcei(m_sourceID, AL_SOURCE_STATE, &source_state);
-      return source_state == AL_PLAYING;
-    }
+  void play()
+  {
+    alSourcePlay(m_sourceID);
+  }
+  
+  bool is_playing() const
+  {
+    ALint source_state = 0;
+    alGetSourcei(m_sourceID, AL_SOURCE_STATE, &source_state);
+    return source_state == AL_PLAYING;
+  }
 
-    void pause()
-    {
-        alSourcePause(m_sourceID);
-    }
+  void pause()
+  {
+    alSourcePause(m_sourceID);
+  }
 
-    void stop()
-    {
-        alSourceStop(m_sourceID);
-    }
+  void stop()
+  {
+    alSourceStop(m_sourceID);
+  }
+  
+  void set_volume(float volume)
+  {
+    alSourcef(m_sourceID, AL_GAIN, volume);
+  }
+  
+  void set_pitch(float pitch)
+  {
+    alSourcef(m_sourceID, AL_PITCH, pitch);
+  }
+  
+  void set_looping(bool loop)
+  {
+    alSourcei(m_sourceID, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
+  }
     
-    void set_volume(float volume)
-    {
-        alSourcef(m_sourceID, AL_GAIN, volume);
-    }
-    
-    void set_pitch(float pitch)
-    {
-        alSourcef(m_sourceID, AL_PITCH, pitch);
-    }
-    
-    void set_looping(bool loop)
-    {
-      alSourcei(m_sourceID, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
-    }
-    
-    void detach()
-    {
-      alSourcei(m_sourceID, AL_BUFFER, 0);
-    }
+  void detach()
+  {
+    alSourcei(m_sourceID, AL_BUFFER, 0);
+  }
 
 private:
-    ALuint m_sourceID = 0;
+  ALuint m_sourceID = 0;
 };
 
 class AudioSourceHandler
@@ -115,8 +115,8 @@ public:
     std::ifstream file(wavFilePath, std::ios::binary);
     if (!file.is_open())
     {
-        std::cerr << "Error opening sound file: " << wavFilePath << std::endl;
-        return nullptr;
+      std::cerr << "Error opening sound file: " << wavFilePath << std::endl;
+      return nullptr;
     }
 
     // Read the file contents into a buffer
@@ -136,9 +136,9 @@ public:
     ALenum error = alGetError();
     if (error != AL_NO_ERROR)
     {
-        // Handle error
-        std::cerr << "Error creating audio source from file: " << alGetString(error) << std::endl;
-        return nullptr;
+      // Handle error
+      std::cerr << "Error creating audio source from file: " << alGetString(error) << std::endl;
+      return nullptr;
     }
 
     // Store the source in the vector
@@ -184,9 +184,9 @@ public:
     ALenum error = alGetError();
     if (error != AL_NO_ERROR)
     {
-        // Handle error
-        std::cerr << "Error creating audio source: " << alGetString(error) << std::endl;
-        return nullptr;
+      // Handle error
+      std::cerr << "Error creating audio source: " << alGetString(error) << std::endl;
+      return nullptr;
     }
 
     // Store the source in the vector
@@ -234,19 +234,19 @@ public:
 
     if (it != m_sources.end())
     {
-        // Stop playing the source
-        (*it)->stop();
+      // Stop playing the source
+      (*it)->stop();
 
-        // Detach buffer from the source
-        (*it)->detach();
+      // Detach buffer from the source
+      (*it)->detach();
 
-        // Erase the source from the vector
-        m_sources.erase(it, m_sources.end());
+      // Erase the source from the vector
+      m_sources.erase(it, m_sources.end());
     }
     else
     {
-        // Handle error: Source not found
-        std::cerr << "Error: Source not found for removal." << std::endl;
+      // Handle error: Source not found
+      std::cerr << "Error: Source not found for removal." << std::endl;
     }
   }
 
