@@ -17,12 +17,16 @@
 #include "../../lib/Core Lib/Rand.h"
 #include <iostream>
 #include <numeric>
+#include <variant>
 
 
 namespace audio
 {
   enum class WaveformType { SINE_WAVE, SQUARE_WAVE, TRIANGLE_WAVE, SAWTOOTH_WAVE, NOISE };
-  
+  enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP };
+  enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP };
+    
+  // The returned data from the waveform generator.
   struct WaveformData
   {
     std::vector<short> buffer;
@@ -222,14 +226,17 @@ namespace audio
       return m_sources.back().get();
     }
     
+    using WaveformFuncArg = std::variant<WaveformType, std::function<float(float)>>;
+    using FrequencyFuncArg = std::variant<FrequencyType, std::function<float(float, float, float)>>;
+    using AmplitudeFuncArg = std::variant<AmplitudeType, std::function<float(float, float, float)>>;
+    
     // Function to generate a simple waveform buffer
-    WaveformData generate_waveform(const std::function<float(float)>& wave_func,
+    WaveformData generate_waveform(const WaveformFuncArg& wave_func_arg = WaveformType::SINE_WAVE,
                                    float duration = 10.f, float frequency = 440.f,
-                                   const std::function<float(float, float, float)>& freq_func =
-                                     [](float t, float dur, float frq_0) { return frq_0; },
-                                   const std::function<float(float, float, float)>& ampl_func =
-                                     [](float t, float dur, float a_0) { return a_0; },
-                                   float sample_rate = 44100.f)
+                                   const FrequencyFuncArg& freq_func_arg = FrequencyType::CONSTANT,
+                                   const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
+                                   float sample_rate = 44100.f,
+                                   bool verbose = false)
     {
       WaveformData wd;
       wd.frequency = frequency;
@@ -242,6 +249,95 @@ namespace audio
       args.init();
       
       wd.buffer.resize(args.buffer_len);
+      
+      // Argument Functions
+      
+      std::function<float(float)> wave_func = waveform_sine;
+      std::visit([&wave_func, this, verbose](auto&& val) {
+      if constexpr (std::is_same_v<std::decay_t<decltype(val)>, WaveformType>)
+        {
+          // Handle enum class case
+          switch (val)
+          {
+            case WaveformType::SINE_WAVE:
+              wave_func = waveform_sine;
+              if (verbose) std::cout << "Waveform: SINE_WAVE" << std::endl;
+              break;
+            case WaveformType::SQUARE_WAVE:
+              wave_func = waveform_square;
+              if (verbose) std::cout << "Waveform: SQUARE_WAVE" << std::endl;
+              break;
+            case WaveformType::TRIANGLE_WAVE:
+              wave_func = waveform_triangle;
+              if (verbose) std::cout << "Waveform: TRIANGLE_WAVE" << std::endl;
+              break;
+            case WaveformType::SAWTOOTH_WAVE:
+              wave_func = waveform_sawtooth;
+              if (verbose) std::cout << "Waveform: SAWTOOTH_WAVE" << std::endl;
+              break;
+            case WaveformType::NOISE:
+              wave_func = waveform_noise;
+              if (verbose) std::cout << "Waveform: NOISE" << std::endl;
+              break;
+          }
+        }
+        else if constexpr (std::is_invocable_v<decltype(val)>)
+        {
+            // Handle std::function case
+            wave_func = val;
+            if (verbose) std::cout << "Waveform: Custom" << std::endl;
+        }
+      }, wave_func_arg);
+      
+      std::function<float(float, float, float)> freq_func = freq_func_constant;
+      std::visit([&freq_func, this, verbose](auto&& val) {
+        if constexpr (std::is_same_v<std::decay_t<decltype(val)>, FrequencyType>)
+        {
+          // Handle enum class case
+          switch (val)
+          {
+            case FrequencyType::CONSTANT:
+              freq_func = freq_func_constant;
+              if (verbose) std::cout << "Frequency: CONSTANT" << std::endl;
+              break;
+            case FrequencyType::JET_ENGINE_POWERUP:
+              freq_func = freq_func_jet_engine_powerup;
+              if (verbose) std::cout << "Frequency: JET_ENGINE_POWERUP" << std::endl;
+              break;
+          }
+        }
+        else if constexpr (std::is_invocable_v<decltype(val)>)
+        {
+            // Handle std::function case
+            freq_func = val;
+            if (verbose) std::cout << "Frequency: Custom" << std::endl;
+        }
+      }, freq_func_arg);
+      
+      std::function<float(float, float, float)> ampl_func = ampl_func_constant;
+      std::visit([&ampl_func, this, verbose](auto&& val) {
+        if constexpr (std::is_same_v<std::decay_t<decltype(val)>, AmplitudeType>)
+        {
+          // Handle enum class case
+          switch (val)
+          {
+            case AmplitudeType::CONSTANT:
+              ampl_func = ampl_func_constant;
+              if (verbose) std::cout << "Amplitude: CONSTANT" << std::endl;
+              break;
+            case AmplitudeType::JET_ENGINE_POWERUP:
+              ampl_func = ampl_func_jet_engine_powerup;
+              if (verbose) std::cout << "Amplitude: JET_ENGINE_POWERUP" << std::endl;
+              break;
+          }
+        }
+        else if constexpr (std::is_invocable_v<decltype(val)>)
+        {
+            // Handle std::function case
+            ampl_func = val;
+            if (verbose) std::cout << "Amplitude: Custom" << std::endl;
+        }
+      }, ampl_func_arg);
       
       double accumulated_frequency = 0.0;
       
@@ -261,29 +357,6 @@ namespace audio
       }
       
       return wd;
-    }
-    
-    WaveformData generate_waveform(WaveformType wf_type,
-                                   float duration = 10.f, float frequency = 440.f,
-                                   const std::function<float(float, float, float)>& freq_func =
-                                     [](float t, float dur, float frq_0) { return frq_0; },
-                                   const std::function<float(float, float, float)>& ampl_func =
-                                     [](float t, float dur, float a_0) { return a_0; },
-                                   float sample_rate = 44100.f)
-    {
-      switch (wf_type)
-      {
-        case WaveformType::SINE_WAVE:
-          return generate_waveform(waveform_sine, duration, frequency, freq_func, ampl_func, sample_rate);
-        case WaveformType::SQUARE_WAVE:
-          return generate_waveform(waveform_square, duration, frequency, freq_func, ampl_func, sample_rate);
-        case WaveformType::TRIANGLE_WAVE:
-          return generate_waveform(waveform_triangle, duration, frequency, freq_func, ampl_func, sample_rate);
-        case WaveformType::SAWTOOTH_WAVE:
-          return generate_waveform(waveform_sawtooth, duration, frequency, freq_func, ampl_func, sample_rate);
-        case WaveformType::NOISE:
-          return generate_waveform(waveform_noise, duration, frequency, freq_func, ampl_func, sample_rate);
-      }
     }
     
     void remove_source(AudioSource* source)
@@ -371,6 +444,36 @@ namespace audio
     const WaveformFunc waveform_noise = [](float phi) -> float
     {
       return rnd::rand()*2.0f - 1.0f;
+    };
+    
+    // //////////////////////
+    // Frequency Functions //
+    // //////////////////////
+    using FrequencyFunc = std::function<float(float, float, float)>;
+    
+    const FrequencyFunc freq_func_constant = [](float t, float duration, float freq_0)
+    {
+      return freq_0;
+    };
+    
+    const FrequencyFunc freq_func_jet_engine_powerup = [](float t, float duration, float freq_0)
+    {
+      return freq_0*(1 + rnd::rand_float(0, 2)*t);
+    };
+    
+    // //////////////////////
+    // Amplitude Functions //
+    // //////////////////////
+    using AmplitudeFunc = std::function<float(float, float, float)>;
+    
+    const AmplitudeFunc ampl_func_constant = [](float t, float duration, float ampl_0)
+    {
+      return ampl_0;
+    };
+    
+    const AmplitudeFunc ampl_func_jet_engine_powerup = [](float t, float duration, float ampl_0)
+    {
+      return math::linmap(t, 0.f, duration, 0.f, ampl_0*rnd::rand());
     };
     
   };
