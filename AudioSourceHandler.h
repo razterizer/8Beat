@@ -16,6 +16,7 @@
 #include "../../lib/Core Lib/Math.h"
 #include "../../lib/Core Lib/Rand.h"
 #include <iostream>
+#include <numeric>
 
 
 namespace audio
@@ -29,12 +30,21 @@ namespace audio
     float sample_rate = 44100.f;
   };
   
+  // Used inside the waveform lambda function.
   struct WaveformArgs
   {
     float duration = 5.f;
-    float frequency = 440.f;
-    const float amplitude = 32767.f;
+    float frequency_0 = 440.f;
+    float frequency = frequency_0; // Set by freq_func().
+    const float amplitude_0 = 32767.f;
+    float amplitude = amplitude_0; // Set by ampl_func().
     int buffer_len = 1000;
+    
+    void init()
+    {
+      frequency = frequency_0;
+      amplitude = amplitude_0;
+    }
   };
   
   
@@ -213,9 +223,13 @@ namespace audio
     }
     
     // Function to generate a simple waveform buffer
-    WaveformData generate_waveform(
-                                   const std::function<float(float, const WaveformArgs&)>& wave_func,
-                                   float duration, float frequency, float sample_rate = 44100.f)
+    WaveformData generate_waveform(const std::function<float(float)>& wave_func,
+                                   float duration = 10.f, float frequency = 440.f,
+                                   const std::function<float(float, float, float)>& freq_func =
+                                     [](float t, float dur, float frq_0) { return frq_0; },
+                                   const std::function<float(float, float, float)>& ampl_func =
+                                     [](float t, float dur, float a_0) { return a_0; },
+                                   float sample_rate = 44100.f)
     {
       WaveformData wd;
       wd.frequency = frequency;
@@ -223,34 +237,52 @@ namespace audio
       
       WaveformArgs args;
       args.duration = duration;
-      args.frequency = frequency;
+      args.frequency_0 = frequency;
       args.buffer_len = duration * sample_rate;
+      args.init();
+      
+      wd.buffer.resize(args.buffer_len);
+      
+      double accumulated_frequency = 0.0;
       
       for (int i = 0; i < args.buffer_len; ++i)
       {
         float t = static_cast<float>(i) / sample_rate;
-        float value = wave_func(t, args);
-        wd.buffer.push_back(static_cast<short>(value));
+        args.frequency = freq_func(t, duration, args.frequency_0);
+        args.amplitude = ampl_func(t, duration, args.amplitude_0);
+        
+        // Accumulate frequency for phase modulation
+        accumulated_frequency += args.frequency;
+        
+        // Apply phase modulation similar to Octave code
+        float phase_modulation = 2 * M_PI * accumulated_frequency / sample_rate;
+        float value = args.amplitude * wave_func(phase_modulation);
+        wd.buffer[i] = static_cast<short>(value);
       }
       
       return wd;
     }
     
     WaveformData generate_waveform(WaveformType wf_type,
-                                   float duration, float frequency, float sample_rate = 44100.f)
+                                   float duration = 10.f, float frequency = 440.f,
+                                   const std::function<float(float, float, float)>& freq_func =
+                                     [](float t, float dur, float frq_0) { return frq_0; },
+                                   const std::function<float(float, float, float)>& ampl_func =
+                                     [](float t, float dur, float a_0) { return a_0; },
+                                   float sample_rate = 44100.f)
     {
       switch (wf_type)
       {
         case WaveformType::SINE_WAVE:
-          return generate_waveform(waveform_sine, duration, frequency, sample_rate);
+          return generate_waveform(waveform_sine, duration, frequency, freq_func, ampl_func, sample_rate);
         case WaveformType::SQUARE_WAVE:
-          return generate_waveform(waveform_square, duration, frequency, sample_rate);
+          return generate_waveform(waveform_square, duration, frequency, freq_func, ampl_func, sample_rate);
         case WaveformType::TRIANGLE_WAVE:
-          return generate_waveform(waveform_triangle, duration, frequency, sample_rate);
+          return generate_waveform(waveform_triangle, duration, frequency, freq_func, ampl_func, sample_rate);
         case WaveformType::SAWTOOTH_WAVE:
-          return generate_waveform(waveform_sawtooth, duration, frequency, sample_rate);
+          return generate_waveform(waveform_sawtooth, duration, frequency, freq_func, ampl_func, sample_rate);
         case WaveformType::NOISE:
-          return generate_waveform(waveform_noise, duration, frequency, sample_rate);
+          return generate_waveform(waveform_noise, duration, frequency, freq_func, ampl_func, sample_rate);
       }
     }
     
@@ -283,46 +315,62 @@ namespace audio
     
     std::vector<std::unique_ptr<AudioSource>> m_sources;
     
-    using WaveformFunc = std::function<float(float, const WaveformArgs&)>;
+    // /////////////////////
+    // Waveform Functions //
+    // /////////////////////
+    using WaveformFunc = std::function<float(float)>;
     
-    const WaveformFunc waveform_sine = [](float t, const WaveformArgs& args) -> float
+    const WaveformFunc waveform_sine = [](float phi) -> float
     {
-      return args.amplitude * std::sin(2 * M_PI * args.frequency * t);
+      //return args.amplitude * std::sin(2 * M_PI * args.frequency * t);
+      return std::sin(phi);
     };
     
-    const WaveformFunc waveform_square = [](float t, const WaveformArgs& args) -> float
+    const WaveformFunc waveform_square = [](float phi) -> float
     {
+    #if false
       float f = args.frequency;
       //return args.amplitude * sin(w * t);
       auto a = std::fmod(f * t, 1.f);
+    #else
+      auto a = std::fmod(phi / (2*M_PI), 1.f);
+    #endif
       if (0 <= a && a < 0.5f)
-        return +args.amplitude;
+        return +1.f;
       else
-        return -args.amplitude;
+        return -1.f;
     };
     
-    const WaveformFunc waveform_triangle = [](float t, const WaveformArgs& args) -> float
+    const WaveformFunc waveform_triangle = [](float phi) -> float
     {
+    #if false
       float f = args.frequency;
       //return args.amplitude * sin(w * t);
       auto a = std::fmod(f * t, 1.f);
+    #else
+      auto a = std::fmod(phi / (2*M_PI), 1.f);
+    #endif
       if (0 <= a && a < 0.5f)
-        return math::lerp(a, -args.amplitude, +args.amplitude);
+        return math::lerp(2*a, -1.f, +1.f);
       else
-        return math::lerp(a, +args.amplitude, -args.amplitude);
+        return math::lerp(2*a-1, +1.f, -1.f);
     };
     
-    const WaveformFunc waveform_sawtooth = [](float t, const WaveformArgs& args) -> float
+    const WaveformFunc waveform_sawtooth = [](float phi) -> float
     {
+    #if false
       float f = args.frequency;
       //return args.amplitude * sin(w * t);
       auto a = std::fmod(f * t, 1.f);
-      return args.amplitude * a;
+    #else
+      auto a = std::fmod(phi / (2*M_PI), 1.f);
+    #endif
+      return 2*a-1;
     };
     
-    const WaveformFunc waveform_noise = [](float t, const WaveformArgs& args) -> float
+    const WaveformFunc waveform_noise = [](float phi) -> float
     {
-      return args.amplitude * (rnd::rand()*2.0f - 1.0f);
+      return rnd::rand()*2.0f - 1.0f;
     };
     
   };
