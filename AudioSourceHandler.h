@@ -458,7 +458,7 @@ namespace audio
     
     const FrequencyFunc freq_func_jet_engine_powerup = [](float t, float duration, float freq_0)
     {
-      return freq_0*(1 + rnd::rand_float(0, 2)*t);
+      return freq_0*(1 + rnd::rand_float(0, 2)*(0.5f + t));
     };
     
     // //////////////////////
