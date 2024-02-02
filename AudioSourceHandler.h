@@ -18,6 +18,14 @@
 #include <iostream>
 #include <numeric>
 #include <variant>
+#include <complex>
+
+// phi
+#define WAVEFORM_FUNC_ARGS float
+// t, duration, frequency_0
+#define FREQUENCY_FUNC_ARGS float, float, float
+// t, duration
+#define AMPLITUDE_FUNC_ARGS float, float
 
 
 namespace audio
@@ -25,11 +33,14 @@ namespace audio
   enum class WaveformType { SINE_WAVE, SQUARE_WAVE, TRIANGLE_WAVE, SAWTOOTH_WAVE, NOISE };
   enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP };
   enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP };
+  enum class LowPassFilterType { NONE, Butterworth, ChebyshevTypeI, ChebyshevTypeII };
+  
+  const float c_amplitude_0 = 32767.f;
     
   // The returned data from the waveform generator.
   struct WaveformData
   {
-    std::vector<short> buffer;
+    std::vector<float> buffer_f;
     float frequency = 440.f; // A4
     float sample_rate = 44100.f;
   };
@@ -40,14 +51,13 @@ namespace audio
     float duration = 5.f;
     float frequency_0 = 440.f;
     float frequency = frequency_0; // Set by freq_func().
-    const float amplitude_0 = 32767.f;
-    float amplitude = amplitude_0; // Set by ampl_func().
+    float amplitude = c_amplitude_0; // Set by ampl_func().
     int buffer_len = 1000;
     
     void init()
     {
       frequency = frequency_0;
-      amplitude = amplitude_0;
+      amplitude = c_amplitude_0;
     }
   };
   
@@ -206,7 +216,16 @@ namespace audio
       
       // Load buffer data
       //alIsExtensionPresent("AL_EXT_float32");
-      alBufferData(bufferID, AL_FORMAT_MONO16, wd.buffer.data(), static_cast<ALsizei>(wd.buffer.size() * sizeof(float)), wd.sample_rate);
+      std::vector<short> buffer_i;
+      buffer_i.resize(wd.buffer_f.size());
+      int N = static_cast<int>(wd.buffer_f.size());
+      for (int i = 0; i < N; ++i)
+      {
+        buffer_i[i] = static_cast<short>(c_amplitude_0 * wd.buffer_f[i]);
+        buffer_i[i] = std::max<short>(-c_amplitude_0, buffer_i[i]);
+        buffer_i[i] = std::min<short>(+c_amplitude_0, buffer_i[i]);
+      }
+      alBufferData(bufferID, AL_FORMAT_MONO16, buffer_i.data(), static_cast<ALsizei>(N * sizeof(float)), wd.sample_rate);
       
       // Attach buffer to source
       alSourcei(sourceID, AL_BUFFER, bufferID);
@@ -226,9 +245,35 @@ namespace audio
       return m_sources.back().get();
     }
     
-    using WaveformFuncArg = std::variant<WaveformType, std::function<float(float)>>;
-    using FrequencyFuncArg = std::variant<FrequencyType, std::function<float(float, float, float)>>;
-    using AmplitudeFuncArg = std::variant<AmplitudeType, std::function<float(float, float, float)>>;
+    void remove_source(AudioSource* source)
+    {
+      auto it = std::remove_if(m_sources.begin(), m_sources.end(),
+                               [source](const auto& ptr) { return ptr.get() == source; });
+      
+      if (it != m_sources.end())
+      {
+        // Stop playing the source
+        (*it)->stop();
+        
+        // Detach buffer from the source
+        (*it)->detach();
+        
+        // Erase the source from the vector
+        m_sources.erase(it, m_sources.end());
+      }
+      else
+      {
+        // Handle error: Source not found
+        std::cerr << "Error: Source not found for removal." << std::endl;
+      }
+    }
+    
+    using WaveformFunc = std::function<float(WAVEFORM_FUNC_ARGS)>;
+    using FrequencyFunc = std::function<float(FREQUENCY_FUNC_ARGS)>;
+    using AmplitudeFunc = std::function<float(AMPLITUDE_FUNC_ARGS)>;
+    using WaveformFuncArg = std::variant<WaveformType, WaveformFunc>;
+    using FrequencyFuncArg = std::variant<FrequencyType, FrequencyFunc>;
+    using AmplitudeFuncArg = std::variant<AmplitudeType, AmplitudeFunc>;
     
     // Function to generate a simple waveform buffer
     WaveformData generate_waveform(const WaveformFuncArg& wave_func_arg = WaveformType::SINE_WAVE,
@@ -248,13 +293,248 @@ namespace audio
       args.buffer_len = duration * sample_rate;
       args.init();
       
-      wd.buffer.resize(args.buffer_len);
+      wd.buffer_f.resize(args.buffer_len);
       
       // Argument Functions
+      auto wave_func = extract_waveform_func(wave_func_arg, verbose);
+      auto freq_func = extract_frequency_func(freq_func_arg, verbose);
+      auto ampl_func = extract_amplitude_func(ampl_func_arg, verbose);
       
-      std::function<float(float)> wave_func = waveform_sine;
-      std::visit([&wave_func, this, verbose](auto&& val) {
-      if constexpr (std::is_same_v<std::decay_t<decltype(val)>, WaveformType>)
+      double accumulated_frequency = 0.0;
+      
+      for (int i = 0; i < args.buffer_len; ++i)
+      {
+        float t = static_cast<float>(i) / sample_rate;
+        args.frequency = freq_func(t, duration, args.frequency_0);
+        args.amplitude = ampl_func(t, duration);
+        
+        // Accumulate frequency for phase modulation
+        accumulated_frequency += args.frequency;
+        
+        // Apply phase modulation similar to Octave code
+        float phase_modulation = 2 * M_PI * accumulated_frequency / sample_rate;
+        float sample = args.amplitude * wave_func(phase_modulation);
+        wd.buffer_f[i] = sample;
+      }
+      
+      return wd;
+    }
+    
+    // Function to calculate the fundamental frequency after ring modulation
+    int calc_fundamental_frequency(int frequency_A, int frequency_B)
+    {
+      // Calculate the GCD of the frequencies
+      int gcd_result = math::gcd(frequency_A, frequency_B);
+      
+      // The GCD represents the fundamental frequency
+      return gcd_result;
+    }
+    
+    WaveformData ring_modulation(const WaveformData& wave_A, const WaveformData& wave_B)
+    {
+      // Resample both signals to a common sample rate
+      float common_sample_rate = std::max(wave_A.sample_rate, wave_B.sample_rate);
+      WaveformData resampled_A = resample(wave_A, common_sample_rate, LowPassFilterType::Butterworth);
+      WaveformData resampled_B = resample(wave_B, common_sample_rate, LowPassFilterType::Butterworth);
+      
+      
+      WaveformData prod;
+      prod.sample_rate = common_sample_rate;
+      prod.frequency = calc_fundamental_frequency(resampled_A.frequency, resampled_B.frequency);
+      
+      int Nmin = static_cast<int>(std::min(resampled_A.buffer_f.size(), resampled_B.buffer_f.size()));
+      prod.buffer_f.resize(Nmin);
+      
+      for (int i = 0; i < Nmin; ++i)
+      {
+        float a = resampled_A.buffer_f[i];
+        float b = resampled_B.buffer_f[i];
+        prod.buffer_f[i] = a * b;
+      }
+      
+      return prod;
+    }
+    
+    WaveformData resample(const WaveformData& wave, float new_sample_rate,
+      LowPassFilterType filter_type = LowPassFilterType::Butterworth,
+      int filter_order = 1, float cutoff_freq_multiplier = 2.5f, float ripple = 0.1f)
+    {
+      if (wave.sample_rate == new_sample_rate)
+        return wave;
+    
+      WaveformData resampled_wave;
+      resampled_wave.frequency = wave.frequency;
+      resampled_wave.sample_rate = new_sample_rate;
+      
+      // Calculate the resampling factor
+      float resampling_factor = wave.sample_rate / new_sample_rate;
+      
+      // Calculate the new size of the buffer
+      size_t new_size = static_cast<size_t>(wave.buffer_f.size() / resampling_factor);
+      
+      // Resize the buffer in the resampled_wave struct
+      resampled_wave.buffer_f.resize(new_size);
+      
+      // Perform linear interpolation to fill the new buffer
+      for (size_t i = 0; i < new_size; ++i)
+      {
+        float index_f = i * resampling_factor;
+        size_t index = static_cast<size_t>(index_f);
+        float fraction = index_f - index;
+        
+        // Linear interpolation
+        resampled_wave.buffer_f[i] = (1.0f - fraction) * wave.buffer_f[index]
+        + fraction * wave.buffer_f[index + 1];
+      }
+      
+      float cutoff_frequency = cutoff_freq_multiplier * resampled_wave.frequency;
+      
+      // Apply the specified low-pass filter
+      switch (filter_type)
+      {
+        case LowPassFilterType::NONE:
+          break;
+        case LowPassFilterType::Butterworth:
+          apply_Butterworth_low_pass_filter(resampled_wave.buffer_f, cutoff_frequency, new_sample_rate, filter_order);
+          break;
+          
+        case LowPassFilterType::ChebyshevTypeI:
+          apply_ChebyshevI_low_pass_filter(resampled_wave.buffer_f, cutoff_frequency, new_sample_rate, ripple);
+          break;
+          
+        case LowPassFilterType::ChebyshevTypeII:
+          apply_ChebyshevII_low_pass_filter(resampled_wave.buffer_f, cutoff_frequency, new_sample_rate, ripple);
+          break;
+          
+          // Add more cases for other filter types if needed
+          
+        default:
+          // Handle unsupported filter types or provide a default behavior
+          break;
+      }
+      
+      return resampled_wave;
+    }
+    
+    // Example of applying a Butterworth low-pass filter
+    void apply_Butterworth_low_pass_filter(std::vector<float>& signal, float cutoff_frequency, float sample_rate, int filter_order)
+    {
+      if (filter_order <= 0)
+      {
+        // Invalid filter order
+        return;
+      }
+      
+      // Calculate the analog cutoff frequency in radians
+      double omega_c = 2.0 * M_PI * cutoff_frequency / sample_rate;
+      
+      // Calculate poles of the Butterworth filter in the left half of the complex plane
+      std::vector<std::complex<double>> poles;
+      for (int k = 0; k < filter_order; ++k)
+      {
+        double real_part = -std::sin(M_PI * (2.0 * k + 1) / (2.0 * filter_order));
+        double imag_part = std::cos(M_PI * (2.0 * k + 1) / (2.0 * filter_order));
+        poles.emplace_back(real_part, imag_part);
+      }
+      
+      // Apply the Butterworth filter to the signal
+      for (size_t n = filter_order; n < signal.size(); ++n)
+      {
+        double filtered_sample = 0.0;
+        for (int k = 0; k < filter_order; ++k)
+        {
+          // Calculate the z-transform of the filter transfer function
+          std::complex<double> z = std::exp(std::complex<double>(0, omega_c)) * poles[k];
+          filtered_sample += real(z) * signal[n - k];
+        }
+        
+        signal[n] = static_cast<float>(filtered_sample);
+      }
+    }
+    
+    // Example of applying a first-order Chebyshev low-pass filter (Type I)
+    void apply_ChebyshevI_low_pass_filter(std::vector<float>& signal, float cutoff_frequency, float sample_rate, float ripple)
+    {
+      if (ripple <= 0.0)
+      {
+        // Invalid ripple value
+        return;
+      }
+      
+      // Calculate the analog cutoff frequency in radians
+      //double omega_c = 2.0 * M_PI * cutoff_frequency / sample_rate;
+      
+      // Calculate the epsilon value for Chebyshev Type I filter
+      //double epsilon = sqrt(1.0 / (pow(10, 0.1 * ripple)) - 1.0);
+      double epsilon = 0;
+      double epsilon_threshold = 1e-10; // Adjust the threshold as needed
+      
+      // Calculate the epsilon value for Chebyshev Type I filter
+      double temp = std::pow(10, 0.1 * ripple) - 1.0;
+      
+      // Set epsilon to a small positive value to avoid NaN
+      epsilon = (temp > epsilon_threshold) ? std::sqrt(temp) : 1e-5;
+      
+      // Calculate the poles of the Chebyshev Type I filter in the left half of the complex plane
+      std::vector<std::complex<double>> poles;
+      poles.emplace_back(-epsilon, 0.0);
+      
+      // Apply the Chebyshev Type I filter to the signal
+      for (size_t n = 1; n < signal.size(); ++n)
+      {
+        double filtered_sample = epsilon * signal[n] + signal[n - 1];
+        signal[n] = static_cast<float>(filtered_sample);
+      }
+    }
+    
+    // Example of applying a first-order Chebyshev low-pass filter (Type II)
+    void apply_ChebyshevII_low_pass_filter(std::vector<float>& signal, float cutoff_frequency, float sample_rate, float ripple)
+    {
+      if (ripple <= 0.0)
+      {
+        // Invalid ripple value
+        return;
+      }
+      
+      // Calculate the analog cutoff frequency in radians
+      //double omega_c = 2.0 * M_PI * cutoff_frequency / sample_rate;
+      
+      // Calculate the epsilon value for Chebyshev Type II filter
+      //double epsilon = sqrt(1.0 / (pow(10, 0.1 * ripple)) - 1.0);
+      double epsilon = 0;
+      double epsilon_threshold = 1e-10; // Adjust the threshold as needed
+      
+      // Calculate the epsilon value for Chebyshev Type I filter
+      double temp = std::pow(10, 0.1 * ripple) - 1.0;
+      
+      // Set epsilon to a small positive value to avoid NaN
+      epsilon = (temp > epsilon_threshold) ? std::sqrt(temp) : 1e-5;
+      
+      // Initialize previous sample
+      double y_prev = 0.0;
+      
+      // Apply the Chebyshev Type II filter to the signal
+      for (size_t n = 1; n < signal.size(); ++n)
+      {
+        double filtered_sample = 2.0 * epsilon * y_prev - signal[n] + epsilon * signal[n];
+        y_prev = signal[n];
+        signal[n] = static_cast<float>(filtered_sample);
+      }
+    }
+    
+  private:
+    ALCdevice* m_device = nullptr;
+    ALCcontext* m_context = nullptr;
+    
+    std::vector<std::unique_ptr<AudioSource>> m_sources;
+  
+    WaveformFunc extract_waveform_func(const WaveformFuncArg& wave_func_arg, bool verbose)
+    {
+      WaveformFunc wave_func = waveform_sine;
+      std::visit([&wave_func, this, verbose](auto&& val)
+      {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, WaveformType>)
         {
           // Handle enum class case
           switch (val)
@@ -281,17 +561,23 @@ namespace audio
               break;
           }
         }
-        else if constexpr (std::is_invocable_v<decltype(val)>)
+        else if constexpr (std::is_invocable_v<T, WAVEFORM_FUNC_ARGS>)
         {
             // Handle std::function case
             wave_func = val;
             if (verbose) std::cout << "Waveform: Custom" << std::endl;
         }
       }, wave_func_arg);
-      
-      std::function<float(float, float, float)> freq_func = freq_func_constant;
-      std::visit([&freq_func, this, verbose](auto&& val) {
-        if constexpr (std::is_same_v<std::decay_t<decltype(val)>, FrequencyType>)
+      return wave_func;
+    }
+    
+    FrequencyFunc extract_frequency_func(const FrequencyFuncArg& freq_func_arg, bool verbose)
+    {
+      FrequencyFunc freq_func = freq_func_constant;
+      std::visit([&freq_func, this, verbose](auto&& val)
+      {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, FrequencyType>)
         {
           // Handle enum class case
           switch (val)
@@ -306,17 +592,23 @@ namespace audio
               break;
           }
         }
-        else if constexpr (std::is_invocable_v<decltype(val)>)
+        else if constexpr (std::is_invocable_v<T, FREQUENCY_FUNC_ARGS>)
         {
             // Handle std::function case
             freq_func = val;
             if (verbose) std::cout << "Frequency: Custom" << std::endl;
         }
       }, freq_func_arg);
-      
-      std::function<float(float, float, float)> ampl_func = ampl_func_constant;
-      std::visit([&ampl_func, this, verbose](auto&& val) {
-        if constexpr (std::is_same_v<std::decay_t<decltype(val)>, AmplitudeType>)
+      return freq_func;
+    }
+    
+    AmplitudeFunc extract_amplitude_func(const AmplitudeFuncArg& ampl_func_arg, bool verbose)
+    {
+      AmplitudeFunc ampl_func = ampl_func_constant;
+      std::visit([&ampl_func, this, verbose](auto&& val)
+      {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, AmplitudeType>)
         {
           // Handle enum class case
           switch (val)
@@ -331,68 +623,19 @@ namespace audio
               break;
           }
         }
-        else if constexpr (std::is_invocable_v<decltype(val)>)
+        else if constexpr (std::is_invocable_v<T, AMPLITUDE_FUNC_ARGS>)
         {
             // Handle std::function case
             ampl_func = val;
             if (verbose) std::cout << "Amplitude: Custom" << std::endl;
         }
       }, ampl_func_arg);
-      
-      double accumulated_frequency = 0.0;
-      
-      for (int i = 0; i < args.buffer_len; ++i)
-      {
-        float t = static_cast<float>(i) / sample_rate;
-        args.frequency = freq_func(t, duration, args.frequency_0);
-        args.amplitude = ampl_func(t, duration, args.amplitude_0);
-        
-        // Accumulate frequency for phase modulation
-        accumulated_frequency += args.frequency;
-        
-        // Apply phase modulation similar to Octave code
-        float phase_modulation = 2 * M_PI * accumulated_frequency / sample_rate;
-        float value = args.amplitude * wave_func(phase_modulation);
-        wd.buffer[i] = static_cast<short>(value);
-      }
-      
-      return wd;
+      return ampl_func;
     }
-    
-    void remove_source(AudioSource* source)
-    {
-      auto it = std::remove_if(m_sources.begin(), m_sources.end(),
-                               [source](const auto& ptr) { return ptr.get() == source; });
-      
-      if (it != m_sources.end())
-      {
-        // Stop playing the source
-        (*it)->stop();
-        
-        // Detach buffer from the source
-        (*it)->detach();
-        
-        // Erase the source from the vector
-        m_sources.erase(it, m_sources.end());
-      }
-      else
-      {
-        // Handle error: Source not found
-        std::cerr << "Error: Source not found for removal." << std::endl;
-      }
-    }
-    
-  private:
-    ALCdevice* m_device = nullptr;
-    ALCcontext* m_context = nullptr;
-    
-    std::vector<std::unique_ptr<AudioSource>> m_sources;
     
     // /////////////////////
     // Waveform Functions //
     // /////////////////////
-    using WaveformFunc = std::function<float(float)>;
-    
     const WaveformFunc waveform_sine = [](float phi) -> float
     {
       //return args.amplitude * std::sin(2 * M_PI * args.frequency * t);
@@ -449,8 +692,6 @@ namespace audio
     // //////////////////////
     // Frequency Functions //
     // //////////////////////
-    using FrequencyFunc = std::function<float(float, float, float)>;
-    
     const FrequencyFunc freq_func_constant = [](float t, float duration, float freq_0)
     {
       return freq_0;
@@ -464,16 +705,14 @@ namespace audio
     // //////////////////////
     // Amplitude Functions //
     // //////////////////////
-    using AmplitudeFunc = std::function<float(float, float, float)>;
-    
-    const AmplitudeFunc ampl_func_constant = [](float t, float duration, float ampl_0)
+    const AmplitudeFunc ampl_func_constant = [](float t, float duration)
     {
-      return ampl_0;
+      return 1.f;
     };
     
-    const AmplitudeFunc ampl_func_jet_engine_powerup = [](float t, float duration, float ampl_0)
+    const AmplitudeFunc ampl_func_jet_engine_powerup = [](float t, float duration)
     {
-      return math::linmap(t, 0.f, duration, 0.f, ampl_0*rnd::rand());
+      return math::linmap(t, 0.f, duration, 0.f, rnd::rand());
     };
     
   };
