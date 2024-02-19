@@ -118,6 +118,7 @@ namespace audio
       reverb.frequency = calc_fundamental_frequency(res_wave.frequency, res_kernel.frequency);
       reverb.duration = calc_duration(reverb);
       
+      // Normalize to amplitude max 1 if amplitude > 1.
       normalize_over(reverb);
       //auto [minval, maxval] = WaveformHelper::find_min_max(reverb, true);
       //std::cout << "minval = " << minval << std::endl;
