@@ -6,8 +6,8 @@
 //
 
 #pragma once
-#include "WaveformData.h"
-#include "FFTResult.h"
+#include "Waveform.h"
+#include "Spectrum.h"
 #include "../../lib/Core Lib/MachineLearning/ann_cnn.h"
 #include <complex>
 

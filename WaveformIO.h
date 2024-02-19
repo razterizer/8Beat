@@ -6,7 +6,7 @@
 //
 
 #pragma once
-#include "WaveformData.h"
+#include "Waveform.h"
 #include "WaveformHelper.h"
 #include <sndfile.h>
 //#include <typeinfo>

@@ -6,7 +6,7 @@
 //
 
 #pragma once
-#include "WaveformData.h"
+#include "Waveform.h"
 
 // phi
 #define WAVEFORM_FUNC_ARGS float

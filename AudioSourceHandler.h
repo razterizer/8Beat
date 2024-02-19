@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "WaveformData.h"
+#include "Waveform.h"
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <vector>
