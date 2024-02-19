@@ -12,6 +12,7 @@
 #include <chrono>
 #include <thread>
 #include "AudioSourceHandler.h"
+#include "Waveform.h"
 #include "../Terminal Text Lib/Delay.h"
 #include <thread>
 #include <atomic>
@@ -117,7 +118,7 @@ namespace audio
     void play_note(const Note& note)
     {
       // Create a waveform for the note
-      WaveformData wd = m_audioHandler.generate_waveform(
+      Waveform wd = m_audioHandler.generate_waveform(
         WaveformType::SINE_WAVE,
         note.duration_ms / 1000.f, note.frequency);
 

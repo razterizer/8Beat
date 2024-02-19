@@ -33,14 +33,14 @@ namespace audio
     using AmplitudeFuncArg = std::variant<AmplitudeType, AmplitudeFunc>;
     
     // Function to generate a simple waveform buffer
-    WaveformData generate_waveform(const WaveformFuncArg& wave_func_arg = WaveformType::SINE_WAVE,
+    Waveform generate_waveform(const WaveformFuncArg& wave_func_arg = WaveformType::SINE_WAVE,
                                    float duration = 10.f, float frequency = 440.f,
                                    const FrequencyFuncArg& freq_func_arg = FrequencyType::CONSTANT,
                                    const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
                                    float sample_rate = 44100.f,
                                    bool verbose = false)
     {
-      WaveformData wd;
+      Waveform wd;
       wd.frequency = frequency;
       wd.sample_rate = sample_rate;
       wd.duration = duration;
@@ -49,7 +49,7 @@ namespace audio
       float freq_mod = frequency;
       float ampl_mod = 1.f;
       
-      wd.buffer_f.resize(buffer_len);
+      wd.buffer.resize(buffer_len);
       
       // Argument Functions
       auto wave_func = extract_waveform_func(wave_func_arg, verbose);
@@ -70,7 +70,7 @@ namespace audio
         // Apply phase modulation similar to Octave code
         float phase_modulation = 2 * M_PI * accumulated_frequency / sample_rate;
         float sample = ampl_mod * wave_func(phase_modulation);
-        wd.buffer_f[i] = sample;
+        wd.buffer[i] = sample;
       }
       
       return wd;

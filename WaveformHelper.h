@@ -6,6 +6,7 @@
 //
 
 #pragma once
+#include "WaveformData.h"
 #include "FFTResult.h"
 #include "../../lib/Core Lib/MachineLearning/ann_cnn.h"
 #include <complex>
@@ -24,26 +25,26 @@ namespace audio
   class WaveformHelper
   {
   public:
-    static WaveformData ring_modulation(const WaveformData& wave_A, const WaveformData& wave_B)
+    static Waveform ring_modulation(const Waveform& wave_A, const Waveform& wave_B)
     {
       // Resample both signals to a common sample rate
       float common_sample_rate = std::max(wave_A.sample_rate, wave_B.sample_rate);
-      WaveformData res_A = resample(wave_A, common_sample_rate, LowPassFilterType::Butterworth);
-      WaveformData res_B = resample(wave_B, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_A = resample(wave_A, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_B = resample(wave_B, common_sample_rate, LowPassFilterType::Butterworth);
       
       
-      WaveformData prod;
+      Waveform prod;
       prod.sample_rate = common_sample_rate;
       prod.frequency = calc_fundamental_frequency(res_A.frequency, res_B.frequency);
       
-      int Nmin = static_cast<int>(std::min(res_A.buffer_f.size(), res_B.buffer_f.size()));
-      prod.buffer_f.resize(Nmin);
+      int Nmin = static_cast<int>(std::min(res_A.buffer.size(), res_B.buffer.size()));
+      prod.buffer.resize(Nmin);
       
       for (int i = 0; i < Nmin; ++i)
       {
-        float a = res_A.buffer_f[i];
-        float b = res_B.buffer_f[i];
-        prod.buffer_f[i] = a * b;
+        float a = res_A.buffer[i];
+        float b = res_B.buffer[i];
+        prod.buffer[i] = a * b;
       }
       
       prod.duration = calc_duration(prod);
@@ -53,18 +54,18 @@ namespace audio
     
     // wave: the waveform to produce a reverb effect for.
     // kernel: a dirac-like pulse sample in the environment to make a reverb effect from.
-    static WaveformData reverb(const WaveformData& wave, const WaveformData& kernel)
+    static Waveform reverb(const Waveform& wave, const Waveform& kernel)
     {
       // Resample both signals to a common sample rate.
       float common_sample_rate = std::max(wave.sample_rate, kernel.sample_rate);
-      WaveformData res_wave = resample(wave, common_sample_rate, LowPassFilterType::Butterworth);
-      WaveformData res_kernel = resample(kernel, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_wave = resample(wave, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_kernel = resample(kernel, common_sample_rate, LowPassFilterType::Butterworth);
       
-      WaveformData conv;
+      Waveform conv;
       conv.sample_rate = common_sample_rate;
       conv.frequency = calc_fundamental_frequency(res_wave.frequency, res_kernel.frequency);
       
-      conv.buffer_f = ml::ann::conv_1d(res_wave.buffer_f, res_kernel.buffer_f, 0.f,
+      conv.buffer = ml::ann::conv_1d(res_wave.buffer, res_kernel.buffer, 0.f,
                                        ml::ann::ConvRange::Full, ml::ann::ConvType::Convolution);
                                        
       normalize_over(conv);
@@ -77,42 +78,42 @@ namespace audio
       return conv;
     }
     
-    static WaveformData reverb_fast(const WaveformData& wave, const WaveformData& kernel)
+    static Waveform reverb_fast(const Waveform& wave, const Waveform& kernel)
     {
       // Resample both signals to a common sample rate.
       float common_sample_rate = std::max(wave.sample_rate, kernel.sample_rate);
-      WaveformData res_wave = resample(wave, common_sample_rate, LowPassFilterType::Butterworth);
-      WaveformData res_kernel = resample(kernel, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_wave = resample(wave, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_kernel = resample(kernel, common_sample_rate, LowPassFilterType::Butterworth);
       
       // Apply windowing.
       //apply_window(res_wave, WindowType::HAMMING);
       //apply_window(res_kernel, WindowType::HAMMING);
       
       // Padding to common length.
-      auto Nw = static_cast<int>(res_wave.buffer_f.size());
-      auto Nk = static_cast<int>(res_kernel.buffer_f.size());
+      auto Nw = static_cast<int>(res_wave.buffer.size());
+      auto Nk = static_cast<int>(res_kernel.buffer.size());
       auto N = static_cast<int>(std::max(Nw, Nk));
       for (int i = 0; i < N - Nw; ++i)
-        res_wave.buffer_f.emplace_back(0.f);
+        res_wave.buffer.emplace_back(0.f);
       for (int i = 0; i < N - Nk; ++i)
-        res_kernel.buffer_f.emplace_back(0.f);
+        res_kernel.buffer.emplace_back(0.f);
       
       auto spec_res_wave = fft(res_wave);
       auto spec_res_kernel = fft(res_kernel);
       
-      int Ns = static_cast<int>(spec_res_wave.spectrum.size());
-      FFTResult prod;
-      prod.spectrum.resize(Ns);
+      int Ns = static_cast<int>(spec_res_wave.buffer.size());
+      Spectrum prod;
+      prod.buffer.resize(Ns);
       for (int i = 0; i < Ns; ++i)
-        prod.spectrum[i] = spec_res_wave.spectrum[i] * spec_res_kernel.spectrum[i];
+        prod.buffer[i] = spec_res_wave.buffer[i] * spec_res_kernel.buffer[i];
       prod.freq_start = spec_res_wave.freq_start;
       prod.freq_end = spec_res_wave.freq_end;
       
       auto reverb = ifft(prod);
       auto conv_full_size = Nw + Nk - 1;
-      //reverb.buffer_f.resize(std::min(reverb.buffer_f.size(), res_kernel.buffer_f.size()));
-      //reverb.buffer_f.resize(std::min(reverb.buffer_f.size(), res_wave.buffer_f.size()));
-      reverb.buffer_f.resize(conv_full_size);
+      //reverb.buffer.resize(std::min(reverb.buffer.size(), res_kernel.buffer.size()));
+      //reverb.buffer.resize(std::min(reverb.buffer.size(), res_wave.buffer.size()));
+      reverb.buffer.resize(conv_full_size);
       reverb.sample_rate = common_sample_rate;
       reverb.frequency = calc_fundamental_frequency(res_wave.frequency, res_kernel.frequency);
       reverb.duration = calc_duration(reverb);
@@ -160,20 +161,20 @@ namespace audio
       return output;
     }
     
-    static FFTResult fft(const WaveformData& wave)
+    static Spectrum fft(const Waveform& wave)
     {
-      auto sz = static_cast<int>(wave.buffer_f.size());
+      auto sz = static_cast<int>(wave.buffer.size());
       int N = std::pow<int>(2, std::ceil(std::log(sz)/std::log(2)));
     
-      std::vector<std::complex<float>> input(std::begin(wave.buffer_f), std::end(wave.buffer_f));
+      std::vector<std::complex<float>> input(std::begin(wave.buffer), std::end(wave.buffer));
       // Padding.
       for (int i = 0; i < N - sz; ++i)
         input.emplace_back(0);
       
       auto output = fft_rec(input);
       
-      FFTResult result;
-      result.spectrum = output;
+      Spectrum result;
+      result.buffer = output;
       // Calculate frequency axis.
       result.freq_start = -wave.sample_rate / 2.f;
       result.freq_end = wave.sample_rate / 2.f;
@@ -181,12 +182,12 @@ namespace audio
       return result;
     }
     
-    static WaveformData ifft(const FFTResult& spectrum, Complex2Real c2r_filter = Complex2Real::REAL)
+    static Waveform ifft(const Spectrum& spectrum, Complex2Real c2r_filter = Complex2Real::REAL)
     {
-      auto sz = static_cast<int>(spectrum.spectrum.size());
+      auto sz = static_cast<int>(spectrum.buffer.size());
       int N = std::pow<int>(2, std::ceil(std::log(sz)/std::log(2)));
     
-      std::vector<std::complex<float>> input(std::begin(spectrum.spectrum), std::end(spectrum.spectrum));
+      std::vector<std::complex<float>> input(std::begin(spectrum.buffer), std::end(spectrum.buffer));
       // Padding.
       for (int i = 0; i < N - sz; ++i)
         input.emplace_back(0);
@@ -197,15 +198,15 @@ namespace audio
       for (auto& s : output)
         s /= static_cast<float>(N);
       
-      WaveformData result;
-      result.buffer_f = complex2real(output, c2r_filter);
+      Waveform result;
+      result.buffer = complex2real(output, c2r_filter);
       // Calculate frequency axis.
       result.sample_rate = spectrum.freq_end * 2.f;
       
       return result;
     }
     
-    static std::tuple<float, float> find_min_max(const WaveformData& wd, bool abs = false)
+    static std::tuple<float, float> find_min_max(const Waveform& wd, bool abs = false)
     {
       float min_val = 0.f;
       float max_val = 0.f;
@@ -213,7 +214,7 @@ namespace audio
       {
         min_val = +std::numeric_limits<float>::infinity();
         max_val = 0.f;
-        for (const auto& s : wd.buffer_f)
+        for (const auto& s : wd.buffer)
         {
           math::minimize(min_val, std::abs(s));
           math::maximize(max_val, std::abs(s));
@@ -223,7 +224,7 @@ namespace audio
       {
         min_val = +std::numeric_limits<float>::infinity();
         max_val = -std::numeric_limits<float>::infinity();
-        for (const auto& s : wd.buffer_f)
+        for (const auto& s : wd.buffer)
         {
           math::minimize(min_val, s);
           math::maximize(max_val, s);
@@ -238,40 +239,40 @@ namespace audio
     //   waveform scaled so that max amplitude = amplitude_limit
     // else
     //   unchanged
-    static void normalize_over(WaveformData& wd, float amplitude_limit = 1.f)
+    static void normalize_over(Waveform& wd, float amplitude_limit = 1.f)
     {
       auto [_, max_val] = find_min_max(wd, true);
       if (max_val > amplitude_limit)
       {
-        for (auto& s : wd.buffer_f)
+        for (auto& s : wd.buffer)
           s /= max_val * amplitude_limit;
       }
     }
     
     // Normalize so that max amplitude = 1
-    static void normalize(WaveformData& wd)
+    static void normalize(Waveform& wd)
     {
       auto [_, max_val] = find_min_max(wd, true);
-      for (auto& s : wd.buffer_f)
+      for (auto& s : wd.buffer)
         s /= max_val;
     }
     
     // Scale so that max_amplitude = scale.
-    static void scale(WaveformData& wd, float scale = 1.f)
+    static void scale(Waveform& wd, float scale = 1.f)
     {
       auto [_, max_val] = find_min_max(wd, true);
-      for (auto& s : wd.buffer_f)
+      for (auto& s : wd.buffer)
         s /= max_val * scale;
     }
     
-    static WaveformData resample(const WaveformData& wave, float new_sample_rate = 44100.f,
+    static Waveform resample(const Waveform& wave, float new_sample_rate = 44100.f,
                                  LowPassFilterType filter_type = LowPassFilterType::Butterworth,
                                  int filter_order = 1, float cutoff_freq_multiplier = 2.5f, float ripple = 0.1f)
     {
       if (wave.sample_rate == new_sample_rate)
         return wave;
       
-      WaveformData resampled_wave;
+      Waveform resampled_wave;
       resampled_wave.frequency = wave.frequency;
       resampled_wave.sample_rate = new_sample_rate;
       resampled_wave.duration = wave.duration;
@@ -282,10 +283,10 @@ namespace audio
       //resampled_wave.duration = wave.duration * resampling_factor;
       
       // Calculate the new size of the buffer
-      size_t new_size = static_cast<size_t>(wave.buffer_f.size() / resampling_factor);
+      size_t new_size = static_cast<size_t>(wave.buffer.size() / resampling_factor);
       
       // Resize the buffer in the resampled_wave struct
-      resampled_wave.buffer_f.resize(new_size);
+      resampled_wave.buffer.resize(new_size);
       
       // Perform linear interpolation to fill the new buffer
       for (size_t i = 0; i < new_size; ++i)
@@ -295,8 +296,8 @@ namespace audio
         float fraction = index_f - index;
         
         // Linear interpolation
-        resampled_wave.buffer_f[i] = (1.0f - fraction) * wave.buffer_f[index]
-        + fraction * wave.buffer_f[index + 1];
+        resampled_wave.buffer[i] = (1.0f - fraction) * wave.buffer[index]
+        + fraction * wave.buffer[index + 1];
       }
       
       float cutoff_frequency = cutoff_freq_multiplier * resampled_wave.frequency;
@@ -307,15 +308,15 @@ namespace audio
         case LowPassFilterType::NONE:
           break;
         case LowPassFilterType::Butterworth:
-          apply_Butterworth_low_pass_filter(resampled_wave.buffer_f, filter_order, cutoff_frequency, new_sample_rate);
+          apply_Butterworth_low_pass_filter(resampled_wave.buffer, filter_order, cutoff_frequency, new_sample_rate);
           break;
           
         case LowPassFilterType::ChebyshevTypeI:
-          apply_ChebyshevI_low_pass_filter(resampled_wave.buffer_f, filter_order, cutoff_frequency, new_sample_rate, ripple);
+          apply_ChebyshevI_low_pass_filter(resampled_wave.buffer, filter_order, cutoff_frequency, new_sample_rate, ripple);
           break;
           
         case LowPassFilterType::ChebyshevTypeII:
-          apply_ChebyshevII_low_pass_filter(resampled_wave.buffer_f, filter_order, cutoff_frequency, new_sample_rate, ripple);
+          apply_ChebyshevII_low_pass_filter(resampled_wave.buffer, filter_order, cutoff_frequency, new_sample_rate, ripple);
           break;
           
           // Add more cases for other filter types if needed
@@ -328,11 +329,11 @@ namespace audio
       return resampled_wave;
     }
     
-    static void print_waveform_graph(const WaveformData& wave, GraphType type,
+    static void print_waveform_graph(const Waveform& wave, GraphType type,
                                      int width = 100, int height = 20,
                                      int a_idx_start = 0, std::optional<int> a_idx_end = std::nullopt)
     {
-      int tot_buffer_len = static_cast<int>(wave.buffer_f.size());
+      int tot_buffer_len = static_cast<int>(wave.buffer.size());
       int idx_start = a_idx_start;
       int idx_end = tot_buffer_len - 1;
       if (a_idx_end.has_value())
@@ -340,7 +341,7 @@ namespace audio
       if (idx_end >= tot_buffer_len)
         idx_end = tot_buffer_len - 1;
       
-      std::vector<float> buffer(wave.buffer_f.begin() + idx_start, wave.buffer_f.begin() + idx_end + 1);
+      std::vector<float> buffer(wave.buffer.begin() + idx_start, wave.buffer.begin() + idx_end + 1);
       auto buffer_size = static_cast<int>(buffer.size());
       int step = buffer_size / width;
       
@@ -434,7 +435,7 @@ namespace audio
       }
     }
     
-    static void print_waveform_graph(const WaveformData& wave, GraphType type,
+    static void print_waveform_graph(const Waveform& wave, GraphType type,
                                      int width = 100, int height = 20,
                                      float t_start = 0.f, std::optional<float> t_end = std::nullopt)
     {
@@ -450,21 +451,21 @@ namespace audio
       print_waveform_graph(wave, type, width, height, idx_start, idx_end);
     }
     
-    static float calc_time_from_num_cycles(const WaveformData& wave, float num_cycles)
+    static float calc_time_from_num_cycles(const Waveform& wave, float num_cycles)
     {
       float T = 1/wave.frequency;
       return num_cycles * T;
     }
     
-    static float calc_dt(const WaveformData& wave)
+    static float calc_dt(const Waveform& wave)
     {
       return 1/wave.sample_rate;
     }
     
-    static float calc_duration(const WaveformData& wave)
+    static float calc_duration(const Waveform& wave)
     {
       float dt = 1/wave.sample_rate;
-      size_t num_samples = wave.buffer_f.size();
+      size_t num_samples = wave.buffer.size();
       return num_samples * dt;
     }
     
@@ -645,9 +646,9 @@ namespace audio
     }
     
     // Assuming 'signal' is your time-domain signal before FFT or after IFFT.
-    static void apply_window(WaveformData& wave, WindowType type)
+    static void apply_window(Waveform& wave, WindowType type)
     {
-      const size_t N = wave.buffer_f.size();
+      const size_t N = wave.buffer.size();
       
       switch (type)
       {
@@ -655,14 +656,14 @@ namespace audio
           for (size_t i = 0; i < N; ++i)
           {
             float window_val = 0.54f - 0.46f * std::cos(2.0f * M_PI * i / (N - 1));
-            wave.buffer_f[i] *= window_val;
+            wave.buffer[i] *= window_val;
           }
           break;
         case WindowType::HANNING:
           for (size_t i = 0; i < N; ++i)
           {
             float window_val = 0.5f * (1.0f - std::cos(2.0f * M_PI * i / (N - 1)));
-            wave.buffer_f[i] *= window_val;
+            wave.buffer[i] *= window_val;
           }
           break;
       }

@@ -48,10 +48,10 @@ namespace audio
   class WaveformIO
   {
   public:
-    static std::optional<WaveformData> load(const std::string& filepath,
+    static std::optional<Waveform> load(const std::string& filepath,
       int verbosity = 1)
     {
-      WaveformData wd;
+      Waveform wd;
       
       SF_INFO sf_info;
       sf_info.format = 0; // #NOTE: Specify for format raw.
@@ -80,16 +80,16 @@ namespace audio
       
       const size_t input_buf_size = sf_info.channels * sf_info.frames;
       std::vector<float> buffer_in(input_buf_size);
-      wd.buffer_f.resize(sf_info.frames);
+      wd.buffer.resize(sf_info.frames);
       
       // #FIXME: Fix proper stereo-support in the future.
       sf_read_float(file, buffer_in.data(), static_cast<sf_count_t>(input_buf_size));
       for (size_t f_idx = 0; f_idx < sf_info.frames; ++f_idx)
       {
-        wd.buffer_f[f_idx] = 0;
+        wd.buffer[f_idx] = 0;
         for (int c_idx = 0; c_idx < sf_info.channels; c_idx++)
-            wd.buffer_f[f_idx] += buffer_in[f_idx*sf_info.channels + c_idx];
-        wd.buffer_f[f_idx] /= sf_info.channels;
+            wd.buffer[f_idx] += buffer_in[f_idx*sf_info.channels + c_idx];
+        wd.buffer[f_idx] /= sf_info.channels;
       }
       // Normalize to amplitude max 1 if amplitude > 1.
       WaveformHelper::normalize_over(wd);
@@ -102,14 +102,14 @@ namespace audio
       return wd;
     }
     
-    static bool save(const WaveformData& wd, const std::string& filepath,
+    static bool save(const Waveform& wd, const std::string& filepath,
                      AudioFileFormatSubType subtype,
                      int verbosity = 1)
     {
       SF_INFO sf_info;
       
       sf_info.samplerate = static_cast<int>(wd.sample_rate);
-      sf_info.frames = static_cast<sf_count_t>(wd.buffer_f.size());
+      sf_info.frames = static_cast<sf_count_t>(wd.buffer.size());
       sf_info.channels = 1;  // Use 1 for mono, update for stereo support.
       
       auto filepath2 = filepath;
@@ -277,12 +277,12 @@ namespace audio
       }
       
       sf_info.samplerate = static_cast<int>(wd.sample_rate);
-      sf_info.frames = static_cast<sf_count_t>(wd.buffer_f.size());
+      sf_info.frames = static_cast<sf_count_t>(wd.buffer.size());
       sf_info.channels = 1;  // Use 1 for mono, update for stereo support.
       
       //std::cout << "sf_info.channels: " << sf_info.channels << std::endl;
       //std::cout << "sf_info.frames: " << sf_info.channels << std::endl;
-      //std::cout << "wd.buffer_f.size(): " << wd.buffer_f.size() << std::endl;
+      //std::cout << "wd.buffer.size(): " << wd.buffer.size() << std::endl;
       
       sf_count_t written_frames = 0;
       switch (subtype)
@@ -461,17 +461,17 @@ namespace audio
     }
     
     template <typename T>
-    static sf_count_t write_PCM(SNDFILE* file, const WaveformData& wd)
+    static sf_count_t write_PCM(SNDFILE* file, const Waveform& wd)
     {
       // Convert float data to the specified bit depth
-      std::vector<T> buffer(wd.buffer_f.size());
+      std::vector<T> buffer(wd.buffer.size());
       const auto min_val = static_cast<float>(std::numeric_limits<T>::min());
       const auto max_val = static_cast<float>(std::numeric_limits<T>::max());
       const float scale_factor = max_val;
       
-      for (size_t i = 0; i < wd.buffer_f.size(); ++i)
+      for (size_t i = 0; i < wd.buffer.size(); ++i)
       {
-        auto scaled_value = wd.buffer_f[i] * scale_factor;
+        auto scaled_value = wd.buffer[i] * scale_factor;
         buffer[i] = static_cast<T>(std::max(min_val, std::min(max_val, scaled_value)));
       }
       
@@ -485,17 +485,17 @@ namespace audio
       return written_frames;
     }
     
-    static sf_count_t write_PCM_float(SNDFILE* file, const WaveformData& wd)
+    static sf_count_t write_PCM_float(SNDFILE* file, const Waveform& wd)
     {
       // Write float data to file
-      sf_count_t written_frames = sf_write_float(file, wd.buffer_f.data(), wd.buffer_f.size());
+      sf_count_t written_frames = sf_write_float(file, wd.buffer.data(), wd.buffer.size());
       return written_frames;
     }
     
-    static sf_count_t write_PCM_double(SNDFILE* file, const WaveformData& wd)
+    static sf_count_t write_PCM_double(SNDFILE* file, const Waveform& wd)
     {
       // Convert float data to double
-      std::vector<double> buffer_double(wd.buffer_f.begin(), wd.buffer_f.end());
+      std::vector<double> buffer_double(wd.buffer.begin(), wd.buffer.end());
       
       // Write double data to file
       sf_count_t written_frames = sf_write_double(file, buffer_double.data(), buffer_double.size());
@@ -577,15 +577,15 @@ namespace audio
       return static_cast<uint8_t>(sign | ((exponent & 0x0F) << 4) | mantissa);
     }
     
-    static sf_count_t write_ULAW(SNDFILE* file, const WaveformData& wd)
+    static sf_count_t write_ULAW(SNDFILE* file, const Waveform& wd)
     {
       // Convert float data to μ-law encoded integers
-      std::vector<uint8_t> buffer_ulaw(wd.buffer_f.size());
+      std::vector<uint8_t> buffer_ulaw(wd.buffer.size());
       
-      for (size_t i = 0; i < wd.buffer_f.size(); ++i)
+      for (size_t i = 0; i < wd.buffer.size(); ++i)
       {
         // Convert float value to μ-law
-        buffer_ulaw[i] = linear_to_ulaw(wd.buffer_f[i]);
+        buffer_ulaw[i] = linear_to_ulaw(wd.buffer[i]);
       }
       
       // Write μ-law data to file
@@ -594,15 +594,15 @@ namespace audio
       return written_frames;
     }
     
-    static sf_count_t write_ALAW(SNDFILE* file, const WaveformData& wd)
+    static sf_count_t write_ALAW(SNDFILE* file, const Waveform& wd)
     {
       // Convert float data to A-law encoded integers
-      std::vector<uint8_t> buffer_alaw(wd.buffer_f.size());
+      std::vector<uint8_t> buffer_alaw(wd.buffer.size());
       
-      for (size_t i = 0; i < wd.buffer_f.size(); ++i)
+      for (size_t i = 0; i < wd.buffer.size(); ++i)
       {
         // Convert float value to A-law
-        buffer_alaw[i] = linear_to_alaw(wd.buffer_f[i]);
+        buffer_alaw[i] = linear_to_alaw(wd.buffer[i]);
       }
       
       // Write A-law data to file

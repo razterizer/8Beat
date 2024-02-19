@@ -13,9 +13,10 @@
 namespace audio
 {
 
-  struct FFTResult
+  // FFT Spectrum.
+  struct Spectrum
   {
-    std::vector<std::complex<float>> spectrum;
+    std::vector<std::complex<float>> buffer;
     float freq_start = 0.f;
     float freq_end = 0.f;
   };

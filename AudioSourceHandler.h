@@ -123,7 +123,7 @@ namespace audio
     }
     
     // Function to create a sound source with programmatically created buffer
-    AudioSource* create_source_from_waveform(const WaveformData& wd)
+    AudioSource* create_source_from_waveform(const Waveform& wd)
     {
       ALuint sourceID = 0;
       
@@ -144,11 +144,11 @@ namespace audio
       // Load buffer data
       //alIsExtensionPresent("AL_EXT_float32");
       std::vector<short> buffer_i;
-      buffer_i.resize(wd.buffer_f.size());
-      int N = static_cast<int>(wd.buffer_f.size());
+      buffer_i.resize(wd.buffer.size());
+      int N = static_cast<int>(wd.buffer.size());
       for (int i = 0; i < N; ++i)
       {
-        buffer_i[i] = static_cast<short>(c_amplitude_0 * wd.buffer_f[i]);
+        buffer_i[i] = static_cast<short>(c_amplitude_0 * wd.buffer[i]);
         buffer_i[i] = std::max<short>(-c_amplitude_0, buffer_i[i]);
         buffer_i[i] = std::min<short>(+c_amplitude_0, buffer_i[i]);
       }
