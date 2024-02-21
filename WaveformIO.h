@@ -542,7 +542,6 @@ namespace audio
     static uint8_t linear_to_alaw(float sample)
     {
       const float max_value = 32768.0f;
-      const float alawMax = 32768.0f;
       
       // Ensure the sample is within the valid range
       if (sample > max_value)
