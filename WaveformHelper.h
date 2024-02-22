@@ -27,6 +27,24 @@ namespace audio
   class WaveformHelper
   {
   public:
+    static Waveform mix(float t, const Waveform& wave_A, const Waveform& wave_B)
+    {
+      // Resample both signals to a common sample rate
+      float common_sample_rate = std::max(wave_A.sample_rate, wave_B.sample_rate);
+      Waveform res_A = resample(wave_A, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_B = resample(wave_B, common_sample_rate, LowPassFilterType::Butterworth);
+      
+      const auto Nmin = std::min(res_A.buffer.size(), res_A.buffer.size());
+      Waveform sum(Nmin, 0.f);
+      sum.sample_rate = common_sample_rate;
+      sum.frequency = res_A.frequency + res_B.frequency;
+      
+      for (size_t i = 0; i < Nmin; ++i)
+        sum.buffer[i] = math::lerp(t, res_A.buffer[i], res_B.buffer[i]);
+      
+      return sum;
+    }
+  
     static Waveform ring_modulation(const Waveform& wave_A, const Waveform& wave_B)
     {
       // Resample both signals to a common sample rate
