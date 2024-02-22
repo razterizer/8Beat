@@ -9,6 +9,7 @@
 #include "Waveform.h"
 #include "Spectrum.h"
 #include "../../lib/Core Lib/MachineLearning/ann_cnn.h"
+#include "../../lib/Core Lib/Math.h"
 #include <complex>
 
 using namespace std::complex_literals;
@@ -21,6 +22,42 @@ namespace audio
   enum class GraphType { PLOT_THIN, PLOT_THICK0, PLOT_THICK1, PLOT_THICK2, PLOT_THICK3, FILLED_BOTTOM_UP, FILLED_FROM_T_AXIS };
   enum class Complex2Real { ABS, REAL, IMAG };
   enum class WindowType { HAMMING, HANNING };
+  enum class ADSRMode { LIN, EXP, LOG };
+  
+  struct Attack
+  {
+    Attack(ADSRMode m, float time_ms)
+      : mode(m)
+      , attack_time_ms(time_ms)
+    {}
+    ADSRMode mode = ADSRMode::LIN;
+    float attack_time_ms = 0.f;
+  };
+  struct Decay
+  {
+    Decay(ADSRMode m, float time_ms)
+      : mode(m)
+      , decay_time_ms(time_ms)
+    {}
+    ADSRMode mode = ADSRMode::LIN;
+    float decay_time_ms = 0.f;
+  };
+  struct Sustain
+  {
+    Sustain(float level)
+      : sustain_level(level)
+    {}
+    float sustain_level = 0.f;
+  };
+  struct Release
+  {
+    Release(ADSRMode m, float time_ms)
+      : mode(m)
+      , release_time_ms(time_ms)
+    {}
+    ADSRMode mode = ADSRMode::LIN;
+    float release_time_ms = 0.f;
+  };
   
   class WaveformHelper
   {
@@ -263,6 +300,152 @@ namespace audio
       auto [_, max_val] = find_min_max(wd, true);
       for (auto& s : wd.buffer)
         s /= max_val * scale;
+    }
+    
+    static Waveform fir_moving_average(const Waveform& wave, int window_size, bool preserve_amplitude)
+    {
+      auto N = static_cast<int>(wave.buffer.size());
+      if (window_size > N)
+        window_size = N;
+      int Navg = N - window_size + 1;
+      Waveform output(Navg, 0.f);
+      output.copy_properties(wave);
+      
+      auto [_, max_val] = find_min_max(wave, true);
+      
+      for (int i = 0; i < Navg; ++i)
+      {
+        for (int j = 0; j < window_size; ++j)
+          output.buffer[i] += wave.buffer[i + j];
+        output.buffer[i] /= static_cast<float>(window_size);
+      }
+      
+      if (preserve_amplitude)
+        scale(output, max_val);
+      
+      output.update_duration();
+      return output;
+    }
+    
+    static Waveform fir_sinc_window_low_pass(const Waveform& wave)
+    {
+      auto N = static_cast<int>(wave.buffer.size());
+      Waveform output(N, 0.f);
+      // #FIXME: Implement me.
+      output.update_duration();
+      return output;
+    }
+    
+    // #FIXME: Why you not work!?!?
+    static Waveform fir_chorus(const Waveform& wave, float modulation_freq = 1.f, float modulation_depth = 5e-3f, const std::vector<float> coeffs = { 1.f, .5f, -.2f, .1f })
+    {
+      auto N = wave.buffer.size();
+      auto Nc = coeffs.size();
+      Waveform output(N, 0.f);
+      output.copy_properties(wave);
+      
+      float delay = modulation_depth * std::sin(2.f * M_PI * modulation_freq / wave.sample_rate);
+      
+      // FIR filter.
+      for (size_t i = 0; i < N; ++i)
+        for (size_t j = 0; j < Nc; ++j)
+        {
+          auto delayed_index = static_cast<int>(i - delay * wave.sample_rate * j);
+          if (delayed_index >= 0 && delayed_index < static_cast<int>(wave.buffer.size()))
+            output.buffer[i] += coeffs[j] * wave.buffer[delayed_index];
+        }
+        
+      output.update_duration();
+      return output;
+    }
+    
+    static Waveform envelope_adsr(const Waveform& wave,
+      const Attack& attack, const Decay& decay, const Sustain& sustain, const Release& release)
+    {
+      auto N = wave.buffer.size();
+      Waveform output = wave;
+      
+      const float gate_s = output.duration;
+      const float attack_s = attack.attack_time_ms * 1e-3f;
+      const float decay_s = decay.decay_time_ms * 1e-3f;
+      const float sustain_lvl = sustain.sustain_level;
+      const float release_s = release.release_time_ms * 1e-3f;
+      
+      const float t_a = 0.f;
+      const float t_ad = std::min(gate_s - release_s, attack_s);
+      const float t_ds = std::min(gate_s - release_s, attack_s + decay_s);
+      const float t_sr = std::max(t_ds, gate_s - release_s); //gate_ms - attack_ms - decay_ms - release_ms;
+      const float t_r = gate_s;
+      
+      float dt = calc_dt(wave);
+      float t = 0.f;
+      for (size_t i = 0; i < N; ++i)
+      {
+        t = i * dt;
+        //std::cout << t << '\n';
+        auto& s = output.buffer[i];
+        float env = 0.f;
+        
+        if (math::in_range<float>(t, t_a, t_ad, Range::Closed))
+        {
+          //std::cout << "A";
+          switch (attack.mode)
+          {
+            case ADSRMode::LIN:
+              env = math::linmap(t, t_a, t_ad, 0.f, 1.f);
+              break;
+            case ADSRMode::EXP:
+              env = std::exp(M_LN2 * (t - t_a)/attack_s) - 1;
+              break;
+            case ADSRMode::LOG:
+              env = std::log((t - t_a)/attack_s*(M_E - 1) + 1);
+              break;
+          }
+        }
+        else if (math::in_range<float>(t, t_ad, t_ds, Range::OpenClosed))
+        {
+          //std::cout << "D";
+          switch (decay.mode)
+          {
+            case ADSRMode::LIN:
+              env = math::linmap(t, t_ad, t_ds, 1.f, sustain_lvl);
+              break;
+            case ADSRMode::EXP:
+              env = (2 - 2.f*sustain_lvl)*std::exp(-M_LN2*(t - t_ad)/decay_s) - (1 - 2.f*sustain_lvl);
+              break;
+            case ADSRMode::LOG:
+              env = std::log(1-(t - t_ad)/decay_s*(1.f-std::exp(sustain_lvl - 1))) + 1;
+              break;
+          }
+        }
+        else if (math::in_range<float>(t, t_ds, t_sr, Range::OpenClosed))
+        {
+          //std::cout << "S";
+          env = sustain_lvl;
+        }
+        else if (math::in_range<float>(t, t_sr, t_r, Range::OpenClosed))
+        {
+          //std::cout << "R";
+          switch (release.mode)
+          {
+            case ADSRMode::LIN:
+              env = math::linmap(t, t_sr, t_r, sustain_lvl, 0.f);
+              break;
+            case ADSRMode::EXP:
+              env = 2.f*sustain_lvl*std::exp(-M_LN2*(t - t_sr)/release_s) - sustain_lvl;
+              break;
+            case ADSRMode::LOG:
+              env = sustain_lvl*(std::log(1-(t - t_sr)/release_s*(1-1./M_E)) + 1);
+              break;
+          }
+        }
+        
+        //std::cout << env << ", ";
+        s *= env;
+      }
+      
+      output.update_duration();
+      return output;
     }
     
     static Waveform resample(const Waveform& wave, float new_sample_rate = 44100.f,
