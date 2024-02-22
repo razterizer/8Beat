@@ -8,6 +8,7 @@
 #pragma once
 #include "Waveform.h"
 #include "Spectrum.h"
+#include "ADSR.h"
 #include "../../lib/Core Lib/MachineLearning/ann_cnn.h"
 #include "../../lib/Core Lib/Math.h"
 #include <complex>
@@ -22,42 +23,6 @@ namespace audio
   enum class GraphType { PLOT_THIN, PLOT_THICK0, PLOT_THICK1, PLOT_THICK2, PLOT_THICK3, FILLED_BOTTOM_UP, FILLED_FROM_T_AXIS };
   enum class Complex2Real { ABS, REAL, IMAG };
   enum class WindowType { HAMMING, HANNING };
-  enum class ADSRMode { LIN, EXP, LOG };
-  
-  struct Attack
-  {
-    Attack(ADSRMode m, float time_ms)
-      : mode(m)
-      , attack_time_ms(time_ms)
-    {}
-    ADSRMode mode = ADSRMode::LIN;
-    float attack_time_ms = 0.f;
-  };
-  struct Decay
-  {
-    Decay(ADSRMode m, float time_ms)
-      : mode(m)
-      , decay_time_ms(time_ms)
-    {}
-    ADSRMode mode = ADSRMode::LIN;
-    float decay_time_ms = 0.f;
-  };
-  struct Sustain
-  {
-    Sustain(float level)
-      : sustain_level(level)
-    {}
-    float sustain_level = 0.f;
-  };
-  struct Release
-  {
-    Release(ADSRMode m, float time_ms)
-      : mode(m)
-      , release_time_ms(time_ms)
-    {}
-    ADSRMode mode = ADSRMode::LIN;
-    float release_time_ms = 0.f;
-  };
   
   class WaveformHelper
   {
@@ -359,11 +324,15 @@ namespace audio
       return output;
     }
     
-    static Waveform envelope_adsr(const Waveform& wave,
-      const Attack& attack, const Decay& decay, const Sustain& sustain, const Release& release)
+    static Waveform envelope_adsr(const Waveform& wave, const ADSR& adsr)
     {
       auto N = wave.buffer.size();
       Waveform output = wave;
+      
+      const auto& attack = adsr.attack;
+      const auto& decay = adsr.decay;
+      const auto& sustain = adsr.sustain;
+      const auto& release = adsr.release;
       
       const float gate_s = output.duration;
       const float attack_s = attack.attack_time_ms * 1e-3f;
@@ -446,6 +415,13 @@ namespace audio
       
       output.update_duration();
       return output;
+    }
+    
+    static Waveform envelope_adsr(const Waveform& wave,
+      const Attack& attack, const Decay& decay, const Sustain& sustain, const Release& release)
+    {
+      ADSR adsr(attack, decay, sustain, release);
+      return envelope_adsr(wave, adsr);
     }
     
     static Waveform resample(const Waveform& wave, float new_sample_rate = 44100.f,
