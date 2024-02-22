@@ -73,7 +73,7 @@ namespace audio
       //std::cout << "minval = " << minval << std::endl;
       //std::cout << "maxval = " << maxval << std::endl;
       
-      conv.duration = calc_duration(conv);
+      conv.update_duration();
       
       return conv;
     }
@@ -106,8 +106,7 @@ namespace audio
       prod.buffer.resize(Ns);
       for (int i = 0; i < Ns; ++i)
         prod.buffer[i] = spec_res_wave.buffer[i] * spec_res_kernel.buffer[i];
-      prod.freq_start = spec_res_wave.freq_start;
-      prod.freq_end = spec_res_wave.freq_end;
+      prod.copy_properties(spec_res_wave);
       
       auto reverb = ifft(prod);
       auto conv_full_size = Nw + Nk - 1;
@@ -116,7 +115,7 @@ namespace audio
       reverb.buffer.resize(conv_full_size);
       reverb.sample_rate = common_sample_rate;
       reverb.frequency = calc_fundamental_frequency(res_wave.frequency, res_kernel.frequency);
-      reverb.duration = calc_duration(reverb);
+      reverb.update_duration();
       
       // Normalize to amplitude max 1 if amplitude > 1.
       normalize_over(reverb);
@@ -274,9 +273,8 @@ namespace audio
         return wave;
       
       Waveform resampled_wave;
-      resampled_wave.frequency = wave.frequency;
+      resampled_wave.copy_properties(wave);
       resampled_wave.sample_rate = new_sample_rate;
-      resampled_wave.duration = wave.duration;
       
       // Calculate the resampling factor
       float resampling_factor = wave.sample_rate / new_sample_rate;
@@ -326,6 +324,8 @@ namespace audio
           // Handle unsupported filter types or provide a default behavior
           break;
       }
+      
+      resampled_wave.update_duration();
       
       return resampled_wave;
     }
