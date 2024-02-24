@@ -36,6 +36,49 @@ namespace audio
   class WaveformHelper
   {
   public:
+    static Waveform mix(const std::vector<std::pair<float, Waveform>>& weighted_waves)
+    {
+      const size_t Nw = weighted_waves.size();
+      size_t Nmin = static_cast<size_t>(-1);
+      std::vector<std::pair<float, Waveform>> res_weighted_waves(weighted_waves.size());
+      float common_sample_rate = 0.f;
+      float frequency = 0.f;
+      float weight_sum = 0.f;
+      for (const auto& ww : weighted_waves)
+      {
+        const auto weight = ww.first;
+        const auto& wave = ww.second;
+        math::maximize(common_sample_rate, wave.sample_rate);
+        frequency += wave.frequency;
+        math::minimize(Nmin, wave.buffer.size());
+        weight_sum += weight;
+      }
+      frequency /= Nw;
+      for (size_t w_idx = 0; w_idx < Nw; ++w_idx)
+      {
+        const auto& ww_i = weighted_waves[w_idx];
+        const auto& wave_i = ww_i.second;
+        auto& ww_o = res_weighted_waves[w_idx];
+        ww_o.first = ww_i.first;
+        ww_o.second = resample(wave_i, common_sample_rate, LowPassFilterType::Butterworth);
+      }
+    
+      Waveform weighted_sum(Nmin, 0.f);
+      weighted_sum.sample_rate = common_sample_rate;
+      weighted_sum.frequency = frequency;
+      
+      for (size_t i = 0; i < Nmin; ++i)
+      {
+        weighted_sum.buffer[i] = 0.f;
+        for (const auto& ww : weighted_waves)
+          weighted_sum.buffer[i] += ww.first * ww.second.buffer[i];
+        weighted_sum.buffer[i] /= weight_sum;
+      }
+      
+      weighted_sum.update_duration();
+      return weighted_sum;
+    }
+  
     static Waveform mix(float t, const Waveform& wave_A, const Waveform& wave_B)
     {
       // Resample both signals to a common sample rate
