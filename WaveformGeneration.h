@@ -8,19 +8,22 @@
 #pragma once
 #include "Waveform.h"
 
-// phi
-#define WAVEFORM_FUNC_ARGS float
+// phi, param
+#define WAVEFORM_FUNC_ARGS float, float
 // t, duration, frequency_0
 #define FREQUENCY_FUNC_ARGS float, float, float
 // t, duration
 #define AMPLITUDE_FUNC_ARGS float, float
+// t, duration
+#define PHASE_FUNC_ARGS float, float
 
 
 namespace audio
 {
-  enum class WaveformType { SINE_WAVE, SQUARE_WAVE, TRIANGLE_WAVE, SAWTOOTH_WAVE, NOISE };
+  enum class WaveformType { SINE_WAVE, SQUARE_WAVE, TRIANGLE_WAVE, SAWTOOTH_WAVE, NOISE, PWM };
   enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP };
-  enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP };
+  enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP, VIBRATO };
+  enum class PhaseType { ZERO };
   
   class WaveformGeneration
   {
@@ -28,17 +31,21 @@ namespace audio
     using WaveformFunc = std::function<float(WAVEFORM_FUNC_ARGS)>;
     using FrequencyFunc = std::function<float(FREQUENCY_FUNC_ARGS)>;
     using AmplitudeFunc = std::function<float(AMPLITUDE_FUNC_ARGS)>;
+    using PhaseFunc = std::function<float(PHASE_FUNC_ARGS)>;
     using WaveformFuncArg = std::variant<WaveformType, WaveformFunc>;
     using FrequencyFuncArg = std::variant<FrequencyType, FrequencyFunc>;
     using AmplitudeFuncArg = std::variant<AmplitudeType, AmplitudeFunc>;
+    using PhaseFuncArg = std::variant<PhaseType, PhaseFunc>;
     
     // Function to generate a simple waveform buffer
     Waveform generate_waveform(const WaveformFuncArg& wave_func_arg = WaveformType::SINE_WAVE,
-                                   float duration = 10.f, float frequency = 440.f,
-                                   const FrequencyFuncArg& freq_func_arg = FrequencyType::CONSTANT,
-                                   const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
-                                   float sample_rate = 44100.f,
-                                   bool verbose = false)
+                               float duration = 10.f, float frequency = 440.f,
+                               const FrequencyFuncArg& freq_func_arg = FrequencyType::CONSTANT,
+                               const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
+                               const PhaseFuncArg& phase_func_arg = PhaseType::ZERO,
+                               float pwm_duty_cycle = 0.5f,
+                               float sample_rate = 44100.f,
+                               bool verbose = false) const
     {
       Waveform wd;
       wd.frequency = frequency;
@@ -55,8 +62,12 @@ namespace audio
       auto wave_func = extract_waveform_func(wave_func_arg, verbose);
       auto freq_func = extract_frequency_func(freq_func_arg, verbose);
       auto ampl_func = extract_amplitude_func(ampl_func_arg, verbose);
+      auto phase_func = extract_phase_func(phase_func_arg, verbose);
       
       double accumulated_frequency = 0.0;
+      
+      float param = 0.f;
+      param = pwm_duty_cycle; // #FIXME: Only set when using PWM waveform.
       
       for (int i = 0; i < buffer_len; ++i)
       {
@@ -68,8 +79,9 @@ namespace audio
         accumulated_frequency += freq_mod;
         
         // Apply phase modulation similar to Octave code
-        float phase_modulation = 2 * M_PI * accumulated_frequency / sample_rate;
-        float sample = ampl_mod * wave_func(phase_modulation);
+        float phi = phase_func(t, duration);
+        float phase_modulation = 2 * M_PI * accumulated_frequency / sample_rate + phi;
+        float sample = ampl_mod * wave_func(phase_modulation, param);
         wd.buffer[i] = sample;
       }
       
@@ -77,7 +89,7 @@ namespace audio
     }
     
   private:
-    WaveformFunc extract_waveform_func(const WaveformFuncArg& wave_func_arg, bool verbose)
+    WaveformFunc extract_waveform_func(const WaveformFuncArg& wave_func_arg, bool verbose) const
     {
       WaveformFunc wave_func = waveform_sine;
       std::visit([&wave_func, this, verbose](auto&& val)
@@ -108,6 +120,9 @@ namespace audio
               wave_func = waveform_noise;
               if (verbose) std::cout << "Waveform: NOISE" << std::endl;
               break;
+            case WaveformType::PWM:
+              wave_func = waveform_pwm;
+              if (verbose) std::cout << "Waveform: PWM" << std::endl;
           }
         }
         else if constexpr (std::is_invocable_v<T, WAVEFORM_FUNC_ARGS>)
@@ -120,7 +135,7 @@ namespace audio
       return wave_func;
     }
     
-    FrequencyFunc extract_frequency_func(const FrequencyFuncArg& freq_func_arg, bool verbose)
+    FrequencyFunc extract_frequency_func(const FrequencyFuncArg& freq_func_arg, bool verbose) const
     {
       FrequencyFunc freq_func = freq_func_constant;
       std::visit([&freq_func, this, verbose](auto&& val)
@@ -151,7 +166,7 @@ namespace audio
       return freq_func;
     }
     
-    AmplitudeFunc extract_amplitude_func(const AmplitudeFuncArg& ampl_func_arg, bool verbose)
+    AmplitudeFunc extract_amplitude_func(const AmplitudeFuncArg& ampl_func_arg, bool verbose) const
     {
       AmplitudeFunc ampl_func = ampl_func_constant;
       std::visit([&ampl_func, this, verbose](auto&& val)
@@ -170,6 +185,10 @@ namespace audio
               ampl_func = ampl_func_jet_engine_powerup;
               if (verbose) std::cout << "Amplitude: JET_ENGINE_POWERUP" << std::endl;
               break;
+            case AmplitudeType::VIBRATO:
+              ampl_func = ampl_func_vibrato;
+              if (verbose) std::cout << "Amplitude: VIBRATO" << std::endl;
+              break;
           }
         }
         else if constexpr (std::is_invocable_v<T, AMPLITUDE_FUNC_ARGS>)
@@ -182,16 +201,43 @@ namespace audio
       return ampl_func;
     }
     
+    PhaseFunc extract_phase_func(const PhaseFuncArg& phase_func_arg, bool verbose) const
+    {
+      PhaseFunc phase_func = phase_func_zero;
+      std::visit([&phase_func, this, verbose](auto&& val)
+                 {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, PhaseType>)
+        {
+          // Handle enum class case
+          switch (val)
+          {
+            case PhaseType::ZERO:
+              phase_func = phase_func_zero;
+              if (verbose) std::cout << "Phase: ZERO" << std::endl;
+              break;
+          }
+        }
+        else if constexpr (std::is_invocable_v<T, PHASE_FUNC_ARGS>)
+        {
+          // Handle std::function case
+          phase_func = val;
+          if (verbose) std::cout << "Phase: Custom" << std::endl;
+        }
+      }, phase_func_arg);
+      return phase_func;
+    }
+    
     // /////////////////////
     // Waveform Functions //
     // /////////////////////
-    const WaveformFunc waveform_sine = [](float phi) -> float
+    const WaveformFunc waveform_sine = [](float phi, float /*param*/) -> float
     {
       //return args.amplitude * std::sin(2 * M_PI * args.frequency * t);
       return std::sin(phi);
     };
     
-    const WaveformFunc waveform_square = [](float phi) -> float
+    const WaveformFunc waveform_square = [](float phi, float /*param*/) -> float
     {
 #if false
       float f = args.frequency;
@@ -206,7 +252,7 @@ namespace audio
         return -1.f;
     };
     
-    const WaveformFunc waveform_triangle = [](float phi) -> float
+    const WaveformFunc waveform_triangle = [](float phi, float /*param*/) -> float
     {
 #if false
       float f = args.frequency;
@@ -221,7 +267,7 @@ namespace audio
         return math::lerp(2*a-1, +1.f, -1.f);
     };
     
-    const WaveformFunc waveform_sawtooth = [](float phi) -> float
+    const WaveformFunc waveform_sawtooth = [](float phi, float /*param*/) -> float
     {
 #if false
       float f = args.frequency;
@@ -233,9 +279,19 @@ namespace audio
       return 2*a-1;
     };
     
-    const WaveformFunc waveform_noise = [](float phi) -> float
+    const WaveformFunc waveform_noise = [](float phi, float /*param*/) -> float
     {
       return rnd::rand()*2.0f - 1.0f;
+    };
+    
+    const WaveformFunc waveform_pwm = [](float phi, float param) -> float
+    {
+      auto duty_cycle = param;
+      auto a = std::fmod(phi / (2*M_PI), 1.f);
+      if (0 <= a && a < duty_cycle)
+        return +1.f;
+      else
+        return 0.f;
     };
     
     // //////////////////////
@@ -263,8 +319,21 @@ namespace audio
     {
       return math::linmap(t, 0.f, duration, 0.f, rnd::rand());
     };
-
     
+    const AmplitudeFunc ampl_func_vibrato = [](float t, float duration)
+    {
+      return 0.8f + 0.2f*std::sin(2*M_PI*2.2f*t*(1 + std::min(0.8f, 0.4f*t)));
+    };
+    
+    // //////////////////
+    // Phase Functions //
+    // //////////////////
+    
+    const PhaseFunc phase_func_zero = [](float t, float duration)
+    {
+      return 0.f;
+    };
+
   };
   
 }
