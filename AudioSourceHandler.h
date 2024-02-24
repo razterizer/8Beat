@@ -180,10 +180,10 @@ namespace audio
       if (it != m_sources.end())
       {
         // Stop playing the source
-        (*it)->stop();
+        source->stop();
         
         // Detach buffer from the source
-        (*it)->detach();
+        source->detach();
         
         // Erase the source from the vector
         m_sources.erase(it, m_sources.end());
