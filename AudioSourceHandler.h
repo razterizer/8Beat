@@ -30,10 +30,47 @@ namespace audio
   class AudioSource
   {
   public:
-    AudioSource(ALuint sourceID, float dur_s)
-      : m_sourceID(sourceID)
-      , duration_s(dur_s)
+    AudioSource(const Waveform& wave)
+      : m_duration_s(wave.duration)
     {
+      m_sourceID = 0;
+      
+      // Generate OpenAL source
+      alGenSources(1, &m_sourceID);
+      
+      // Set source parameters (adjust as needed)
+      alSourcef(m_sourceID, AL_PITCH, 1.0f);
+      alSourcef(m_sourceID, AL_GAIN, 1.0f);
+      alSource3f(m_sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
+      alSource3f(m_sourceID, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+      alSourcei(m_sourceID, AL_LOOPING, AL_FALSE); // Adjust as needed
+      
+      // Generate OpenAL buffer
+      ALuint bufferID = 0;
+      alGenBuffers(1, &bufferID);
+      
+      // Load buffer data
+      //alIsExtensionPresent("AL_EXT_float32");
+      m_buffer_i.resize(wave.buffer.size());
+      int N = static_cast<int>(wave.buffer.size());
+      for (int i = 0; i < N; ++i)
+      {
+        m_buffer_i[i] = static_cast<short>(c_amplitude_0 * wave.buffer[i]);
+        m_buffer_i[i] = std::max<short>(-c_amplitude_0, m_buffer_i[i]);
+        m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
+      }
+      alBufferData(bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), static_cast<ALsizei>(N * sizeof(float)), wave.sample_rate);
+      
+      // Attach buffer to source
+      alSourcei(m_sourceID, AL_BUFFER, bufferID);
+      
+      // Check for errors
+      ALenum error = alGetError();
+      if (error != AL_NO_ERROR)
+      {
+        // Handle error
+        std::cerr << "Error creating audio source: " << alGetString(error) << std::endl;
+      }
     }
     
     ~AudioSource()
@@ -94,7 +131,8 @@ namespace audio
     
   private:
     ALuint m_sourceID = 0;
-    float duration_s = 0.f;
+    float m_duration_s = 0.f;
+    std::vector<short> m_buffer_i;
   };
   
   class AudioSourceHandler
@@ -129,51 +167,10 @@ namespace audio
     }
     
     // Function to create a sound source with programmatically created buffer
-    AudioSource* create_source_from_waveform(const Waveform& wd)
+    AudioSource* create_source_from_waveform(const Waveform& wave)
     {
-      ALuint sourceID = 0;
-      
-      // Generate OpenAL source
-      alGenSources(1, &sourceID);
-      
-      // Set source parameters (adjust as needed)
-      alSourcef(sourceID, AL_PITCH, 1.0f);
-      alSourcef(sourceID, AL_GAIN, 1.0f);
-      alSource3f(sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
-      alSource3f(sourceID, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-      alSourcei(sourceID, AL_LOOPING, AL_FALSE); // Adjust as needed
-      
-      // Generate OpenAL buffer
-      ALuint bufferID = 0;
-      alGenBuffers(1, &bufferID);
-      
-      // Load buffer data
-      //alIsExtensionPresent("AL_EXT_float32");
-      std::vector<short> buffer_i;
-      buffer_i.resize(wd.buffer.size());
-      int N = static_cast<int>(wd.buffer.size());
-      for (int i = 0; i < N; ++i)
-      {
-        buffer_i[i] = static_cast<short>(c_amplitude_0 * wd.buffer[i]);
-        buffer_i[i] = std::max<short>(-c_amplitude_0, buffer_i[i]);
-        buffer_i[i] = std::min<short>(+c_amplitude_0, buffer_i[i]);
-      }
-      alBufferData(bufferID, AL_FORMAT_MONO16, buffer_i.data(), static_cast<ALsizei>(N * sizeof(float)), wd.sample_rate);
-      
-      // Attach buffer to source
-      alSourcei(sourceID, AL_BUFFER, bufferID);
-      
-      // Check for errors
-      ALenum error = alGetError();
-      if (error != AL_NO_ERROR)
-      {
-        // Handle error
-        std::cerr << "Error creating audio source: " << alGetString(error) << std::endl;
-        return nullptr;
-      }
-      
       // Store the source in the vector
-      m_sources.push_back(std::make_unique<AudioSource>(sourceID, wd.duration));
+      m_sources.push_back(std::make_unique<AudioSource>(wave));
       
       return m_sources.back().get();
     }
