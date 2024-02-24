@@ -103,12 +103,14 @@ namespace audio
       if (m_device == nullptr)
       {
         // Handle error: Unable to open audio device
+        std::cerr << "ERROR: Unable to open audio device in AudioSourceHandler().\n";
       }
       
       m_context = alcCreateContext(m_device, nullptr);
       if (m_context == nullptr)
       {
         // Handle error: Unable to create audio context
+        std::cerr << "ERROR: Unable to create audio context in AudioSourceHandler().\n";
       }
       
       alcMakeContextCurrent(m_context);
