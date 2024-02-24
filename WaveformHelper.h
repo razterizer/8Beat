@@ -265,7 +265,7 @@ namespace audio
       if (max_val > amplitude_limit)
       {
         for (auto& s : wd.buffer)
-          s /= max_val * amplitude_limit;
+          s *= amplitude_limit / max_val;
       }
     }
     
