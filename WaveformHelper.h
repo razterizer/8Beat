@@ -278,11 +278,17 @@ namespace audio
     }
     
     // Scale so that max_amplitude = scale.
-    static void scale(Waveform& wd, float scale = 1.f)
+    static void normalize_scale(Waveform& wd, float scale = 1.f)
     {
       auto [_, max_val] = find_min_max(wd, true);
       for (auto& s : wd.buffer)
-        s /= max_val * scale;
+        s *= scale / max_val;
+    }
+    
+    static void scale(Waveform& wd, float scale = 1.f)
+    {
+      for (auto& s : wd.buffer)
+        s *= scale;
     }
     
     static Waveform fir_moving_average(const Waveform& wave, int window_size, bool preserve_amplitude)
