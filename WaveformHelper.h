@@ -46,7 +46,7 @@ namespace audio
       const auto Nmin = std::min(res_A.buffer.size(), res_A.buffer.size());
       Waveform sum(Nmin, 0.f);
       sum.sample_rate = common_sample_rate;
-      sum.frequency = res_A.frequency + res_B.frequency;
+      sum.frequency = (res_A.frequency + res_B.frequency)*0.5f;
       
       for (size_t i = 0; i < Nmin; ++i)
         sum.buffer[i] = math::lerp(t, res_A.buffer[i], res_B.buffer[i]);
