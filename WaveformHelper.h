@@ -24,6 +24,15 @@ namespace audio
   enum class Complex2Real { ABS, REAL, IMAG };
   enum class WindowType { HAMMING, HANNING };
   
+  struct LowPassFilterArgs
+  {
+    LowPassFilterType filter_type = LowPassFilterType::NONE;
+    int filter_order = 1;
+    float cutoff_freq_multiplier = 2.5f;
+    float ripple = 0.1f;
+  };
+  
+  
   class WaveformHelper
   {
   public:
@@ -482,7 +491,31 @@ namespace audio
         + fraction * wave.buffer[index + 1];
       }
       
-      float cutoff_frequency = cutoff_freq_multiplier * resampled_wave.frequency;
+      auto filtered_wave = filter_low_pass(resampled_wave, filter_type,
+        filter_order, cutoff_freq_multiplier, ripple);
+      
+      filtered_wave.update_duration();
+      return filtered_wave;
+    }
+    
+    static Waveform filter_low_pass(const Waveform& wave, const LowPassFilterArgs& args)
+    {
+      return filter_low_pass(wave,
+        args.filter_type,
+        args.filter_order,
+        args.cutoff_freq_multiplier,
+        args.ripple);
+    }
+    
+    static Waveform filter_low_pass(const Waveform& wave,
+                                    LowPassFilterType filter_type = LowPassFilterType::Butterworth,
+                                    int filter_order = 1,
+                                    float cutoff_freq_multiplier = 2.5f,
+                                    float ripple = 0.1f)
+    {
+      auto filtered_wave = wave;
+      
+      float cutoff_frequency = cutoff_freq_multiplier * wave.frequency;
       
       // Apply the specified low-pass filter
       switch (filter_type)
@@ -490,15 +523,15 @@ namespace audio
         case LowPassFilterType::NONE:
           break;
         case LowPassFilterType::Butterworth:
-          apply_Butterworth_low_pass_filter(resampled_wave.buffer, filter_order, cutoff_frequency, new_sample_rate);
+          apply_Butterworth_low_pass_filter(filtered_wave.buffer, filter_order, cutoff_frequency, wave.sample_rate);
           break;
           
         case LowPassFilterType::ChebyshevTypeI:
-          apply_ChebyshevI_low_pass_filter(resampled_wave.buffer, filter_order, cutoff_frequency, new_sample_rate, ripple);
+          apply_ChebyshevI_low_pass_filter(filtered_wave.buffer, filter_order, cutoff_frequency, wave.sample_rate, ripple);
           break;
           
         case LowPassFilterType::ChebyshevTypeII:
-          apply_ChebyshevII_low_pass_filter(resampled_wave.buffer, filter_order, cutoff_frequency, new_sample_rate, ripple);
+          apply_ChebyshevII_low_pass_filter(filtered_wave.buffer, filter_order, cutoff_frequency, wave.sample_rate, ripple);
           break;
           
           // Add more cases for other filter types if needed
@@ -508,9 +541,7 @@ namespace audio
           break;
       }
       
-      resampled_wave.update_duration();
-      
-      return resampled_wave;
+      return filtered_wave;
     }
     
     static void print_waveform_graph(const Waveform& wave, GraphType type,
