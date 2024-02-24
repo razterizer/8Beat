@@ -46,9 +46,13 @@ namespace audio
     {
       alSourcePlay(m_sourceID);
       
-      auto tol = 1e4f; //1e5f;
+      auto tol = 1e3f; //1e4f; //1e5f;
       if (do_sleep)
-        Delay::sleep(duration_s*1e6f + tol);
+      {
+        Delay::sleep(m_duration_s*1e6f);
+        stop();
+        Delay::sleep(tol);
+      }
     }
     
     bool is_playing() const
