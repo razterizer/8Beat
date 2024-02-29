@@ -343,6 +343,15 @@ namespace audio
         s *= scale;
     }
     
+    static void clamp(Waveform& wd, float min = -1.f, float max = +1.f)
+    {
+      for (auto& s : wd.buffer)
+        if (s > max)
+          s = max;
+        else if (s < min)
+          s = min;
+    }
+    
     static Waveform fir_moving_average(const Waveform& wave, int window_size, bool preserve_amplitude)
     {
       auto N = static_cast<int>(wave.buffer.size());
