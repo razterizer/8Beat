@@ -173,7 +173,7 @@ namespace audio
       AudioSourceBase::play(playback_mode);
     }
     
-    void update_stream(int num_stream_samples)
+    void update_buffer(int num_stream_samples)
     {
       if (m_listener == nullptr)
         return;
@@ -192,10 +192,13 @@ namespace audio
       
       m_duration_s = t;
       
+      alDeleteBuffers(1, &m_bufferID);
+      alGenBuffers(1, &m_bufferID);
+      
       alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), num_stream_samples * sizeof(short), m_sample_rate);
     }
     
-    void update_stream(const Waveform& wave)
+    void update_buffer(const Waveform& wave)
     {
       auto Ns = static_cast<int>(wave.buffer.size());
       m_buffer_i.resize(Ns);
@@ -211,6 +214,9 @@ namespace audio
       }
       
       m_duration_s = wave.duration;
+      
+      alDeleteBuffers(1, &m_bufferID);
+      alGenBuffers(1, &m_bufferID);
       
       alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), Ns * sizeof(short), m_sample_rate);
     }
