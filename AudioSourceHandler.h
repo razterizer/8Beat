@@ -265,6 +265,11 @@ namespace audio
         std::make_unique<AudioStreamSource>(listener, sample_rate)).get();
     }
     
+    AudioStreamSource* create_stream_source()
+    {
+      return m_stream_sources.emplace_back(std::make_unique<AudioStreamSource>()).get();
+    }
+    
     void remove_source(AudioSource* source)
     {
       auto it = std::remove_if(m_sources.begin(), m_sources.end(),
