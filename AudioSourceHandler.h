@@ -38,6 +38,21 @@ namespace audio
     float m_duration_s = 0.f;
     
   public:
+    AudioSourceBase()
+    {
+      // Generate OpenAL source
+      alGenSources(1, &m_sourceID);
+      
+      // Generate OpenAL buffer
+      alGenBuffers(1, &m_bufferID);
+    }
+    virtual ~AudioSourceBase()
+    {
+      // Clean up OpenAL source
+      alDeleteSources(1, &m_sourceID);
+      alDeleteBuffers(1, &m_bufferID);
+    }
+  
     virtual void play(PlaybackMode playback_mode = PlaybackMode::NONE)
     {
       alSourcePlay(m_sourceID);
@@ -100,12 +115,6 @@ namespace audio
   public:
     AudioSource(const Waveform& wave)
     {
-      // Generate OpenAL source
-      alGenSources(1, &m_sourceID);
-      
-      // Generate OpenAL buffer
-      alGenBuffers(1, &m_bufferID);
-      
       // Set source parameters (adjust as needed)
       alSourcef(m_sourceID, AL_PITCH, 1.0f);
       alSourcef(m_sourceID, AL_GAIN, 1.0f);
@@ -140,13 +149,6 @@ namespace audio
       }
     }
     
-    ~AudioSource()
-    {
-      // Clean up OpenAL source
-      alDeleteSources(1, &m_sourceID);
-      alDeleteBuffers(1, &m_bufferID);
-    }
-    
   private:
     std::vector<short> m_buffer_i;
   };
@@ -160,18 +162,9 @@ namespace audio
   {
   public:
     AudioStreamSource(AudioStreamListener* listener, int sample_rate)
-    : m_listener(listener),
-    m_sample_rate(sample_rate)
-    {
-      alGenSources(1, &m_sourceID);
-      alGenBuffers(1, &m_bufferID);
-    }
-    
-    ~AudioStreamSource()
-    {
-      alDeleteSources(1, &m_sourceID);
-      alDeleteBuffers(1, &m_bufferID);
-    }
+      : m_listener(listener)
+      , m_sample_rate(sample_rate)
+    {}
     
     virtual void play(PlaybackMode playback_mode = PlaybackMode::NONE) override
     {
