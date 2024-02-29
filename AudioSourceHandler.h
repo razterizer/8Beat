@@ -197,13 +197,16 @@ namespace audio
       m_buffer_i.resize(num_stream_samples);
       
       float dt = 1./m_sample_rate;
+      float t = 0.f;
       for (int i = 0; i < num_stream_samples; ++i)
       {
-        float t = i * dt;
+        t = i * dt;
         m_buffer_i[i] = static_cast<short>(c_amplitude_0 * m_listener->on_get_sample(t));
         m_buffer_i[i] = std::max<short>(-c_amplitude_0, m_buffer_i[i]);
         m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
       }
+      
+      m_duration_s = t;
       
       alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), num_stream_samples * sizeof(short), m_sample_rate);
     }
@@ -212,6 +215,7 @@ namespace audio
     ALuint m_sourceID = 0;
     ALuint m_bufferID = 0;
     int m_sample_rate = 44100;
+    float m_duration_s = 0.f;
     AudioStreamListener* m_listener = nullptr;
     std::vector<short> m_buffer_i;
   };
