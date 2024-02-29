@@ -460,9 +460,10 @@ namespace audio
       const float release_s = release.release_time_ms * 1e-3f;
       
       const float t_a = 0.f;
-      const float t_ad = std::min(gate_s - release_s, attack_s);
-      const float t_ds = std::min(gate_s - release_s, attack_s + decay_s);
-      const float t_sr = std::max(t_ds, gate_s - release_s); //gate_ms - attack_ms - decay_ms - release_ms;
+      const float t_adr = std::max(gate_s - release_s, 0.f);
+      const float t_ad = std::min(t_adr, attack_s);
+      const float t_ds = std::min(t_adr, attack_s + decay_s);
+      const float t_sr = std::max(t_ds, t_adr); //gate_ms - attack_ms - decay_ms - release_ms;
       const float t_r = gate_s;
       
       float dt = calc_dt(wave);
