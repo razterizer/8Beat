@@ -628,6 +628,8 @@ namespace audio
           break;
       }
       
+      clamp(filtered_wave);
+      
       return filtered_wave;
     }
     
