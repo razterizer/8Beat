@@ -166,15 +166,24 @@ namespace audio
       alDeleteBuffers(1, &m_bufferID);
     }
     
-    void play()
+    void play(PlaybackMode playback_mode = PlaybackMode::NONE)
     {
       alSourcei(m_sourceID, AL_BUFFER, m_bufferID);
       alSourcePlay(m_sourceID);
-      do
+      
+      switch (playback_mode)
       {
-        
+        case PlaybackMode::NONE:
+          break;
+        case PlaybackMode::SLEEP:
+          Delay::sleep(m_duration_s*1e6f);
+          break;
+        case PlaybackMode::STATE_WAIT:
+          do
+          {
+          } while (is_playing());
+          break;
       }
-      while (is_playing());
     }
     
     bool is_playing() const
