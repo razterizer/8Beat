@@ -161,6 +161,7 @@ namespace audio
   class AudioStreamSource : public AudioSourceBase
   {
   public:
+    AudioStreamSource() = default;
     AudioStreamSource(AudioStreamListener* listener, int sample_rate)
       : m_listener(listener)
       , m_sample_rate(sample_rate)
