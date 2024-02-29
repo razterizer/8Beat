@@ -32,8 +32,8 @@ namespace audio
     }
     ~ChipTuneEngine()
     {
-      for (const auto& note : m_tune)
-        m_audio_handler.remove_source(note.src);
+      for (const auto& voice : m_voices)
+        m_audio_handler.remove_source(voice.src);
     }
 
     // Load tune from a text file with a specific format
@@ -53,27 +53,10 @@ namespace audio
         parse_line(line);
       }
       
-      if (!m_tune.empty())
-      {
-        // Old format:
-        for (auto& note : m_tune)
-        {
-          // Create a waveform for the note
-          note.wave = m_waveform_gen.generate_waveform(WaveformType::SINE_WAVE,
-            note.duration_ms / 1000.f,
-            note.frequency);
-
-          // Create an audio source from the waveform
-          note.src = m_audio_handler.create_source_from_waveform(note.wave);
-        }
-      }
-      else
-      {
-        std::cout << "Creating Instruments" << std::endl;
-        create_instruments();
-        std::cout << "Initializing Sources" << std::endl;
-        init_voice_sources();
-      }
+      std::cout << "Creating Instruments" << std::endl;
+      create_instruments();
+      std::cout << "Initializing Sources" << std::endl;
+      init_voice_sources();
 
       return true;
     }
@@ -82,32 +65,24 @@ namespace audio
     void play_tune()
     {
       std::cout << "Playing Tune" << std::endl;
-      if (!m_tune.empty())
+      auto num_notes = static_cast<int>(m_voices[0].notes.size());
+      for (int note_idx = 0; note_idx < num_notes; ++note_idx)
       {
-        for (const auto& note : m_tune)
-          play_note(note, PlaybackMode::STATE_WAIT);
-      }
-      else
-      {
-        auto num_notes = static_cast<int>(m_voices[0].notes.size());
-        for (int note_idx = 0; note_idx < num_notes; ++note_idx)
+        for (const auto& voice : m_voices)
         {
-          for (const auto& voice : m_voices)
+          auto* note = voice.notes[note_idx].get();
+          if (voice.src != nullptr)
           {
-            auto* note = voice.notes[note_idx].get();
-            if (voice.src != nullptr)
+            // #FIXME: Use streaming audio source.
+            if (!note->pause && !voice.src->is_playing())
             {
-              // #FIXME: Use streaming audio source.
-              if (!note->pause && !voice.src->is_playing())
-              {
-                voice.src->update_buffer(note->wave);
-                voice.src->set_volume(note->volume);
-                voice.src->play(PlaybackMode::NONE);
-              }
+              voice.src->update_buffer(note->wave);
+              voice.src->set_volume(note->volume);
+              voice.src->play(PlaybackMode::NONE);
             }
           }
-          Delay::sleep(time_step_ms*1e3f);
         }
+        Delay::sleep(time_step_ms*1e3f);
       }
     }
     
@@ -148,7 +123,6 @@ namespace audio
       float frequency = 0.f;
       float duration_ms = 0.f;
       Waveform wave;
-      AudioSource* src = nullptr; // #NOTE: For legacy.
       int instrument_basic_idx = -1;
       int instrument_ring_mod_idx = -1;
       int instrument_weight_avg_idx = -1;
@@ -159,7 +133,6 @@ namespace audio
     {
       std::string name;
       WaveformType waveform = WaveformType::SINE_WAVE;
-      //
       float duty_cycle = 0.5f;
       int adsr_idx = -1;
       int flp_idx = -1;
@@ -196,17 +169,9 @@ namespace audio
       AudioStreamSource* src = nullptr;
       std::vector<std::unique_ptr<Note>> notes;
     };
-    //enum class InstrType { BASIC, RING_MOD, WEIGHT_AVG, LIB };
-    //struct Instrument
-    //{
-    //  std::string name;
-    //  InstrType type = InstrType::BASIC;
-    //  Waveform wave;
-    //};
 
     AudioSourceHandler& m_audio_handler;
     const WaveformGeneration& m_waveform_gen;
-    std::vector<Note> m_tune;
     std::vector<InstrumentBasic> m_instruments_basic;
     std::vector<InstrumentRingMod> m_instruments_ring_mod;
     std::vector<InstrumentWeightAvg> m_instruments_weight_avg;
@@ -250,19 +215,6 @@ namespace audio
         }
         else
           std::cerr << "Error parsing instrument line: " << line << std::endl;
-      }
-      else if (!line.empty() && line[0] != ';' && line[0] != '#')
-      {
-        // Old format:
-        float frequency, duration;
-        if (iss >> frequency >> duration)
-        {
-          auto& note = m_tune.emplace_back();
-          note.frequency = frequency;
-          note.duration_ms = duration;
-        }
-        else
-          std::cerr << "Error parsing line: " << line << std::endl;
       }
     }
     
@@ -353,18 +305,7 @@ namespace audio
         
         auto& instr = m_instruments_lib.emplace_back();
         instr.name = instrument_name;
-        
-        /*
-         PIANO,
-         VIOLIN,
-         ORGAN,
-         TRUMPET,
-         FLUTE,
-         KICKDRUM,
-         SNAREDRUM,
-         HIHAT,
-         ANVIL,
-         */
+
         if (lib_instrument == "PIANO")
           instr.lib_instrument = InstrumentType::PIANO;
         else if (lib_instrument == "VIOLIN")
@@ -833,13 +774,6 @@ namespace audio
         // #FIXME: Use streamed audio source
         voice.src = m_audio_handler.create_stream_source();
       }
-    }
-
-    void play_note(const Note& note, PlaybackMode playback_mode = PlaybackMode::NONE)
-    {
-      // Play the source
-      if (note.src != nullptr)
-        note.src->play(playback_mode);
     }
     
     std::thread audio_thread;
