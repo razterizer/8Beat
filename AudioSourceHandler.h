@@ -30,58 +30,15 @@ namespace audio
   enum class PlaybackMode { NONE, SLEEP, STATE_WAIT };
   const float c_amplitude_0 = 32767.f;
   
-  class AudioSource
+  class AudioSourceBase
   {
+  protected:
+    ALuint m_sourceID = 0;
+    ALuint m_bufferID = 0;
+    float m_duration_s = 0.f;
+    
   public:
-    AudioSource(const Waveform& wave)
-      : m_duration_s(wave.duration)
-    {
-      // Generate OpenAL source
-      alGenSources(1, &m_sourceID);
-      
-      // Set source parameters (adjust as needed)
-      alSourcef(m_sourceID, AL_PITCH, 1.0f);
-      alSourcef(m_sourceID, AL_GAIN, 1.0f);
-      alSource3f(m_sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
-      alSource3f(m_sourceID, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-      alSourcei(m_sourceID, AL_LOOPING, AL_FALSE); // Adjust as needed
-      
-      // Generate OpenAL buffer
-      alGenBuffers(1, &m_bufferID);
-      
-      // Load buffer data
-      //alIsExtensionPresent("AL_EXT_float32");
-      m_buffer_i.resize(wave.buffer.size());
-      int N = static_cast<int>(wave.buffer.size());
-      for (int i = 0; i < N; ++i)
-      {
-        m_buffer_i[i] = static_cast<short>(c_amplitude_0 * wave.buffer[i]);
-        m_buffer_i[i] = std::max<short>(-c_amplitude_0, m_buffer_i[i]);
-        m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
-      }
-      
-      alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), static_cast<ALsizei>(N * sizeof(short)), wave.sample_rate);
-      
-      // Attach buffer to source
-      alSourcei(m_sourceID, AL_BUFFER, m_bufferID);
-      
-      // Check for errors
-      ALenum error = alGetError();
-      if (error != AL_NO_ERROR)
-      {
-        // Handle error
-        std::cerr << "Error creating audio source: " << alGetString(error) << std::endl;
-      }
-    }
-    
-    ~AudioSource()
-    {
-      // Clean up OpenAL source
-      alDeleteSources(1, &m_sourceID);
-      alDeleteBuffers(1, &m_bufferID);
-    }
-    
-    void play(PlaybackMode playback_mode = PlaybackMode::NONE)
+    virtual void play(PlaybackMode playback_mode = PlaybackMode::NONE)
     {
       alSourcePlay(m_sourceID);
       
@@ -136,11 +93,61 @@ namespace audio
     {
       alSourcei(m_sourceID, AL_BUFFER, 0);
     }
+  };
+  
+  class AudioSource : public AudioSourceBase
+  {
+  public:
+    AudioSource(const Waveform& wave)
+    {
+      // Generate OpenAL source
+      alGenSources(1, &m_sourceID);
+      
+      // Generate OpenAL buffer
+      alGenBuffers(1, &m_bufferID);
+      
+      // Set source parameters (adjust as needed)
+      alSourcef(m_sourceID, AL_PITCH, 1.0f);
+      alSourcef(m_sourceID, AL_GAIN, 1.0f);
+      alSource3f(m_sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
+      alSource3f(m_sourceID, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+      alSourcei(m_sourceID, AL_LOOPING, AL_FALSE); // Adjust as needed
+      
+      m_duration_s = wave.duration;
+      
+      // Load buffer data
+      //alIsExtensionPresent("AL_EXT_float32");
+      m_buffer_i.resize(wave.buffer.size());
+      int N = static_cast<int>(wave.buffer.size());
+      for (int i = 0; i < N; ++i)
+      {
+        m_buffer_i[i] = static_cast<short>(c_amplitude_0 * wave.buffer[i]);
+        m_buffer_i[i] = std::max<short>(-c_amplitude_0, m_buffer_i[i]);
+        m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
+      }
+      
+      alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), static_cast<ALsizei>(N * sizeof(short)), wave.sample_rate);
+      
+      // Attach buffer to source
+      alSourcei(m_sourceID, AL_BUFFER, m_bufferID);
+      
+      // Check for errors
+      ALenum error = alGetError();
+      if (error != AL_NO_ERROR)
+      {
+        // Handle error
+        std::cerr << "Error creating audio source: " << alGetString(error) << std::endl;
+      }
+    }
+    
+    ~AudioSource()
+    {
+      // Clean up OpenAL source
+      alDeleteSources(1, &m_sourceID);
+      alDeleteBuffers(1, &m_bufferID);
+    }
     
   private:
-    ALuint m_sourceID = 0;
-    ALuint m_bufferID = 0;
-    float m_duration_s = 0.f;
     std::vector<short> m_buffer_i;
   };
   
@@ -149,7 +156,7 @@ namespace audio
     virtual float on_get_sample(float /*t*/) const = 0;
   };
   
-  class AudioStreamSource
+  class AudioStreamSource : public AudioSourceBase
   {
   public:
     AudioStreamSource(AudioStreamListener* listener, int sample_rate)
@@ -166,39 +173,10 @@ namespace audio
       alDeleteBuffers(1, &m_bufferID);
     }
     
-    void play(PlaybackMode playback_mode = PlaybackMode::NONE)
+    virtual void play(PlaybackMode playback_mode = PlaybackMode::NONE) override
     {
       alSourcei(m_sourceID, AL_BUFFER, m_bufferID);
-      alSourcePlay(m_sourceID);
-      
-      switch (playback_mode)
-      {
-        case PlaybackMode::NONE:
-          break;
-        case PlaybackMode::SLEEP:
-          Delay::sleep(m_duration_s*1e6f);
-          break;
-        case PlaybackMode::STATE_WAIT:
-          do
-          {
-          } while (is_playing());
-          break;
-      }
-    }
-    
-    bool is_playing() const
-    {
-      ALint state;
-      alGetSourcei(m_sourceID, AL_SOURCE_STATE, &state);
-      return state == AL_PLAYING;
-    }
-    
-    void stop() {}
-    void detach() {}
-    
-    void set_volume(float volume)
-    {
-      alSourcef(m_sourceID, AL_GAIN, volume);
+      AudioSourceBase::play(playback_mode);
     }
     
     void update_stream(int num_stream_samples)
@@ -221,10 +199,7 @@ namespace audio
     }
     
   private:
-    ALuint m_sourceID = 0;
-    ALuint m_bufferID = 0;
     int m_sample_rate = 44100;
-    float m_duration_s = 0.f;
     AudioStreamListener* m_listener = nullptr;
     std::vector<short> m_buffer_i;
   };
