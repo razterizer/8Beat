@@ -174,6 +174,9 @@ namespace audio
     
     void update_stream(int num_stream_samples)
     {
+      if (m_listener == nullptr)
+        return;
+    
       m_buffer_i.resize(num_stream_samples);
       
       float dt = 1./m_sample_rate;
