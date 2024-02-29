@@ -60,12 +60,13 @@ namespace audio
     static Waveform synthesize(InstrumentType instr,
       const WaveformGeneration& wave_gen,
       float duration_s, float frequency_Hz,
-      bool vibrato = false)
+      FrequencyType frequency_effect = FrequencyType::CONSTANT,
+      AmplitudeType amplitude_effect = AmplitudeType::CONSTANT,
+      PhaseType phase_effect = PhaseType::ZERO)
     {
       ADSR adsr;
       Waveform noise, square, triangle, sine;
       std::vector<std::pair<float, Waveform>> wave_comp; // {{ Weight, Waveform }}
-      auto amplitude_func = vibrato ? AmplitudeType::VIBRATO : AmplitudeType::CONSTANT;
       int num_harmonics = 6;
       float tot_harmonics_ampl = 0.f;
       LowPassFilterArgs final_low_pass_filter_args;
@@ -86,7 +87,7 @@ namespace audio
         case InstrumentType::VIOLIN:
           adsr = adsr_presets::VIOLIN_0;
           wave_comp.emplace_back(0.5f, wave_gen.generate_waveform(WaveformType::SAWTOOTH_WAVE,
-            duration_s, frequency_Hz, FrequencyType::CONSTANT, amplitude_func));
+            duration_s, frequency_Hz, frequency_effect, amplitude_effect, phase_effect));
           wave_comp.emplace_back(0.3f, wave_gen.generate_waveform(WaveformType::SQUARE_WAVE,
             duration_s, frequency_Hz));
           noise = wave_gen.generate_waveform(WaveformType::NOISE, duration_s);
@@ -100,14 +101,14 @@ namespace audio
           break;
         case InstrumentType::ORGAN:
           adsr = adsr_presets::ORGAN_0;
-          wave_comp.emplace_back(0.5f, wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, frequency_Hz, FrequencyType::CONSTANT, amplitude_func, [](float t, float) { return 25.f*t; }));
+          wave_comp.emplace_back(0.5f, wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, frequency_Hz, frequency_effect, amplitude_effect, [](float t, float) { return 25.f*t; }));
           wave_comp.emplace_back(0.3f, wave_gen.generate_waveform(WaveformType::SQUARE_WAVE, duration_s, 2*frequency_Hz, FrequencyType::CONSTANT, AmplitudeType::CONSTANT, [](float t, float) { return 30.f*t; }));
           wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::TRIANGLE_WAVE, duration_s, 3*frequency_Hz));
           wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::SAWTOOTH_WAVE, duration_s, 4*frequency_Hz));
           break;
         case InstrumentType::TRUMPET:
           adsr = adsr_presets::TRUMPET_0;
-          wave_comp.emplace_back(0.7f, wave_gen.generate_waveform(WaveformType::PWM, duration_s, frequency_Hz, FrequencyType::CONSTANT, amplitude_func, PhaseType::ZERO, 0.1f));
+          wave_comp.emplace_back(0.7f, wave_gen.generate_waveform(WaveformType::PWM, duration_s, frequency_Hz, frequency_effect, amplitude_effect, phase_effect, 0.1f));
           wave_comp.emplace_back(0.2f, wave_gen.generate_waveform(WaveformType::TRIANGLE_WAVE, duration_s, frequency_Hz));
           
           square = wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, 1.011f*frequency_Hz);
@@ -121,7 +122,7 @@ namespace audio
           adsr = adsr_presets::FLUTE_0;
           for (int h = 1; h <= num_harmonics; ++h) tot_harmonics_ampl += 1.f/h;
           for (int h = 1; h <= num_harmonics; ++h)
-            wave_comp.emplace_back(0.8f*(1.f/h)/tot_harmonics_ampl, wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, h * frequency_Hz, FrequencyType::CONSTANT, amplitude_func));
+            wave_comp.emplace_back(0.8f*(1.f/h)/tot_harmonics_ampl, wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, h * frequency_Hz, frequency_effect, amplitude_effect, phase_effect));
 
 #if 0
           triangle = wave_gen.generate_waveform(WaveformType::TRIANGLE_WAVE, duration_s, 6.f*frequency_Hz);
