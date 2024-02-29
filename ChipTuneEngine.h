@@ -136,7 +136,7 @@ namespace audio
       float duty_cycle = 0.5f;
       int adsr_idx = -1;
       int flp_idx = -1;
-      int volume = 100;
+      float volume = 1.f;
     };
     struct InstrumentRingMod
     {
@@ -145,7 +145,7 @@ namespace audio
       std::string ring_mod_instr_name_B;
       int adsr_idx = -1;
       int flp_idx = -1;
-      int volume = 100;
+      float volume = 1.f;
     };
     struct InstrumentWeightAvg
     {
@@ -153,7 +153,7 @@ namespace audio
       std::vector<std::pair<float, std::string>> instrument_names;
       int adsr_idx = -1;
       int flp_idx = -1;
-      int volume = 100;
+      float volume = 1.f;
     };
     struct InstrumentLib
     {
@@ -162,7 +162,7 @@ namespace audio
       FrequencyType freq_effect = FrequencyType::CONSTANT;
       AmplitudeType ampl_effect = AmplitudeType::CONSTANT;
       PhaseType phase_effect = PhaseType::ZERO;
-      int volume = 100;
+      float volume = 1.f;
     };
     struct Voice
     {
@@ -222,8 +222,8 @@ namespace audio
     {
       std::string instrument_name, waveform_name, modifier;
       std::string op;
-      float duty_cycle = 0.5f;
-      int adsr_nr = -1, flp_nr = -1, vol = 100;
+      float duty_cycle = 0.5f, vol = 1.f;
+      int adsr_nr = -1, flp_nr = -1;
       
       iss >> instrument_name;
 
@@ -743,25 +743,25 @@ namespace audio
           {
             const auto& ib = m_instruments_basic[note->instrument_basic_idx];
             note->wave = create_instrument_basic(note.get(), ib);
-            note->volume = ib.volume / 100.f;
+            note->volume = ib.volume;
           }
           else if (note->instrument_ring_mod_idx >= 0)
           {
             const auto& irm = m_instruments_ring_mod[note->instrument_ring_mod_idx];
             note->wave = create_instrument_ring_mod(note.get(), irm);
-            note->volume = irm.volume / 100.f;
+            note->volume = irm.volume;
           }
           else if (note->instrument_weight_avg_idx >= 0)
           {
             const auto& iwa = m_instruments_weight_avg[note->instrument_weight_avg_idx];
             note->wave = create_instrument_weight_avg(note.get(), iwa);
-            note->volume = iwa.volume / 100.f;
+            note->volume = iwa.volume;
           }
           else if (note->instrument_lib_idx >= 0)
           {
             const auto& it = m_instruments_lib[note->instrument_lib_idx];
             note->wave = create_instrument_lib(note.get(), it);
-            note->volume = it.volume / 100.f;
+            note->volume = it.volume;
           }
         }
       }
