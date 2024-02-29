@@ -195,6 +195,26 @@ namespace audio
       alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), num_stream_samples * sizeof(short), m_sample_rate);
     }
     
+    void update_stream(const Waveform& wave)
+    {
+      auto Ns = static_cast<int>(wave.buffer.size());
+      m_buffer_i.resize(Ns);
+      
+      float dt = 1./wave.sample_rate;
+      float t = 0.f;
+      for (int i = 0; i < Ns; ++i)
+      {
+        t = i * dt;
+        m_buffer_i[i] = static_cast<short>(c_amplitude_0 * wave.buffer[i]);
+        m_buffer_i[i] = std::max<short>(-c_amplitude_0, m_buffer_i[i]);
+        m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
+      }
+      
+      m_duration_s = wave.duration;
+      
+      alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), Ns * sizeof(short), m_sample_rate);
+    }
+    
   private:
     int m_sample_rate = 44100;
     AudioStreamListener* m_listener = nullptr;
