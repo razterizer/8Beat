@@ -377,6 +377,40 @@ namespace audio
       return output;
     }
     
+    // #FIXME: It's a bit glitchy about midways through the sound.
+    static Waveform fir_flange(const Waveform& wave, float depth = 0.1f, float rate = 1.f, float feedback = 0.2f)
+    {
+      auto N = wave.buffer.size();
+      Waveform output = wave;
+      auto sample_rate = static_cast<int>(wave.sample_rate);
+      std::vector<float> delay_buffer(sample_rate, 0.f);
+      
+      int buffer_index = 0;
+      
+      for (size_t i = 0; i < N; ++i)
+      {
+        // Calculate delay amount based on a sine wave
+        float delay_amount = depth * std::sin(2 * M_PI * rate * i / sample_rate);
+        
+        // Calculate delayed sample index
+        int delay_index = (buffer_index - static_cast<int>(delay_amount)) % sample_rate;
+        if (delay_index < 0)
+          delay_index += sample_rate;
+        
+        // Apply flange effect and update delay buffer
+        float delayed_sample = delay_buffer[delay_index];
+        delay_buffer[buffer_index] = output.buffer[i] + feedback * delayed_sample;
+        
+        // Update buffer index
+        buffer_index = (buffer_index + 1) % sample_rate;
+        
+        // Apply the flange effect to the input signal
+        output.buffer[i] += delayed_sample;
+      }
+      
+      return output;
+    }
+    
     // #FIXME: Why you not work!?!?
     static Waveform fir_chorus(const Waveform& wave, float modulation_freq = 1.f, float modulation_depth = 5e-3f, const std::vector<float> coeffs = { 1.f, .5f, -.2f, .1f })
     {
