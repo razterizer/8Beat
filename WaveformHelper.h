@@ -772,10 +772,10 @@ namespace audio
     
   private:
     // Function to calculate the fundamental frequency after ring modulation
-    static int calc_fundamental_frequency(int frequency_A, int frequency_B)
+    static float calc_fundamental_frequency(float frequency_A, float frequency_B)
     {
       // Calculate the GCD of the frequencies
-      int gcd_result = math::gcd(frequency_A, frequency_B);
+      float gcd_result = math::gcd(frequency_A, frequency_B);
       
       // The GCD represents the fundamental frequency
       return gcd_result;
