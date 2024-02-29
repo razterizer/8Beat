@@ -129,40 +129,33 @@ namespace audio
       int instrument_lib_idx = -1;
       float volume = 1.f;
     };
-    struct InstrumentBasic
+    struct InstrumentBase
     {
       std::string name;
+      int adsr_idx = -1;
+      int flp_idx = -1;
+      float volume = 1.f;
+    };
+    struct InstrumentBasic : InstrumentBase
+    {
       WaveformType waveform = WaveformType::SINE_WAVE;
       float duty_cycle = 0.5f;
-      int adsr_idx = -1;
-      int flp_idx = -1;
-      float volume = 1.f;
     };
-    struct InstrumentRingMod
+    struct InstrumentRingMod : InstrumentBase
     {
-      std::string name;
       std::string ring_mod_instr_name_A;
       std::string ring_mod_instr_name_B;
-      int adsr_idx = -1;
-      int flp_idx = -1;
-      float volume = 1.f;
     };
-    struct InstrumentWeightAvg
+    struct InstrumentWeightAvg : InstrumentBase
     {
-      std::string name;
       std::vector<std::pair<float, std::string>> instrument_names;
-      int adsr_idx = -1;
-      int flp_idx = -1;
-      float volume = 1.f;
     };
-    struct InstrumentLib
+    struct InstrumentLib : InstrumentBase
     {
-      std::string name;
       InstrumentType lib_instrument = InstrumentType::PIANO;
       FrequencyType freq_effect = FrequencyType::CONSTANT;
       AmplitudeType ampl_effect = AmplitudeType::CONSTANT;
       PhaseType phase_effect = PhaseType::ZERO;
-      float volume = 1.f;
     };
     struct Voice
     {
@@ -348,13 +341,25 @@ namespace audio
             auto modifier_name = modifier.substr(0, col_idx);
             auto modifier_val = modifier.substr(col_idx + 1);
             
-            if (modifier_name == "vol")
+            if (modifier_name == "adsr")
+            {
+              if (!(std::istringstream(modifier_val) >> adsr_nr))
+                std::cerr << "Error parsing adsr in instrument line: \"" << line << "\"." << std::endl;
+            }
+            else if (modifier_name == "flp")
+            {
+              if (!(std::istringstream(modifier_val) >> flp_nr))
+                std::cerr << "Error parsing flp in instrument line: \"" << line << "\"." << std::endl;
+            }
+            else if (modifier_name == "vol")
             {
               if (!(std::istringstream(modifier_val) >> vol))
                 std::cerr << "Error parsing vol in instrument line: \"" << line << "\"." << std::endl;
             }
           }
         }
+        instr.adsr_idx = adsr_nr;
+        instr.flp_idx = flp_nr;
         instr.volume = vol;
       }
       else if (op.find("ring_mod_A:") == 0 || op.find("ring_mod_B:") == 0)
@@ -399,7 +404,7 @@ namespace audio
         if (ring_mod_A.empty() || ring_mod_B.empty())
           std::cerr << "Must specify both attributes ring_mod_A and ring_mod_B in instrument line: \"" << line << "\"." << std::endl;
         else
-          m_instruments_ring_mod.push_back({ instrument_name, ring_mod_A, ring_mod_B, adsr_nr, flp_nr, vol });
+          m_instruments_ring_mod.push_back({ instrument_name, adsr_nr, flp_nr, vol, ring_mod_A, ring_mod_B });
       }
       else
       {
@@ -450,7 +455,7 @@ namespace audio
         else if (waveform_name == "pwm")
           wf_type = WaveformType::PWM;
         
-        m_instruments_basic.push_back({ instrument_name, wf_type, duty_cycle, adsr_nr, flp_nr, vol });
+        m_instruments_basic.push_back({ instrument_name, adsr_nr, flp_nr, vol, wf_type, duty_cycle });
       }
     }
     
@@ -727,6 +732,17 @@ namespace audio
       wave = Synthesizer::synthesize(il.lib_instrument, m_waveform_gen,
         note->duration_ms * 1e-3f, note->frequency,
         il.freq_effect, il.ampl_effect, il.phase_effect);
+        
+      if (il.flp_idx >= 0)
+      {
+        const auto& flp = m_filter_lp_args[il.flp_idx];
+        wave = WaveformHelper::filter_low_pass(wave, flp);
+      }
+      if (il.adsr_idx >= 0)
+      {
+        const auto& adsr = m_envelopes[il.adsr_idx];
+        wave = WaveformHelper::envelope_adsr(wave, adsr);
+      }
       
       return wave;
     }
