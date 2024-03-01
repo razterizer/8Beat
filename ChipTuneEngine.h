@@ -665,16 +665,7 @@ namespace audio
       Waveform wave;
       wave = m_waveform_gen.generate_waveform(ib.waveform, note->duration_ms*1e-3f, note->frequency,
                                               FrequencyType::CONSTANT, AmplitudeType::CONSTANT, PhaseType::ZERO, ib.duty_cycle);
-      if (ib.flp_idx >= 0)
-      {
-        const auto& flp = m_filter_lp_args[ib.flp_idx];
-        wave = WaveformHelper::filter_low_pass(wave, flp);
-      }
-      if (ib.adsr_idx >= 0)
-      {
-        const auto& adsr = m_envelopes[ib.adsr_idx];
-        wave = WaveformHelper::envelope_adsr(wave, adsr);
-      }
+      
       return wave;
     }
     
@@ -686,17 +677,6 @@ namespace audio
       Waveform wave_B = create_waveform(note, irm.ring_mod_instr_name_B);
       
       wave = WaveformHelper::ring_modulation(wave_A, wave_B);
-      
-      if (irm.flp_idx >= 0)
-      {
-        const auto& flp = m_filter_lp_args[irm.flp_idx];
-        wave = WaveformHelper::filter_low_pass(wave, flp);
-      }
-      if (irm.adsr_idx >= 0)
-      {
-        const auto& adsr = m_envelopes[irm.adsr_idx];
-        wave = WaveformHelper::envelope_adsr(wave, adsr);
-      }
       
       return wave;
     }
@@ -714,17 +694,6 @@ namespace audio
       
       wave = WaveformHelper::mix(weighted_waves);
       
-      if (iwa.flp_idx >= 0)
-      {
-        const auto& flp = m_filter_lp_args[iwa.flp_idx];
-        wave = WaveformHelper::filter_low_pass(wave, flp);
-      }
-      if (iwa.adsr_idx >= 0)
-      {
-        const auto& adsr = m_envelopes[iwa.adsr_idx];
-        wave = WaveformHelper::envelope_adsr(wave, adsr);
-      }
-      
       return wave;
     }
     
@@ -735,19 +704,22 @@ namespace audio
       wave = Synthesizer::synthesize(il.lib_instrument, m_waveform_gen,
         note->duration_ms * 1e-3f, note->frequency,
         il.freq_effect, il.ampl_effect, il.phase_effect);
-        
-      if (il.flp_idx >= 0)
-      {
-        const auto& flp = m_filter_lp_args[il.flp_idx];
-        wave = WaveformHelper::filter_low_pass(wave, flp);
-      }
-      if (il.adsr_idx >= 0)
-      {
-        const auto& adsr = m_envelopes[il.adsr_idx];
-        wave = WaveformHelper::envelope_adsr(wave, adsr);
-      }
       
       return wave;
+    }
+    
+    void apply_post_effects(Waveform& wave, const InstrumentBase& i)
+    {
+      if (i.flp_idx >= 0)
+      {
+        const auto& flp = m_filter_lp_args[i.flp_idx];
+        wave = WaveformHelper::filter_low_pass(wave, flp);
+      }
+      if (i.adsr_idx >= 0)
+      {
+        const auto& adsr = m_envelopes[i.adsr_idx];
+        wave = WaveformHelper::envelope_adsr(wave, adsr);
+      }
     }
     
     void create_instruments()
@@ -763,24 +735,28 @@ namespace audio
             const auto& ib = m_instruments_basic[note->instrument_basic_idx];
             note->wave = create_instrument_basic(note.get(), ib);
             note->volume = ib.volume;
+            apply_post_effects(note->wave, ib);
           }
           else if (note->instrument_ring_mod_idx >= 0)
           {
             const auto& irm = m_instruments_ring_mod[note->instrument_ring_mod_idx];
             note->wave = create_instrument_ring_mod(note.get(), irm);
             note->volume = irm.volume;
+            apply_post_effects(note->wave, irm);
           }
           else if (note->instrument_weight_avg_idx >= 0)
           {
             const auto& iwa = m_instruments_weight_avg[note->instrument_weight_avg_idx];
             note->wave = create_instrument_weight_avg(note.get(), iwa);
             note->volume = iwa.volume;
+            apply_post_effects(note->wave, iwa);
           }
           else if (note->instrument_lib_idx >= 0)
           {
             const auto& it = m_instruments_lib[note->instrument_lib_idx];
             note->wave = create_instrument_lib(note.get(), it);
             note->volume = it.volume;
+            apply_post_effects(note->wave, it);
           }
         }
       }
