@@ -602,9 +602,10 @@ namespace audio
         {
           for (auto& voice : m_voices)
             voice.notes.emplace_back(std::make_unique<Note>());
+          voice_idx = num_voices;
           break;
         }
-        else if (modifier == "|" && voice_idx < num_voices)
+        else if (modifier == "|" && voice_idx < num_voices && !iss.eof())
         {
           auto& voice = m_voices[voice_idx++];
           
@@ -636,6 +637,9 @@ namespace audio
           }
         }
       }
+      
+      for (int v_idx = voice_idx; v_idx < num_voices; ++v_idx)
+        m_voices[v_idx].notes.emplace_back(std::make_unique<Note>());
     }
     
     Waveform create_waveform(Note* note, const std::string& instr_name)
