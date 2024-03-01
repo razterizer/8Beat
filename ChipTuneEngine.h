@@ -222,7 +222,7 @@ namespace audio
     
     bool parse_post_effects(const std::string& line,
                             const std::string& modifier_name, const std::string& modifier_val,
-                            float& adsr_nr, float& flp_nr, float& vol)
+                            int& adsr_nr, int& flp_nr, float& vol)
     {
       if (modifier_name == "adsr")
       {
