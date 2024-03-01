@@ -21,8 +21,8 @@
 namespace audio
 {
   enum class WaveformType { SINE_WAVE, SQUARE_WAVE, TRIANGLE_WAVE, SAWTOOTH_WAVE, NOISE, PWM };
-  enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP };
-  enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP, VIBRATO };
+  enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP, CHIRP0, CHIRP1, CHIRP2 };
+  enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP, VIBRATO0 };
   enum class PhaseType { ZERO };
   
   class WaveformGeneration
@@ -154,6 +154,18 @@ namespace audio
               freq_func = freq_func_jet_engine_powerup;
               if (verbose) std::cout << "Frequency: JET_ENGINE_POWERUP" << std::endl;
               break;
+            case FrequencyType::CHIRP0:
+              freq_func = freq_func_chirp_0;
+              if (verbose) std::cout << "Frequency: CHIRP0" << std::endl;
+              break;
+            case FrequencyType::CHIRP1:
+              freq_func = freq_func_chirp_1;
+              if (verbose) std::cout << "Frequency: CHIRP1" << std::endl;
+              break;
+            case FrequencyType::CHIRP2:
+              freq_func = freq_func_chirp_2;
+              if (verbose) std::cout << "Frequency: CHIRP2" << std::endl;
+              break;
           }
         }
         else if constexpr (std::is_invocable_v<T, FREQUENCY_FUNC_ARGS>)
@@ -185,9 +197,9 @@ namespace audio
               ampl_func = ampl_func_jet_engine_powerup;
               if (verbose) std::cout << "Amplitude: JET_ENGINE_POWERUP" << std::endl;
               break;
-            case AmplitudeType::VIBRATO:
-              ampl_func = ampl_func_vibrato;
-              if (verbose) std::cout << "Amplitude: VIBRATO" << std::endl;
+            case AmplitudeType::VIBRATO0:
+              ampl_func = ampl_func_vibrato_0;
+              if (verbose) std::cout << "Amplitude: VIBRATO0" << std::endl;
               break;
           }
         }
@@ -307,6 +319,21 @@ namespace audio
       return freq_0*(1 + rnd::rand_float(0, 2)*(0.5f + t));
     };
     
+    const FrequencyFunc freq_func_chirp_0 = [](float t, float duration, float freq_0)
+    {
+      return freq_0 + 0.5f*t;
+    };
+    
+    const FrequencyFunc freq_func_chirp_1 = [](float t, float duration, float freq_0)
+    {
+      return freq_0 + 1.5f*t;
+    };
+    
+    const FrequencyFunc freq_func_chirp_2 = [](float t, float duration, float freq_0)
+    {
+      return freq_0 + 4.f*t;
+    };
+    
     // //////////////////////
     // Amplitude Functions //
     // //////////////////////
@@ -320,7 +347,7 @@ namespace audio
       return math::linmap(t, 0.f, duration, 0.f, rnd::rand());
     };
     
-    const AmplitudeFunc ampl_func_vibrato = [](float t, float duration)
+    const AmplitudeFunc ampl_func_vibrato_0 = [](float t, float duration)
     {
       return 0.8f + 0.2f*std::sin(2*M_PI*2.2f*t*(1 + std::min(0.8f, 0.4f*t)));
     };
