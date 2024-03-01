@@ -319,13 +319,19 @@ namespace audio
           instr.freq_effect = FrequencyType::CONSTANT;
         else if (freq_effect == "JET_ENGINE_POWERUP")
           instr.freq_effect = FrequencyType::JET_ENGINE_POWERUP;
+        else if (freq_effect == "CHIRP_0")
+          instr.freq_effect = FrequencyType::CHIRP_0;
+        else if (freq_effect == "CHIRP_1")
+          instr.freq_effect = FrequencyType::CHIRP_1;
+        else if (freq_effect == "CHIRP_2")
+          instr.freq_effect = FrequencyType::CHIRP_2;
         
         if (ampl_effect.empty() || ampl_effect == "CONSTANT")
           instr.ampl_effect = AmplitudeType::CONSTANT;
         else if (ampl_effect == "JET_ENGINE_POWERUP")
           instr.ampl_effect = AmplitudeType::JET_ENGINE_POWERUP;
-        else if (ampl_effect == "VIBRATO")
-          instr.ampl_effect = AmplitudeType::VIBRATO;
+        else if (ampl_effect == "VIBRATO_0")
+          instr.ampl_effect = AmplitudeType::VIBRATO_0;
           
         if (phase_effect.empty() || phase_effect == "ZERO")
           instr.phase_effect = PhaseType::ZERO;
