@@ -50,7 +50,8 @@ namespace audio
       std::string line;
       while (std::getline(file, line))
       {
-        parse_line(line);
+        if (!parse_line(line))
+          break;
       }
       
       std::cout << "Creating Instruments" << std::endl;
@@ -67,7 +68,7 @@ namespace audio
       std::cout << "Playing Tune" << std::endl;
       Delay::sleep(1e6f); // Warm-up. #FIXME: Find a better, more robust solution.
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
-      for (int note_idx = 0; note_idx < num_notes; ++note_idx)
+      for (int note_idx = note_start_idx; note_idx < num_notes; ++note_idx)
       {
         for (const auto& voice : m_voices)
         {
@@ -177,8 +178,10 @@ namespace audio
     int num_voices = 0;
     std::vector<Voice> m_voices;
     //std::vector<Instrument> m_instruments;
+    int note_start_idx = 0;
+    int num_notes_parsed = 0;
 
-    void parse_line(const std::string& line)
+    bool parse_line(const std::string& line)
     {
       std::istringstream iss(line);
       if (!line.empty())
@@ -201,11 +204,20 @@ namespace audio
               m_voices.resize(num_voices);
           }
           else if (command == "TAB")
+          {
             parse_tab(line, iss);
+            num_notes_parsed++;
+          }
+          else if (command == "END")
+            return false;
+          else if (command == "START")
+            note_start_idx = num_notes_parsed;
+            
         }
         else
           std::cerr << "Error parsing instrument line: " << line << std::endl;
       }
+      return true;
     }
     
     void parse_instrument(const std::string& line, std::istringstream& iss)
