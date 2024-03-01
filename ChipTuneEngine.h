@@ -128,6 +128,7 @@ namespace audio
       Waveform wave;
       int instrument_basic_idx = -1;
       int instrument_ring_mod_idx = -1;
+      int instrument_conv_idx = -1;
       int instrument_weight_avg_idx = -1;
       int instrument_lib_idx = -1;
       float volume = 1.f;
@@ -148,6 +149,11 @@ namespace audio
     {
       std::string ring_mod_instr_name_A;
       std::string ring_mod_instr_name_B;
+    };
+    struct InstrumentConv : InstrumentBase
+    {
+      std::string conv_instr_name_A;
+      std::string conv_instr_name_B;
     };
     struct InstrumentWeightAvg : InstrumentBase
     {
@@ -170,6 +176,7 @@ namespace audio
     const WaveformGeneration& m_waveform_gen;
     std::vector<InstrumentBasic> m_instruments_basic;
     std::vector<InstrumentRingMod> m_instruments_ring_mod;
+    std::vector<InstrumentConv> m_instruments_conv;
     std::vector<InstrumentWeightAvg> m_instruments_weight_avg;
     std::vector<InstrumentLib> m_instruments_lib;
     std::vector<ADSR> m_envelopes;
@@ -408,6 +415,38 @@ namespace audio
         else
           m_instruments_ring_mod.push_back({ instrument_name, adsr_nr, flp_nr, vol, ring_mod_A, ring_mod_B });
       }
+      else if (op.find("conv_A:") == 0 || op.find("conv_B:") == 0)
+      {
+        // Convolution.
+        std::string conv_A, conv_B;
+        while (iss >> modifier)
+        {
+          auto col_idx = modifier.find(':');
+          if (col_idx != std::string::npos)
+          {
+            auto modifier_name = modifier.substr(0, col_idx);
+            auto modifier_val = modifier.substr(col_idx + 1);
+            
+            if (modifier_name == "conv_A")
+            {
+              if (!(std::istringstream(modifier_val) >> conv_A))
+                std::cerr << "Error parsing conv_A in instrument line: \"" << line << "\"." << std::endl;
+            }
+            else if (modifier_name == "conv_B")
+            {
+              if (!(std::istringstream(modifier_val) >> conv_B))
+                std::cerr << "Error parsing conv_B in instrument line: \"" << line << "\"." << std::endl;
+            }
+            else
+              parse_post_effects(line, modifier_name, modifier_val,
+                adsr_nr, flp_nr, vol);
+          }
+        }
+        if (conv_A.empty() || conv_B.empty())
+          std::cerr << "Must specify both attributes ring_mod_A and ring_mod_B in instrument line: \"" << line << "\"." << std::endl;
+        else
+          m_instruments_conv.push_back({ instrument_name, adsr_nr, flp_nr, vol, conv_A, conv_B });
+      }
       else
       {
         // Basic.
@@ -615,6 +654,7 @@ namespace audio
             auto f_match_instr = [instrument](const auto& instr) { return instr.name == instrument; };
             note->instrument_basic_idx = stlutils::find_if_idx(m_instruments_basic, f_match_instr);
             note->instrument_ring_mod_idx = stlutils::find_if_idx(m_instruments_ring_mod, f_match_instr);
+            note->instrument_conv_idx = stlutils::find_if_idx(m_instruments_conv, f_match_instr);
             note->instrument_weight_avg_idx = stlutils::find_if_idx(m_instruments_weight_avg, f_match_instr);
             note->instrument_lib_idx = stlutils::find_if_idx(m_instruments_lib, f_match_instr);
           }
@@ -639,6 +679,10 @@ namespace audio
       auto it_irm = stlutils::find_if(m_instruments_ring_mod, f_match_instr_name);
       if (it_irm != m_instruments_ring_mod.end())
         return create_instrument_ring_mod(note, *it_irm);
+        
+      auto it_ic = stlutils::find_if(m_instruments_conv, f_match_instr_name);
+      if (it_ic != m_instruments_conv.end())
+        return create_instrument_conv(note, *it_ic);
       
       auto it_iwa = stlutils::find_if(m_instruments_weight_avg, f_match_instr_name);
       if (it_iwa != m_instruments_weight_avg.end())
@@ -668,6 +712,18 @@ namespace audio
       Waveform wave_B = create_waveform(note, irm.ring_mod_instr_name_B);
       
       wave = WaveformHelper::ring_modulation(wave_A, wave_B);
+      
+      return wave;
+    }
+    
+    Waveform create_instrument_conv(Note* note, const InstrumentConv& ic)
+    {
+      Waveform wave;
+      
+      Waveform wave_A = create_waveform(note, ic.conv_instr_name_A);
+      Waveform wave_B = create_waveform(note, ic.conv_instr_name_B);
+      
+      wave = WaveformHelper::reverb_fast(wave_A, wave_B);
       
       return wave;
     }
@@ -734,6 +790,13 @@ namespace audio
             note->wave = create_instrument_ring_mod(note.get(), irm);
             note->volume = irm.volume;
             apply_post_effects(note->wave, irm);
+          }
+          else if (note->instrument_conv_idx >= 0)
+          {
+            const auto& ic = m_instruments_conv[note->instrument_conv_idx];
+            note->wave = create_instrument_conv(note.get(), ic);
+            note->volume = ic.volume;
+            apply_post_effects(note->wave, ic);
           }
           else if (note->instrument_weight_avg_idx >= 0)
           {
