@@ -21,8 +21,8 @@
 namespace audio
 {
   enum class WaveformType { SINE_WAVE, SQUARE_WAVE, TRIANGLE_WAVE, SAWTOOTH_WAVE, NOISE, PWM };
-  enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP, CHIRP0, CHIRP1, CHIRP2 };
-  enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP, VIBRATO0 };
+  enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP, CHIRP_0, CHIRP_1, CHIRP_2 };
+  enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP, VIBRATO_0 };
   enum class PhaseType { ZERO };
   
   class WaveformGeneration
@@ -154,17 +154,17 @@ namespace audio
               freq_func = freq_func_jet_engine_powerup;
               if (verbose) std::cout << "Frequency: JET_ENGINE_POWERUP" << std::endl;
               break;
-            case FrequencyType::CHIRP0:
+            case FrequencyType::CHIRP_0:
               freq_func = freq_func_chirp_0;
-              if (verbose) std::cout << "Frequency: CHIRP0" << std::endl;
+              if (verbose) std::cout << "Frequency: CHIRP_0" << std::endl;
               break;
-            case FrequencyType::CHIRP1:
+            case FrequencyType::CHIRP_1:
               freq_func = freq_func_chirp_1;
-              if (verbose) std::cout << "Frequency: CHIRP1" << std::endl;
+              if (verbose) std::cout << "Frequency: CHIRP_1" << std::endl;
               break;
-            case FrequencyType::CHIRP2:
+            case FrequencyType::CHIRP_2:
               freq_func = freq_func_chirp_2;
-              if (verbose) std::cout << "Frequency: CHIRP2" << std::endl;
+              if (verbose) std::cout << "Frequency: CHIRP_2" << std::endl;
               break;
           }
         }
@@ -197,9 +197,9 @@ namespace audio
               ampl_func = ampl_func_jet_engine_powerup;
               if (verbose) std::cout << "Amplitude: JET_ENGINE_POWERUP" << std::endl;
               break;
-            case AmplitudeType::VIBRATO0:
+            case AmplitudeType::VIBRATO_0:
               ampl_func = ampl_func_vibrato_0;
-              if (verbose) std::cout << "Amplitude: VIBRATO0" << std::endl;
+              if (verbose) std::cout << "Amplitude: VIBRATO_0" << std::endl;
               break;
           }
         }
