@@ -220,6 +220,31 @@ namespace audio
       return true;
     }
     
+    bool parse_post_effects(const std::string& line,
+                            const std::string& modifier_name, const std::string& modifier_val,
+                            float& adsr_nr, float& flp_nr, float& vol)
+    {
+      if (modifier_name == "adsr")
+      {
+        if (!(std::istringstream(modifier_val) >> adsr_nr))
+          std::cerr << "Error parsing adsr in instrument line: \"" << line << "\"." << std::endl;
+        return true;
+      }
+      if (modifier_name == "flp")
+      {
+        if (!(std::istringstream(modifier_val) >> flp_nr))
+          std::cerr << "Error parsing flp in instrument line: \"" << line << "\"." << std::endl;
+        return true;
+      }
+      if (modifier_name == "vol")
+      {
+        if (!(std::istringstream(modifier_val) >> vol))
+          std::cerr << "Error parsing vol in instrument line: \"" << line << "\"." << std::endl;
+        return true;
+      }
+      return false;
+    }
+    
     void parse_instrument(const std::string& line, std::istringstream& iss)
     {
       std::string instrument_name, waveform_name, modifier;
@@ -277,21 +302,8 @@ namespace audio
             auto modifier_name = modifier.substr(0, col_idx);
             auto modifier_val = modifier.substr(col_idx + 1);
             
-            if (modifier_name == "adsr")
-            {
-              if (!(std::istringstream(modifier_val) >> adsr_nr))
-                std::cerr << "Error parsing adsr in instrument line: \"" << line << "\"." << std::endl;
-            }
-            else if (modifier_name == "flp")
-            {
-              if (!(std::istringstream(modifier_val) >> flp_nr))
-                std::cerr << "Error parsing flp in instrument line: \"" << line << "\"." << std::endl;
-            }
-            else if (modifier_name == "vol")
-            {
-              if (!(std::istringstream(modifier_val) >> vol))
-                std::cerr << "Error parsing vol in instrument line: \"" << line << "\"." << std::endl;
-            }
+            parse_post_effects(line, modifier_name, modifier_val,
+              adsr_nr, flp_nr, vol);
           }
         }
         instrument.adsr_idx = adsr_nr;
@@ -356,21 +368,8 @@ namespace audio
             auto modifier_name = modifier.substr(0, col_idx);
             auto modifier_val = modifier.substr(col_idx + 1);
             
-            if (modifier_name == "adsr")
-            {
-              if (!(std::istringstream(modifier_val) >> adsr_nr))
-                std::cerr << "Error parsing adsr in instrument line: \"" << line << "\"." << std::endl;
-            }
-            else if (modifier_name == "flp")
-            {
-              if (!(std::istringstream(modifier_val) >> flp_nr))
-                std::cerr << "Error parsing flp in instrument line: \"" << line << "\"." << std::endl;
-            }
-            else if (modifier_name == "vol")
-            {
-              if (!(std::istringstream(modifier_val) >> vol))
-                std::cerr << "Error parsing vol in instrument line: \"" << line << "\"." << std::endl;
-            }
+            parse_post_effects(line, modifier_name, modifier_val,
+              adsr_nr, flp_nr, vol);
           }
         }
         instr.adsr_idx = adsr_nr;
@@ -399,21 +398,9 @@ namespace audio
               if (!(std::istringstream(modifier_val) >> ring_mod_B))
                 std::cerr << "Error parsing ring_mod_B in instrument line: \"" << line << "\"." << std::endl;
             }
-            else if (modifier_name == "adsr")
-            {
-              if (!(std::istringstream(modifier_val) >> adsr_nr))
-                std::cerr << "Error parsing adsr in instrument line: \"" << line << "\"." << std::endl;
-            }
-            else if (modifier_name == "flp")
-            {
-              if (!(std::istringstream(modifier_val) >> flp_nr))
-                std::cerr << "Error parsing flp in instrument line: \"" << line << "\"." << std::endl;
-            }
-            else if (modifier_name == "vol")
-            {
-              if (!(std::istringstream(modifier_val) >> vol))
-                std::cerr << "Error parsing vol in instrument line: \"" << line << "\"." << std::endl;
-            }
+            else
+              parse_post_effects(line, modifier_name, modifier_val,
+                adsr_nr, flp_nr, vol);
           }
         }
         if (ring_mod_A.empty() || ring_mod_B.empty())
@@ -438,21 +425,9 @@ namespace audio
               if (!(std::istringstream(modifier_val) >> duty_cycle))
                 std::cerr << "Error parsing duty_cycle in instrument line: \"" << line << "\"." << std::endl;
             }
-            if (modifier_name == "adsr")
-            {
-              if (!(std::istringstream(modifier_val) >> adsr_nr))
-                std::cerr << "Error parsing adsr in instrument line: \"" << line << "\"." << std::endl;
-            }
-            else if (modifier_name == "flp")
-            {
-              if (!(std::istringstream(modifier_val) >> flp_nr))
-                std::cerr << "Error parsing flp in instrument line: \"" << line << "\"." << std::endl;
-            }
-            else if (modifier_name == "vol")
-            {
-              if (!(std::istringstream(modifier_val) >> vol))
-                std::cerr << "Error parsing vol in instrument line: \"" << line << "\"." << std::endl;
-            }
+            else
+              parse_post_effects(line, modifier_name, modifier_val,
+                adsr_nr, flp_nr, vol);
           }
         }
         
