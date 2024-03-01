@@ -179,12 +179,7 @@ namespace audio
     void parse_line(const std::string& line)
     {
       std::istringstream iss(line);
-      if (line.find("instrument") == 0
-        || line.find("adsr") == 0
-        || line.find("filter_lp") == 0
-        || line.find("TIME_STEP_MS") == 0
-        || line.find("NUM_VOICES") == 0
-        || line.find("TAB") == 0)
+      if (!line.empty())
       {
         std::string command;
         if (iss >> command)
