@@ -65,6 +65,7 @@ namespace audio
     void play_tune()
     {
       std::cout << "Playing Tune" << std::endl;
+      Delay::sleep(1e6f); // Warm-up. #FIXME: Find a better, more robust solution.
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
       for (int note_idx = 0; note_idx < num_notes; ++note_idx)
       {
@@ -84,6 +85,7 @@ namespace audio
         }
         Delay::sleep(time_step_ms*1e3f);
       }
+      Delay::sleep(1e6f); // Cool-down. #FIXME: Find a better, more robust solution.
     }
     
     // Play the loaded tune in a separate thread
