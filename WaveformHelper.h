@@ -443,6 +443,34 @@ namespace audio
       return output;
     }
     
+    // Emulates string instrument sounds.
+    static Waveform karplus_strong(float duration_s, float frequency,
+                                   float sample_rate = 44100.f)
+    {
+      auto Ns = calc_num_samples(duration_s, sample_rate);
+      Waveform wave(Ns, 0.f);
+      wave.duration = duration_s;
+      wave.frequency = frequency;
+      
+      auto Nb = std::min<size_t>(Ns, std::round(sample_rate / frequency));
+      
+      std::vector<float> noise(Nb);
+      for (size_t s_idx = 0; s_idx < Nb; ++s_idx)
+        noise[s_idx] = rnd::rand_float(-1.f, +1.f);
+      
+      // y(n) = x(n) + (y(n-N) + y(n-N+1))/2
+      
+      for (size_t s_idx = 0; s_idx < Ns; ++s_idx)
+      {
+        float avg = 0.5f * (wave.buffer[(s_idx - Nb)%Ns] + wave.buffer[(s_idx - Nb + 1)%Ns]);
+        wave.buffer[s_idx] = avg + noise[s_idx % Nb];
+        // Low-pass filter
+        //wave.buffer[s_idx] = 0.5f * (wave.buffer[s_idx] + wave.buffer[s_idx - 1]);
+      }
+      
+      return wave;
+    }
+    
     static Waveform envelope_adsr(const Waveform& wave, const ADSR& adsr)
     {
       auto N = wave.buffer.size();
