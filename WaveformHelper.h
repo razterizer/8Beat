@@ -773,6 +773,11 @@ namespace audio
       return num_samples * dt;
     }
     
+    static size_t calc_num_samples(float duration_s, int sample_rate)
+    {
+      return std::round(duration_s * sample_rate);
+    }
+    
   private:
     // Function to calculate the fundamental frequency after ring modulation
     static float calc_fundamental_frequency(float frequency_A, float frequency_B)
