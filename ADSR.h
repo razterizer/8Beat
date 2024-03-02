@@ -219,6 +219,13 @@ namespace audio
       { 0.8f },
       { ADSRMode::LIN, 160 },
     };
+    static ADSR GUITAR
+    {
+      { ADSRMode::EXP, 20 },   // Attack: Exponential rise, adjust time as needed
+      { ADSRMode::LIN, 150 },  // Decay: Linear decay, adjust time as needed
+      { 0.5f },                // Sustain: Sustain level, adjust as needed
+      { ADSRMode::LOG, 100 }   // Release: Logarithmic release, adjust time as needed
+    };
     static ADSR KICKDRUM
     {
       { ADSRMode::LOG, 5 },
