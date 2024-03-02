@@ -19,6 +19,7 @@ namespace audio
     ORGAN,
     TRUMPET,
     FLUTE,
+    GUITAR,
     KICKDRUM,
     SNAREDRUM,
     HIHAT,
@@ -39,6 +40,7 @@ namespace audio
         case InstrumentType::ORGAN: std::cout << "ORGAN\n"; break;
         case InstrumentType::TRUMPET: std::cout << "TRUMPET\n"; break;
         case InstrumentType::FLUTE: std::cout << "FLUTE\n"; break;
+        case InstrumentType::GUITAR: std::cout << "GUITAR\n"; break;
         case InstrumentType::KICKDRUM: std::cout << "KICKDRUM\n"; break;
         case InstrumentType::SNAREDRUM: std::cout << "SNAREDRUM\n"; break;
         case InstrumentType::HIHAT: std::cout << "HIHAT\n"; break;
@@ -65,7 +67,7 @@ namespace audio
       PhaseType phase_effect = PhaseType::ZERO)
     {
       ADSR adsr;
-      Waveform noise, square, triangle, sine;
+      Waveform noise, square, triangle, sine, sawtooth;
       std::vector<std::pair<float, Waveform>> wave_comp; // {{ Weight, Waveform }}
       int num_harmonics = 6;
       float tot_harmonics_ampl = 0.f;
@@ -111,9 +113,9 @@ namespace audio
           wave_comp.emplace_back(0.7f, wave_gen.generate_waveform(WaveformType::PWM, duration_s, frequency_Hz, frequency_effect, amplitude_effect, phase_effect, 0.1f));
           wave_comp.emplace_back(0.2f, wave_gen.generate_waveform(WaveformType::TRIANGLE_WAVE, duration_s, frequency_Hz));
           
-          square = wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, 1.011f*frequency_Hz);
-          WaveformHelper::scale(square, 0.4f);
-          wave_comp.back().second = WaveformHelper::ring_modulation(wave_comp.back().second, square);
+          sine = wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, 1.011f*frequency_Hz);
+          WaveformHelper::scale(sine, 0.4f);
+          wave_comp.back().second = WaveformHelper::ring_modulation(wave_comp.back().second, sine);
           
           wave_comp.emplace_back(0.15f, wave_gen.generate_waveform(WaveformType::TRIANGLE_WAVE, duration_s, 3.f*frequency_Hz));
           wave_comp.emplace_back(0.05f, wave_gen.generate_waveform(WaveformType::NOISE, duration_s, frequency_Hz));
@@ -141,6 +143,18 @@ namespace audio
           final_low_pass_filter_args.ripple = 0.2f;
           final_normalize = true;
           break;
+        case InstrumentType::GUITAR:
+          adsr = adsr_presets::GUITAR;
+          wave_comp.emplace_back(1.f, WaveformHelper::karplus_strong(duration_s, frequency_Hz));
+          //wave_comp.emplace_back(0.05f, wave_gen.generate_waveform(WaveformType::SINE_WAVE,
+          //  duration_s, frequency_Hz, frequency_effect, amplitude_effect, [](auto t, auto dur) {return 0.5f; }));
+          wave_comp.emplace_back(0.08f, wave_gen.generate_waveform(WaveformType::NOISE,
+            duration_s, frequency_Hz));
+          final_low_pass_filter_args.filter_type = LowPassFilterType::ChebyshevTypeII;
+          final_low_pass_filter_args.filter_order = 1;
+          final_low_pass_filter_args.cutoff_freq_multiplier = 1.5f;
+          final_low_pass_filter_args.ripple = 0.5f;
+          break;
         case InstrumentType::KICKDRUM:
           adsr = adsr_presets::KICKDRUM;
           wave_comp.emplace_back(0.2f, wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, frequency_Hz));
@@ -155,9 +169,9 @@ namespace audio
           noise = wave_gen.generate_waveform(WaveformType::NOISE,
             duration_s, 0.f);
           wave_comp.emplace_back(0.7f, noise);
-          sine = wave_gen.generate_waveform(WaveformType::SAWTOOTH_WAVE, duration_s, frequency_Hz);
+          sawtooth = wave_gen.generate_waveform(WaveformType::SAWTOOTH_WAVE, duration_s, frequency_Hz);
           square = wave_gen.generate_waveform(WaveformType::SQUARE_WAVE, duration_s, frequency_Hz*1.1f, FrequencyType::CONSTANT, AmplitudeType::CONSTANT, [](float t, float /*dur*/) { return 2*M_PI*2.13f*t*(1 + 3.f*t); });
-          wave_comp.emplace_back(0.25f, WaveformHelper::ring_modulation(sine, square));
+          wave_comp.emplace_back(0.25f, WaveformHelper::ring_modulation(sawtooth, square));
           wave_comp.emplace_back(0.05f, wave_gen.generate_waveform(WaveformType::TRIANGLE_WAVE, duration_s, 3.f*frequency_Hz));
           break;
         case InstrumentType::HIHAT:
