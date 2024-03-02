@@ -144,6 +144,9 @@ namespace audio
     {
       WaveformType waveform = WaveformType::SINE_WAVE;
       float duty_cycle = 0.5f;
+      FrequencyType freq_effect = FrequencyType::CONSTANT;
+      AmplitudeType ampl_effect = AmplitudeType::CONSTANT;
+      PhaseType phase_effect = PhaseType::ZERO;
     };
     struct InstrumentRingMod : InstrumentBase
     {
@@ -252,6 +255,51 @@ namespace audio
       return false;
     }
     
+    bool parse_modulation_effects(const std::string& line,
+      const std::string& modifier_name, const std::string& modifier_val,
+      FrequencyType& frequency_effect, AmplitudeType& amplitude_effect, PhaseType& phase_effect)
+    {
+      std::string str_freq_effect, str_ampl_effect, str_phase_effect;
+      
+      if (modifier_name == "ffx")
+      {
+        if (!(std::istringstream(modifier_val) >> str_freq_effect))
+          std::cerr << "Error parsing ffx in instrument line: \"" << line << "\"." << std::endl;
+        if (str_freq_effect.empty() || str_freq_effect == "CONSTANT")
+          frequency_effect = FrequencyType::CONSTANT;
+        else if (str_freq_effect == "JET_ENGINE_POWERUP")
+          frequency_effect = FrequencyType::JET_ENGINE_POWERUP;
+        else if (str_freq_effect == "CHIRP_0")
+          frequency_effect = FrequencyType::CHIRP_0;
+        else if (str_freq_effect == "CHIRP_1")
+          frequency_effect = FrequencyType::CHIRP_1;
+        else if (str_freq_effect == "CHIRP_2")
+          frequency_effect = FrequencyType::CHIRP_2;
+        return true;
+      }
+      if (modifier_name == "afx")
+      {
+        if (!(std::istringstream(modifier_val) >> str_ampl_effect))
+          std::cerr << "Error parsing afx in instrument line: \"" << line << "\"." << std::endl;
+        if (str_ampl_effect.empty() || str_ampl_effect == "CONSTANT")
+          amplitude_effect = AmplitudeType::CONSTANT;
+        else if (str_ampl_effect == "JET_ENGINE_POWERUP")
+          amplitude_effect = AmplitudeType::JET_ENGINE_POWERUP;
+        else if (str_ampl_effect == "VIBRATO_0")
+          amplitude_effect = AmplitudeType::VIBRATO_0;
+        return true;
+      }
+      if (modifier_name == "pfx")
+      {
+        if (!(std::istringstream(modifier_val) >> str_phase_effect))
+          std::cerr << "Error parsing pfx in instrument line: \"" << line << "\"." << std::endl;
+        if (str_phase_effect.empty() || str_phase_effect == "ZERO")
+          phase_effect = PhaseType::ZERO;
+        return true;
+      }
+      return false;
+    }
+    
     void parse_instrument(const std::string& line, std::istringstream& iss)
     {
       std::string instrument_name, waveform_name, modifier;
@@ -319,9 +367,9 @@ namespace audio
       }
       else if (op.find("&") == 0)
       {
-        std::string lib_instrument, freq_effect, ampl_effect, phase_effect;
+        std::string lib_instrument;
         // Library instrument.
-        iss >> lib_instrument >> freq_effect >> ampl_effect >> phase_effect;
+        iss >> lib_instrument;
         lib_instrument.erase(0, 1);
         
         auto& instr = m_instruments_lib.emplace_back();
@@ -346,27 +394,6 @@ namespace audio
         else if (lib_instrument == "ANVIL")
           instr.lib_instrument = InstrumentType::ANVIL;
         
-        if (freq_effect.empty() || freq_effect == "CONSTANT")
-          instr.freq_effect = FrequencyType::CONSTANT;
-        else if (freq_effect == "JET_ENGINE_POWERUP")
-          instr.freq_effect = FrequencyType::JET_ENGINE_POWERUP;
-        else if (freq_effect == "CHIRP_0")
-          instr.freq_effect = FrequencyType::CHIRP_0;
-        else if (freq_effect == "CHIRP_1")
-          instr.freq_effect = FrequencyType::CHIRP_1;
-        else if (freq_effect == "CHIRP_2")
-          instr.freq_effect = FrequencyType::CHIRP_2;
-        
-        if (ampl_effect.empty() || ampl_effect == "CONSTANT")
-          instr.ampl_effect = AmplitudeType::CONSTANT;
-        else if (ampl_effect == "JET_ENGINE_POWERUP")
-          instr.ampl_effect = AmplitudeType::JET_ENGINE_POWERUP;
-        else if (ampl_effect == "VIBRATO_0")
-          instr.ampl_effect = AmplitudeType::VIBRATO_0;
-          
-        if (phase_effect.empty() || phase_effect == "ZERO")
-          instr.phase_effect = PhaseType::ZERO;
-        
         while (iss >> modifier)
         {
           auto col_idx = modifier.find(':');
@@ -375,8 +402,12 @@ namespace audio
             auto modifier_name = modifier.substr(0, col_idx);
             auto modifier_val = modifier.substr(col_idx + 1);
             
-            parse_post_effects(line, modifier_name, modifier_val,
-              adsr_nr, flp_nr, vol);
+            if (parse_modulation_effects(line, modifier_name, modifier_val,
+              instr.freq_effect, instr.ampl_effect, instr.phase_effect))
+            {}
+            else if (parse_post_effects(line, modifier_name, modifier_val,
+              adsr_nr, flp_nr, vol))
+            {}
           }
         }
         instr.adsr_idx = adsr_nr;
@@ -450,6 +481,10 @@ namespace audio
       else
       {
         // Basic.
+        FrequencyType freq_effect = FrequencyType::CONSTANT;
+        AmplitudeType ampl_effect = AmplitudeType::CONSTANT;
+        PhaseType phase_effect = PhaseType::ZERO;
+        
         iss >> waveform_name;
         while (iss >> modifier)
         {
@@ -464,9 +499,12 @@ namespace audio
               if (!(std::istringstream(modifier_val) >> duty_cycle))
                 std::cerr << "Error parsing duty_cycle in instrument line: \"" << line << "\"." << std::endl;
             }
-            else
-              parse_post_effects(line, modifier_name, modifier_val,
-                adsr_nr, flp_nr, vol);
+            else if (parse_modulation_effects(line, modifier_name, modifier_val,
+              freq_effect, ampl_effect, phase_effect))
+            {}
+            else if (parse_post_effects(line, modifier_name, modifier_val,
+              adsr_nr, flp_nr, vol))
+            {}
           }
         }
         
@@ -484,7 +522,8 @@ namespace audio
         else if (waveform_name == "pwm")
           wf_type = WaveformType::PWM;
         
-        m_instruments_basic.push_back({ instrument_name, adsr_nr, flp_nr, vol, wf_type, duty_cycle });
+        m_instruments_basic.push_back({ instrument_name, adsr_nr, flp_nr, vol, wf_type, duty_cycle,
+          freq_effect, ampl_effect, phase_effect });
       }
     }
     
@@ -699,7 +738,7 @@ namespace audio
     {
       Waveform wave;
       wave = m_waveform_gen.generate_waveform(ib.waveform, note->duration_ms*1e-3f, note->frequency,
-                                              FrequencyType::CONSTANT, AmplitudeType::CONSTANT, PhaseType::ZERO, ib.duty_cycle);
+                                              ib.freq_effect, ib.ampl_effect, ib.phase_effect, ib.duty_cycle);
       
       return wave;
     }
