@@ -69,12 +69,17 @@ namespace audio
       std::cout << "Playing Tune" << std::endl;
       if (auto it_ts = m_time_step_ms.find(0); it_ts != m_time_step_ms.end())
         m_curr_time_step_ms = it_ts->second;
+      if (auto it_v = m_volume.find(0); it_v != m_volume.end())
+        m_curr_volume = it_v->second;
       Delay::sleep(1e6f); // Warm-up. #FIXME: Find a better, more robust solution.
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
       for (int note_idx = note_start_idx; note_idx < num_notes; ++note_idx)
       {
         for (const auto& voice : m_voices)
         {
+          if (auto it_v = m_volume.find(note_idx); it_v != m_volume.end())
+            m_curr_volume = it_v->second;
+        
           auto* note = voice.notes[note_idx].get();
           if (voice.src != nullptr)
           {
@@ -82,11 +87,12 @@ namespace audio
             if (!note->pause && !voice.src->is_playing())
             {
               voice.src->update_buffer(note->wave);
-              voice.src->set_volume(note->volume);
+              voice.src->set_volume(m_curr_volume * note->volume);
               voice.src->play(PlaybackMode::NONE);
             }
           }
         }
+        
         if (auto it_ts = m_time_step_ms.find(note_idx); it_ts != m_time_step_ms.end())
           m_curr_time_step_ms = it_ts->second;
         Delay::sleep(m_curr_time_step_ms*1e3f);
@@ -193,6 +199,8 @@ namespace audio
     std::vector<LowPassFilterArgs> m_filter_lp_args;
     std::map<int, float> m_time_step_ms;
     float m_curr_time_step_ms = 100;
+    std::map<int, float> m_volume;
+    float m_curr_volume = 1.f;
     int num_voices = 0;
     std::vector<Voice> m_voices;
     //std::vector<Instrument> m_instruments;
@@ -223,6 +231,11 @@ namespace audio
           {
             iss >> m_curr_time_step_ms;
             m_time_step_ms[num_notes_parsed] = m_curr_time_step_ms;
+          }
+          else if (command == "VOLUME")
+          {
+            iss >> m_curr_volume;
+            m_volume[num_notes_parsed] = m_curr_volume;
           }
           else if (command == "TAB")
           {
