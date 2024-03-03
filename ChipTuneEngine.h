@@ -534,27 +534,45 @@ namespace audio
       std::string attack_mode, decay_mode, release_mode;
       float attack_ms = 0.f, decay_ms = 0.f, sustain_level = 0.f, release_ms = 0.f;
       
-      iss >> adsr_nr >> attack_mode >> attack_ms >> decay_mode >> decay_ms >> sustain_level >> release_mode >> release_ms;
+      iss >> adsr_nr;
+      
       if (m_envelopes.size() < adsr_nr + 1)
         m_envelopes.resize(adsr_nr + 1);
       
-      auto str2mode = [](const std::string& str)
+      std::string unread = iss.eof()  ?  "" : iss.str().substr(iss.tellg());
+      std::string op = str::ltrim_ret(unread);
+      
+      if (!op.empty() && op[0] == '&')
       {
-        if (str == "LIN")
+        std::string adsr_lib;
+        iss >> adsr_lib;
+        
+        adsr_lib.erase(0, 1);
+        
+        m_envelopes[adsr_nr] = adsr_presets::getter.get(adsr_lib);
+      }
+      else
+      {
+        iss >> attack_mode >> attack_ms >> decay_mode >> decay_ms >> sustain_level >> release_mode >> release_ms;
+        
+        auto str2mode = [](const std::string& str)
+        {
+          if (str == "LIN")
+            return ADSRMode::LIN;
+          if (str == "EXP")
+            return ADSRMode::EXP;
+          if (str == "LOG")
+            return ADSRMode::LOG;
           return ADSRMode::LIN;
-        if (str == "EXP")
-          return ADSRMode::EXP;
-        if (str == "LOG")
-          return ADSRMode::LOG;
-        return ADSRMode::LIN;
-      };
-      
-      Attack attack { str2mode(attack_mode), attack_ms };
-      Decay decay { str2mode(decay_mode), decay_ms };
-      Sustain sustain { sustain_level / 100 };
-      Release release { str2mode(release_mode), release_ms };
-      
-      m_envelopes[adsr_nr] = { attack, decay, sustain, release };
+        };
+        
+        Attack attack { str2mode(attack_mode), attack_ms };
+        Decay decay { str2mode(decay_mode), decay_ms };
+        Sustain sustain { sustain_level / 100 };
+        Release release { str2mode(release_mode), release_ms };
+        
+        m_envelopes[adsr_nr] = { attack, decay, sustain, release };
+      }
     }
     
     void parse_lp_filters(const std::string& line, std::istringstream& iss)
