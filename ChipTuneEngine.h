@@ -132,6 +132,8 @@ namespace audio
       int instrument_conv_idx = -1;
       int instrument_weight_avg_idx = -1;
       int instrument_lib_idx = -1;
+      int adsr_idx = -1;
+      int flp_idx = -1;
       float volume = 1.f;
     };
     struct InstrumentBase
@@ -715,6 +717,32 @@ namespace audio
             note->instrument_conv_idx = stlutils::find_if_idx(m_instruments_conv, f_match_instr);
             note->instrument_weight_avg_idx = stlutils::find_if_idx(m_instruments_weight_avg, f_match_instr);
             note->instrument_lib_idx = stlutils::find_if_idx(m_instruments_lib, f_match_instr);
+            
+            unread = iss.eof()  ?  "" : iss.str().substr(iss.tellg());
+            op = str::ltrim_ret(unread);
+            
+            if (op.find("adsr:") == 0 || op.find("flp:") == 0 || op.find("vol:") == 0)
+            {
+              int adsr_nr = -1, flp_nr = -1;
+              float vol = 1.f;
+              while (iss >> modifier)
+              {
+                auto col_idx = modifier.find(':');
+                if (col_idx != std::string::npos)
+                {
+                  auto modifier_name = modifier.substr(0, col_idx);
+                  auto modifier_val = modifier.substr(col_idx + 1);
+                  
+                  if (parse_post_effects(line, modifier_name, modifier_val,
+                                         adsr_nr, flp_nr, vol))
+                  {
+                    note->adsr_idx = adsr_nr;
+                    note->flp_idx = flp_nr;
+                    note->volume = vol;
+                  }
+                }
+              }
+            }
           }
           else
           {
@@ -813,16 +841,16 @@ namespace audio
       return wave;
     }
     
-    void apply_post_effects(Waveform& wave, const InstrumentBase& i)
+    void apply_post_effects(Waveform& wave, int flp_idx, int adsr_idx)
     {
-      if (i.flp_idx >= 0)
+      if (flp_idx >= 0)
       {
-        const auto& flp = m_filter_lp_args[i.flp_idx];
+        const auto& flp = m_filter_lp_args[flp_idx];
         wave = WaveformHelper::filter_low_pass(wave, flp);
       }
-      if (i.adsr_idx >= 0)
+      if (adsr_idx >= 0)
       {
-        const auto& adsr = m_envelopes[i.adsr_idx];
+        const auto& adsr = m_envelopes[adsr_idx];
         wave = WaveformHelper::envelope_adsr(wave, adsr);
       }
     }
@@ -833,42 +861,45 @@ namespace audio
       {
         for (auto& note : voice.notes)
         {
-          if (note->pause)
-          {}
-          else if (note->instrument_basic_idx >= 0)
+          if (!note->pause)
           {
-            const auto& ib = m_instruments_basic[note->instrument_basic_idx];
-            note->wave = create_instrument_basic(note.get(), ib);
-            note->volume = ib.volume;
-            apply_post_effects(note->wave, ib);
-          }
-          else if (note->instrument_ring_mod_idx >= 0)
-          {
-            const auto& irm = m_instruments_ring_mod[note->instrument_ring_mod_idx];
-            note->wave = create_instrument_ring_mod(note.get(), irm);
-            note->volume = irm.volume;
-            apply_post_effects(note->wave, irm);
-          }
-          else if (note->instrument_conv_idx >= 0)
-          {
-            const auto& ic = m_instruments_conv[note->instrument_conv_idx];
-            note->wave = create_instrument_conv(note.get(), ic);
-            note->volume = ic.volume;
-            apply_post_effects(note->wave, ic);
-          }
-          else if (note->instrument_weight_avg_idx >= 0)
-          {
-            const auto& iwa = m_instruments_weight_avg[note->instrument_weight_avg_idx];
-            note->wave = create_instrument_weight_avg(note.get(), iwa);
-            note->volume = iwa.volume;
-            apply_post_effects(note->wave, iwa);
-          }
-          else if (note->instrument_lib_idx >= 0)
-          {
-            const auto& it = m_instruments_lib[note->instrument_lib_idx];
-            note->wave = create_instrument_lib(note.get(), it);
-            note->volume = it.volume;
-            apply_post_effects(note->wave, it);
+            if (note->instrument_basic_idx >= 0)
+            {
+              const auto& ib = m_instruments_basic[note->instrument_basic_idx];
+              note->wave = create_instrument_basic(note.get(), ib);
+              note->volume *= ib.volume;
+              apply_post_effects(note->wave, ib.flp_idx, ib.adsr_idx);
+            }
+            else if (note->instrument_ring_mod_idx >= 0)
+            {
+              const auto& irm = m_instruments_ring_mod[note->instrument_ring_mod_idx];
+              note->wave = create_instrument_ring_mod(note.get(), irm);
+              note->volume *= irm.volume;
+              apply_post_effects(note->wave, irm.flp_idx, irm.adsr_idx);
+            }
+            else if (note->instrument_conv_idx >= 0)
+            {
+              const auto& ic = m_instruments_conv[note->instrument_conv_idx];
+              note->wave = create_instrument_conv(note.get(), ic);
+              note->volume *= ic.volume;
+              apply_post_effects(note->wave, ic.flp_idx, ic.adsr_idx);
+            }
+            else if (note->instrument_weight_avg_idx >= 0)
+            {
+              const auto& iwa = m_instruments_weight_avg[note->instrument_weight_avg_idx];
+              note->wave = create_instrument_weight_avg(note.get(), iwa);
+              note->volume *= iwa.volume;
+              apply_post_effects(note->wave, iwa.flp_idx, iwa.adsr_idx);
+            }
+            else if (note->instrument_lib_idx >= 0)
+            {
+              const auto& it = m_instruments_lib[note->instrument_lib_idx];
+              note->wave = create_instrument_lib(note.get(), it);
+              note->volume *= it.volume;
+              apply_post_effects(note->wave, it.flp_idx, it.adsr_idx);
+            }
+            
+            apply_post_effects(note->wave, note->flp_idx, note->adsr_idx);
           }
         }
       }
