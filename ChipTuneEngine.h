@@ -5,17 +5,18 @@
 //  Created by Rasmus Anthin on 2024-01-21.
 //
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <chrono>
-#include <thread>
+
 #include "AudioSourceHandler.h"
 #include "Waveform.h"
 #include "WaveformGeneration.h"
 #include "../Terminal Text Lib/Delay.h"
 #include "../Core Lib/StringHelper.h"
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <chrono>
 #include <thread>
 #include <atomic>
 
