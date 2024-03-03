@@ -64,28 +64,49 @@ namespace audio
     }
 
     // Play the loaded tune
-    void play_tune()
+    void play_tune(bool interrupt_unfinished_note = true)
     {
       std::cout << "Playing Tune" << std::endl;
       if (auto it_ts = m_time_step_ms.find(0); it_ts != m_time_step_ms.end())
         m_curr_time_step_ms = it_ts->second;
+      m_curr_volume = 1.f;
       if (auto it_v = m_volume.find(0); it_v != m_volume.end())
         m_curr_volume = it_v->second;
       Delay::sleep(1e6f); // Warm-up. #FIXME: Find a better, more robust solution.
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
       for (int note_idx = note_start_idx; note_idx < num_notes; ++note_idx)
       {
+        // Branching.
+        if (auto it_g = m_gotos.find(note_idx); it_g != m_gotos.end())
+        {
+          auto& goto_pair = it_g->second;
+          const auto& label = goto_pair.first;
+          auto& count = goto_pair.second;
+          if (count > 0 || count == -1)
+          {
+            if (count > 0)
+              count--;
+            
+            auto it_l = m_labels.find(label);
+            note_idx = it_l->second - 1;
+            continue;
+          }
+        }
+        
+        // Volume.
+        if (auto it_v = m_volume.find(note_idx); it_v != m_volume.end())
+          m_curr_volume = it_v->second;
+        
         for (const auto& voice : m_voices)
         {
-          if (auto it_v = m_volume.find(note_idx); it_v != m_volume.end())
-            m_curr_volume = it_v->second;
-        
           auto* note = voice.notes[note_idx].get();
           if (voice.src != nullptr)
           {
             // #FIXME: Use streaming audio source.
-            if (!note->pause && !voice.src->is_playing())
+            if (!note->pause && (interrupt_unfinished_note || !voice.src->is_playing()))
             {
+              if (interrupt_unfinished_note)
+                voice.src->stop();
               voice.src->update_buffer(note->wave);
               voice.src->set_volume(m_curr_volume * note->volume);
               voice.src->play(PlaybackMode::NONE);
@@ -93,6 +114,7 @@ namespace audio
           }
         }
         
+        // Tempo.
         if (auto it_ts = m_time_step_ms.find(note_idx); it_ts != m_time_step_ms.end())
           m_curr_time_step_ms = it_ts->second;
         Delay::sleep(m_curr_time_step_ms*1e3f);
@@ -201,6 +223,8 @@ namespace audio
     float m_curr_time_step_ms = 100;
     std::map<int, float> m_volume;
     float m_curr_volume = 1.f;
+    std::map<std::string, int> m_labels;
+    std::map<int, std::pair<std::string, int>> m_gotos; // note_idx -> { label, count }
     int num_voices = 0;
     std::vector<Voice> m_voices;
     //std::vector<Instrument> m_instruments;
@@ -236,6 +260,25 @@ namespace audio
           {
             iss >> m_curr_volume;
             m_volume[num_notes_parsed] = m_curr_volume;
+          }
+          else if (command == "LABEL")
+          {
+            std::string label;
+            iss >> label;
+            m_labels[label] = num_notes_parsed;
+          }
+          else if (command == "GOTO")
+          {
+            std::string goto_lbl;
+            iss >> goto_lbl;
+            m_gotos[num_notes_parsed] = { goto_lbl, -1 };
+          }
+          else if (command == "GOTO_TIMES")
+          {
+            std::string goto_lbl;
+            int count = 0;
+            iss >> goto_lbl >> count;
+            m_gotos[num_notes_parsed] = { goto_lbl, count };
           }
           else if (command == "TAB")
           {
