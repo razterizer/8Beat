@@ -67,6 +67,8 @@ namespace audio
     void play_tune()
     {
       std::cout << "Playing Tune" << std::endl;
+      if (auto it_ts = m_time_step_ms.find(0); it_ts != m_time_step_ms.end())
+        m_curr_time_step_ms = it_ts->second;
       Delay::sleep(1e6f); // Warm-up. #FIXME: Find a better, more robust solution.
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
       for (int note_idx = note_start_idx; note_idx < num_notes; ++note_idx)
@@ -85,7 +87,9 @@ namespace audio
             }
           }
         }
-        Delay::sleep(time_step_ms*1e3f);
+        if (auto it_ts = m_time_step_ms.find(note_idx); it_ts != m_time_step_ms.end())
+          m_curr_time_step_ms = it_ts->second;
+        Delay::sleep(m_curr_time_step_ms*1e3f);
       }
       Delay::sleep(1e6f); // Cool-down. #FIXME: Find a better, more robust solution.
     }
@@ -187,7 +191,8 @@ namespace audio
     std::vector<InstrumentLib> m_instruments_lib;
     std::vector<ADSR> m_envelopes;
     std::vector<LowPassFilterArgs> m_filter_lp_args;
-    float time_step_ms = 100;
+    std::map<int, float> m_time_step_ms;
+    float m_curr_time_step_ms = 100;
     int num_voices = 0;
     std::vector<Voice> m_voices;
     //std::vector<Instrument> m_instruments;
@@ -209,7 +214,10 @@ namespace audio
           else if (command == "filter_lp")
             parse_lp_filters(line, iss);
           else if (command == "TIME_STEP_MS")
-            iss >> time_step_ms;
+          {
+            iss >> m_curr_time_step_ms;
+            m_time_step_ms[num_notes_parsed] = m_curr_time_step_ms;
+          }
           else if (command == "NUM_VOICES")
           {
             iss >> num_voices;
