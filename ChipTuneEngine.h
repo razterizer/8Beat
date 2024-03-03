@@ -213,16 +213,16 @@ namespace audio
             parse_envelopes(line, iss);
           else if (command == "filter_lp")
             parse_lp_filters(line, iss);
-          else if (command == "TIME_STEP_MS")
-          {
-            iss >> m_curr_time_step_ms;
-            m_time_step_ms[num_notes_parsed] = m_curr_time_step_ms;
-          }
           else if (command == "NUM_VOICES")
           {
             iss >> num_voices;
             if (num_voices > 0)
               m_voices.resize(num_voices);
+          }
+          else if (command == "TIME_STEP_MS")
+          {
+            iss >> m_curr_time_step_ms;
+            m_time_step_ms[num_notes_parsed] = m_curr_time_step_ms;
           }
           else if (command == "TAB")
           {
