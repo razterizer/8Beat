@@ -48,8 +48,8 @@
 				0716712C2B7FA58F0043E9F2 /* WaveformIO.h */,
 				07BB7BDC2B779BA0002899C9 /* WaveformGeneration.h */,
 				07BB7BDB2B7794FD002899C9 /* WaveformHelper.h */,
-				07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */,
 				07A763282B5BC85300705D31 /* AudioSourceHandler.h */,
+				07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */,
 				071671272B785CE00043E9F2 /* lib8-Bit Audio Emulator Lib.a */,
 			);
 			sourceTree = "<group>";
