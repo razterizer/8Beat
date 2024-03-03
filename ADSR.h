@@ -7,6 +7,11 @@
 
 #pragma once
 
+#define ADSR_ENTRY(name) { #name, name },
+
+#include <map>
+
+
 namespace audio
 {
 
@@ -65,6 +70,7 @@ namespace audio
   
   namespace adsr_presets
   {
+  
     static ADSR PIANO_0
     {
       { ADSRMode::LIN, 10 },
@@ -247,5 +253,52 @@ namespace audio
       { 0.2f },
       { ADSRMode::LOG, 10 },
     };
+    
+    class ADSR_Presets
+    {
+      std::map<std::string, ADSR> m_envelopes
+      {
+        ADSR_ENTRY(PIANO_0)
+        ADSR_ENTRY(PIANO_1)
+        ADSR_ENTRY(PIANO_2)
+        ADSR_ENTRY(PIANO_3)
+        ADSR_ENTRY(VIOLIN_0)
+        ADSR_ENTRY(VIOLIN_1)
+        ADSR_ENTRY(VIOLIN_2)
+        ADSR_ENTRY(VIOLIN_3)
+        ADSR_ENTRY(ORGAN_0)
+        ADSR_ENTRY(ORGAN_1)
+        ADSR_ENTRY(ORGAN_2)
+        ADSR_ENTRY(ORGAN_3)
+        ADSR_ENTRY(ORGAN_4)
+        ADSR_ENTRY(TRUMPET_0)
+        ADSR_ENTRY(TRUMPET_1)
+        ADSR_ENTRY(TRUMPET_2)
+        ADSR_ENTRY(TRUMPET_3)
+        ADSR_ENTRY(TRUMPET_4)
+        ADSR_ENTRY(FLUTE_0)
+        ADSR_ENTRY(FLUTE_1)
+        ADSR_ENTRY(FLUTE_2)
+        ADSR_ENTRY(FLUTE_3)
+        ADSR_ENTRY(GUITAR)
+        ADSR_ENTRY(KICKDRUM)
+        ADSR_ENTRY(SNAREDRUM)
+        ADSR_ENTRY(HIHAT)
+      };
+      
+    public:
+      ADSR get(const std::string& adsr_name)
+      {
+        auto it = m_envelopes.find(adsr_name);
+        if (it != m_envelopes.end())
+          return it->second;
+        else
+          return {};
+      }
+    };
+    
+    static ADSR_Presets getter;
+    
   }
+  
 }
