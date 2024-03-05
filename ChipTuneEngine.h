@@ -104,7 +104,6 @@ namespace audio
           auto* note = voice.notes[note_idx].get();
           if (voice.src != nullptr)
           {
-            // #FIXME: Use streaming audio source.
             if (!note->pause && (interrupt_unfinished_note || !voice.src->is_playing()))
             {
               if (interrupt_unfinished_note)
