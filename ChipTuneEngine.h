@@ -211,6 +211,24 @@ namespace audio
       AudioStreamSource* src = nullptr;
       std::vector<std::unique_ptr<Note>> notes;
     };
+    class Goto
+    {
+      int orig_count = 0;
+      
+    public:
+      Goto() = default;
+      Goto(const std::string& src_lbl, const std::string& dst_lbl, int cnt)
+        : from_label(src_lbl)
+        , to_label(dst_lbl)
+        , count(cnt)
+        , orig_count(cnt)
+      {}
+      
+      std::string from_label, to_label;
+      int count = 0;
+      
+      void reset() { count = orig_count; }
+    };
 
     AudioSourceHandler& m_audio_handler;
     const WaveformGeneration& m_waveform_gen;
