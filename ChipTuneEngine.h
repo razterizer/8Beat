@@ -54,6 +54,8 @@ namespace audio
         if (!parse_line(line))
           break;
       }
+      for (auto& voice : m_voices)
+        voice.notes.emplace_back(std::make_unique<Note>());
       
       std::cout << "Creating Instruments" << std::endl;
       create_instruments();
