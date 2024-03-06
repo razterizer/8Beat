@@ -69,11 +69,26 @@ namespace audio
     void play_tune(bool interrupt_unfinished_note = true)
     {
       std::cout << "Playing Tune" << std::endl;
+      
+      auto f_reset_volume = [this](int goto_note_idx)
+      {
+        for (const auto& vol_pair : m_volume)
+          if (vol_pair.first <= goto_note_idx)
+            m_curr_volume = vol_pair.second;
+      };
+      auto f_reset_speed = [this](int goto_note_idx)
+      {
+        for (const auto& ts_pair : m_time_step_ms)
+          if (ts_pair.first <= goto_note_idx)
+            m_curr_time_step_ms = ts_pair.second;
+      };
+      
       if (auto it_ts = m_time_step_ms.find(0); it_ts != m_time_step_ms.end())
         m_curr_time_step_ms = it_ts->second;
       m_curr_volume = 1.f;
       if (auto it_v = m_volume.find(0); it_v != m_volume.end())
         m_curr_volume = it_v->second;
+        
       Delay::sleep(1e6f); // Warm-up. #FIXME: Find a better, more robust solution.
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
       for (int note_idx = note_start_idx; note_idx < num_notes; ++note_idx)
@@ -81,20 +96,88 @@ namespace audio
         // Branching.
         if (auto it_g = m_gotos.find(note_idx); it_g != m_gotos.end())
         {
-          auto& goto_pair = it_g->second;
-          const auto& label = goto_pair.first;
-          auto& count = goto_pair.second;
+          auto& goto_data = it_g->second;
+          const auto& from_label = goto_data.from_label;
+          const auto& to_label = goto_data.to_label;
+          auto& count = goto_data.count;
+          
+          if (from_label == "DA_CAPO_AL_FINE")
+          {
+            m_al_fine = true;
+            note_idx = -1;
+            continue;
+          }
+          else if (from_label == "DA_CAPO_AL_CODA")
+          {
+            m_al_coda = true;
+            note_idx = -1;
+            continue;
+          }
+          else if (from_label == "DAL_SEGNO_AL_FINE")
+          {
+            if (auto it = m_labels.find("SEGNO"); it != m_labels.end())
+            {
+              m_al_fine = true;
+              note_idx = it->second - 1;
+              f_reset_volume(note_idx);
+              f_reset_speed(note_idx);
+              continue;
+            }
+          }
+          else if (from_label == "DAL_SEGNO_AL_CODA")
+          {
+            if (auto it = m_labels.find("SEGNO"); it != m_labels.end())
+            {
+              m_al_coda = true;
+              note_idx = it->second - 1;
+              f_reset_volume(note_idx);
+              f_reset_speed(note_idx);
+              continue;
+            }
+          }
+          else if (m_al_coda && from_label == "TO_CODA")
+          {
+            m_al_coda = false;
+            m_to_coda = true;
+            auto it_l = m_labels.find("CODA");
+            if (it_l != m_labels.end())
+            {
+              note_idx = it_l->second - 1;
+              f_reset_volume(note_idx);
+              f_reset_speed(note_idx);
+              continue;
+            }
+          }
+          
           if (count > 0 || count == -1)
           {
             if (count > 0)
               count--;
             
-            auto it_l = m_labels.find(label);
+            auto it_l = m_labels.find(to_label);
             note_idx = it_l->second - 1;
             continue;
           }
+          
+          if (count == 0)
+            goto_data.reset();
         }
         
+        // Special labels.
+        if (m_al_fine)
+        {
+          if (auto it = m_labels.find("FINE"); it != m_labels.end() && it->second == note_idx)
+          {
+            m_al_fine = false;
+            break;
+          }
+        }
+        else if (m_to_coda)
+        {
+          if (auto it = m_labels.find("CODA"); it != m_labels.end() && it->second == note_idx)
+            m_to_coda = false;
+        }
+      
         // Volume.
         if (auto it_v = m_volume.find(note_idx); it_v != m_volume.end())
           m_curr_volume = it_v->second;
@@ -238,12 +321,19 @@ namespace audio
     std::vector<InstrumentLib> m_instruments_lib;
     std::vector<ADSR> m_envelopes;
     std::vector<LowPassFilterArgs> m_filter_lp_args;
+    
     std::map<int, float> m_time_step_ms;
     float m_curr_time_step_ms = 100;
+    
     std::map<int, float> m_volume;
     float m_curr_volume = 1.f;
-    std::map<std::string, int> m_labels;
-    std::map<int, std::pair<std::string, int>> m_gotos; // note_idx -> { label, count }
+    
+    std::map<std::string, int> m_labels; // label -> note_idx
+    std::map<int, Goto> m_gotos; // note_idx -> Goto
+    bool m_al_fine = false;
+    bool m_al_coda = false;
+    bool m_to_coda = false;
+    
     int num_voices = 0;
     std::vector<Voice> m_voices;
     //std::vector<Instrument> m_instruments;
@@ -252,6 +342,13 @@ namespace audio
 
     bool parse_line(const std::string& line)
     {
+      auto f_has_goto_from_label = [this](const auto& from_label)
+      {
+        return std::find_if(m_gotos.begin(), m_gotos.end(), [&from_label](const auto& gp) { return gp.second.from_label == from_label; }) != m_gotos.end();
+      };
+      
+      m_volume[0] = 1.f;
+    
       std::istringstream iss(line);
       if (!line.empty())
       {
@@ -290,14 +387,70 @@ namespace audio
           {
             std::string goto_lbl;
             iss >> goto_lbl;
-            m_gotos[num_notes_parsed] = { goto_lbl, -1 };
+            m_gotos[num_notes_parsed] = { "GOTO", goto_lbl, -1 };
           }
           else if (command == "GOTO_TIMES")
           {
             std::string goto_lbl;
             int count = 0;
             iss >> goto_lbl >> count;
-            m_gotos[num_notes_parsed] = { goto_lbl, count };
+            m_gotos[num_notes_parsed] = { "GOTO_TIMES", goto_lbl, count };
+          }
+          else if (command == "CODA")
+          {
+            if (m_labels.find("CODA") == m_labels.end())
+              m_labels["CODA"] = num_notes_parsed;
+            else
+              std::cerr << "CODA already defined previously!" << std::endl;
+          }
+          else if (command == "SEGNO")
+          {
+            if (m_labels.find("SEGNO") == m_labels.end())
+              m_labels["SEGNO"] = num_notes_parsed;
+            else
+              std::cerr << "SEGNO already defined previously!" << std::endl;
+          }
+          else if (command == "FINE")
+          {
+            if (m_labels.find("FINE") == m_labels.end())
+              m_labels["FINE"] = num_notes_parsed;
+            else
+              std::cerr << "FINE already defined previously!" << std::endl;
+          }
+          else if (command == "DA_CAPO_AL_FINE")
+          {
+            if (!f_has_goto_from_label("DA_CAPO_AL_FINE"))
+              m_gotos[num_notes_parsed] = { "DA_CAPO_AL_FINE", "", -2 };
+            else
+              std::cerr << "DA_CAPO_AL_FINE already defined previously!" << std::endl;
+          }
+          else if (command == "DA_CAPO_AL_CODA")
+          {
+            if (!f_has_goto_from_label("DA_CAPO_AL_CODA"))
+              m_gotos[num_notes_parsed] = { "DA_CAPO_AL_CODA", "", -2 };
+            else
+              std::cerr << "DA_CAPO_AL_CODA already defined previously!" << std::endl;
+          }
+          else if (command == "DAL_SEGNO_AL_FINE")
+          {
+            if (!f_has_goto_from_label("DAL_SEGNO_AL_FINE"))
+              m_gotos[num_notes_parsed] = { "DAL_SEGNO_AL_FINE", "", -2 };
+            else
+              std::cerr << "DAL_SEGNO_AL_FINE already defined previously!" << std::endl;
+          }
+          else if (command == "DAL_SEGNO_AL_CODA")
+          {
+            if (!f_has_goto_from_label("DAL_SEGNO_AL_CODA"))
+              m_gotos[num_notes_parsed] = { "DAL_SEGNO_AL_CODA", "", -2 };
+            else
+              std::cerr << "DAL_SEGNO_AL_CODA already defined previously!" << std::endl;
+          }
+          else if (command == "TO_CODA")
+          {
+            if (!f_has_goto_from_label("TO_CODA"))
+              m_gotos[num_notes_parsed] = { "TO_CODA", "CODA", -2 };
+            else
+              std::cerr << "TO_CODA already defined previously!" << std::endl;
           }
           else if (command == "TAB")
           {
@@ -991,10 +1144,7 @@ namespace audio
     void init_voice_sources()
     {
       for (auto& voice : m_voices)
-      {
-        // #FIXME: Use streamed audio source
         voice.src = m_audio_handler.create_stream_source();
-      }
     }
     
     std::thread audio_thread;
