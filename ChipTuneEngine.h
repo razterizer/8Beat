@@ -395,8 +395,10 @@ namespace audio
       
       std::string from_label, to_label;
       int count = 0;
+      int note_idx = -1; // Position of the goto itself.
       
       void reset() { count = orig_count; }
+      // Number of jumps performed so far.
       int num_jumps() const { return orig_count - count; }
     };
     struct Label
