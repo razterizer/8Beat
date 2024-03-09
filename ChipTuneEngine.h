@@ -70,6 +70,11 @@ namespace audio
     {
       std::cout << "Playing Tune" << std::endl;
       
+      auto f_find_label = [this](const auto& label)
+      {
+        return std::find_if(m_labels.begin(), m_labels.end(), [&label](const auto& lp) { return lp.second->label == label; });
+      };
+      
       auto f_reset_volume = [this](int goto_note_idx)
       {
         for (const auto& vol_pair : m_volume)
@@ -96,7 +101,7 @@ namespace audio
         // Branching.
         if (auto it_g = m_gotos.find(note_idx); it_g != m_gotos.end())
         {
-          auto& goto_data = it_g->second;
+          auto& goto_data = *it_g->second.get();
           const auto& from_label = goto_data.from_label;
           const auto& to_label = goto_data.to_label;
           auto& count = goto_data.count;
@@ -115,10 +120,10 @@ namespace audio
           }
           else if (from_label == "DAL_SEGNO_AL_FINE")
           {
-            if (auto it = m_labels.find("SEGNO"); it != m_labels.end())
+            if (auto it = f_find_label("SEGNO"); it != m_labels.end())
             {
               m_al_fine = true;
-              note_idx = it->second - 1;
+              note_idx = it->first - 1;
               f_reset_volume(note_idx);
               f_reset_speed(note_idx);
               continue;
@@ -126,10 +131,10 @@ namespace audio
           }
           else if (from_label == "DAL_SEGNO_AL_CODA")
           {
-            if (auto it = m_labels.find("SEGNO"); it != m_labels.end())
+            if (auto it = f_find_label("SEGNO"); it != m_labels.end())
             {
               m_al_coda = true;
-              note_idx = it->second - 1;
+              note_idx = it->first - 1;
               f_reset_volume(note_idx);
               f_reset_speed(note_idx);
               continue;
@@ -139,24 +144,28 @@ namespace audio
           {
             m_al_coda = false;
             m_to_coda = true;
-            auto it_l = m_labels.find("CODA");
+            auto it_l = f_find_label("CODA");
             if (it_l != m_labels.end())
             {
-              note_idx = it_l->second - 1;
+              note_idx = it_l->first - 1;
               f_reset_volume(note_idx);
               f_reset_speed(note_idx);
               continue;
             }
           }
           
+          // Goto label.
           if (count > 0 || count == -1)
           {
             if (count > 0)
               count--;
             
-            auto it_l = m_labels.find(to_label);
-            note_idx = it_l->second - 1;
-            continue;
+            auto it_l = f_find_label(to_label);
+            if (it_l != m_labels.end())
+            {
+              note_idx = it_l->first - 1;
+              continue;
+            }
           }
           
           if (count == 0)
@@ -166,7 +175,7 @@ namespace audio
         // Special labels.
         if (m_al_fine)
         {
-          if (auto it = m_labels.find("FINE"); it != m_labels.end() && it->second == note_idx)
+          if (auto it = f_find_label("FINE"); it != m_labels.end() && it->first == note_idx)
           {
             m_al_fine = false;
             break;
@@ -174,14 +183,54 @@ namespace audio
         }
         else if (m_to_coda)
         {
-          if (auto it = m_labels.find("CODA"); it != m_labels.end() && it->second == note_idx)
+          if (auto it = f_find_label("CODA"); it != m_labels.end() && it->first == note_idx)
             m_to_coda = false;
+        }
+
+        // N:th ending.
+        {
+          bool do_jmp = false;
+          for (auto it = m_labels.begin(); it != m_labels.end(); ++it)
+          {
+            if (it->first == note_idx && it->second->label == "ENDING")
+            {
+              auto* lbl = it->second.get();
+              if (lbl->src_goto != nullptr)
+              {
+                // If we are standing at an ENDING for the following repetition(s).
+                int curr_num_repeats = lbl->src_goto->num_jumps();
+                if (curr_num_repeats < lbl->id)
+                {
+                  note_idx = lbl->src_goto->note_idx - 1;
+                  do_jmp = true;
+                  continue;
+                }
+                else if (curr_num_repeats > lbl->id)
+                {
+                  auto it_rlp = stlutils::find_if(lbl->related_labels, [curr_num_repeats](const auto& rlp)
+                  {
+                    return rlp.second->id == curr_num_repeats;
+                  });
+                  if (it_rlp != lbl->related_labels.end())
+                  {
+                    int rl_note_idx = it_rlp->first;
+                    note_idx = rl_note_idx - 1;
+                    do_jmp = true;
+                    continue;
+                  }
+                }
+              }
+            }
+          }
+          if (do_jmp)
+            continue;
         }
       
         // Volume.
         if (auto it_v = m_volume.find(note_idx); it_v != m_volume.end())
           m_curr_volume = it_v->second;
         
+        // The Melody.
         for (const auto& voice : m_voices)
         {
           auto* note = voice.notes[note_idx].get();
@@ -299,17 +348,32 @@ namespace audio
       
     public:
       Goto() = default;
-      Goto(const std::string& src_lbl, const std::string& dst_lbl, int cnt)
+      Goto(const std::string& src_lbl, const std::string& dst_lbl, int cnt, int curr_idx)
         : from_label(src_lbl)
         , to_label(dst_lbl)
         , count(cnt)
         , orig_count(cnt)
+        , note_idx(curr_idx)
       {}
       
       std::string from_label, to_label;
       int count = 0;
       
       void reset() { count = orig_count; }
+      int num_jumps() const { return orig_count - count; }
+    };
+    struct Label
+    {
+      Label(const std::string& a_lbl, int a_id, Goto* a_src_goto = nullptr)
+        : label(a_lbl)
+        , id(a_id)
+        , src_goto(a_src_goto)
+      {}
+      std::string label;
+      // For ENDING command:
+      int id = 0;
+      Goto* src_goto = nullptr; // src_goto before its jump to its label.
+      std::vector<std::pair<int, Label*>> related_labels;
     };
 
     AudioSourceHandler& m_audio_handler;
@@ -328,8 +392,8 @@ namespace audio
     std::map<int, float> m_volume;
     float m_curr_volume = 1.f;
     
-    std::map<std::string, int> m_labels; // label -> note_idx
-    std::map<int, Goto> m_gotos; // note_idx -> Goto
+    std::map<int, std::unique_ptr<Label>> m_labels; // note_idx -> Label (label, id)
+    std::map<int, std::unique_ptr<Goto>> m_gotos; // note_idx -> Goto (from_label, to_label, count)
     bool m_al_fine = false;
     bool m_al_coda = false;
     bool m_to_coda = false;
@@ -342,9 +406,14 @@ namespace audio
 
     bool parse_line(const std::string& line)
     {
+      auto f_find_label = [this](const auto& label)
+      {
+        return std::find_if(m_labels.begin(), m_labels.end(), [&label](const auto& lp) { return lp.second->label == label; });
+      };
+      
       auto f_has_goto_from_label = [this](const auto& from_label)
       {
-        return std::find_if(m_gotos.begin(), m_gotos.end(), [&from_label](const auto& gp) { return gp.second.from_label == from_label; }) != m_gotos.end();
+        return std::find_if(m_gotos.begin(), m_gotos.end(), [&from_label](const auto& gp) { return gp.second->from_label == from_label; }) != m_gotos.end();
       };
       
       m_volume[0] = 1.f;
@@ -381,76 +450,96 @@ namespace audio
           {
             std::string label;
             iss >> label;
-            m_labels[label] = num_notes_parsed;
+            m_labels[num_notes_parsed] = std::make_unique<Label>(label, 0);
           }
           else if (command == "GOTO")
           {
             std::string goto_lbl;
             iss >> goto_lbl;
-            m_gotos[num_notes_parsed] = { "GOTO", goto_lbl, -1 };
+            m_gotos[num_notes_parsed] = std::make_unique<Goto>("GOTO", goto_lbl, -1, num_notes_parsed);
           }
           else if (command == "GOTO_TIMES")
           {
             std::string goto_lbl;
             int count = 0;
             iss >> goto_lbl >> count;
-            m_gotos[num_notes_parsed] = { "GOTO_TIMES", goto_lbl, count };
+            m_gotos[num_notes_parsed] = std::make_unique<Goto>("GOTO_TIMES", goto_lbl, count, num_notes_parsed);
+            int start_idx = 0;
+            int end_idx = num_notes_parsed;
+            if (auto it = f_find_label(goto_lbl); it != m_labels.end())
+              start_idx = it->first;
+            std::vector<std::pair<int, Label*>> ending_labels;
+            for (auto it = m_labels.begin(); it != m_labels.end(); ++it)
+              if (start_idx <= it->first && it->first <= end_idx)
+                if (it->second->label == "ENDING")
+                {
+                  it->second->src_goto = m_gotos[num_notes_parsed].get();
+                  ending_labels.emplace_back(it->first, it->second.get());
+                }
+            for (auto& lbl_pair : ending_labels)
+              lbl_pair.second->related_labels = ending_labels;
           }
           else if (command == "CODA")
           {
-            if (m_labels.find("CODA") == m_labels.end())
-              m_labels["CODA"] = num_notes_parsed;
+            if (f_find_label("CODA") == m_labels.end())
+              m_labels[num_notes_parsed] = std::make_unique<Label>("CODA", -2);
             else
               std::cerr << "CODA already defined previously!" << std::endl;
           }
           else if (command == "SEGNO")
           {
-            if (m_labels.find("SEGNO") == m_labels.end())
-              m_labels["SEGNO"] = num_notes_parsed;
+            if (f_find_label("SEGNO") == m_labels.end())
+              m_labels[num_notes_parsed] = std::make_unique<Label>("SEGNO", -2);
             else
               std::cerr << "SEGNO already defined previously!" << std::endl;
           }
           else if (command == "FINE")
           {
-            if (m_labels.find("FINE") == m_labels.end())
-              m_labels["FINE"] = num_notes_parsed;
+            if (f_find_label("FINE") == m_labels.end())
+              m_labels[num_notes_parsed] = std::make_unique<Label>("FINE", -2);
             else
               std::cerr << "FINE already defined previously!" << std::endl;
           }
           else if (command == "DA_CAPO_AL_FINE")
           {
             if (!f_has_goto_from_label("DA_CAPO_AL_FINE"))
-              m_gotos[num_notes_parsed] = { "DA_CAPO_AL_FINE", "", -2 };
+              m_gotos[num_notes_parsed] = std::make_unique<Goto>("DA_CAPO_AL_FINE", "", -2, num_notes_parsed);
             else
               std::cerr << "DA_CAPO_AL_FINE already defined previously!" << std::endl;
           }
           else if (command == "DA_CAPO_AL_CODA")
           {
             if (!f_has_goto_from_label("DA_CAPO_AL_CODA"))
-              m_gotos[num_notes_parsed] = { "DA_CAPO_AL_CODA", "", -2 };
+              m_gotos[num_notes_parsed] = std::make_unique<Goto>("DA_CAPO_AL_CODA", "", -2, num_notes_parsed);
             else
               std::cerr << "DA_CAPO_AL_CODA already defined previously!" << std::endl;
           }
           else if (command == "DAL_SEGNO_AL_FINE")
           {
             if (!f_has_goto_from_label("DAL_SEGNO_AL_FINE"))
-              m_gotos[num_notes_parsed] = { "DAL_SEGNO_AL_FINE", "", -2 };
+              m_gotos[num_notes_parsed] = std::make_unique<Goto>("DAL_SEGNO_AL_FINE", "", -2, num_notes_parsed);
             else
               std::cerr << "DAL_SEGNO_AL_FINE already defined previously!" << std::endl;
           }
           else if (command == "DAL_SEGNO_AL_CODA")
           {
             if (!f_has_goto_from_label("DAL_SEGNO_AL_CODA"))
-              m_gotos[num_notes_parsed] = { "DAL_SEGNO_AL_CODA", "", -2 };
+              m_gotos[num_notes_parsed] = std::make_unique<Goto>("DAL_SEGNO_AL_CODA", "", -2, num_notes_parsed);
             else
               std::cerr << "DAL_SEGNO_AL_CODA already defined previously!" << std::endl;
           }
           else if (command == "TO_CODA")
           {
             if (!f_has_goto_from_label("TO_CODA"))
-              m_gotos[num_notes_parsed] = { "TO_CODA", "CODA", -2 };
+              m_gotos[num_notes_parsed] = std::make_unique<Goto>("TO_CODA", "CODA", -2, num_notes_parsed);
             else
               std::cerr << "TO_CODA already defined previously!" << std::endl;
+          }
+          else if (command == "ENDING")
+          {
+            int count = 0;
+            iss >> count;
+            m_labels[num_notes_parsed] = std::make_unique<Label>("ENDING", count);
           }
           else if (command == "TAB")
           {
