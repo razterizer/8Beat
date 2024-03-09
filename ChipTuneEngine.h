@@ -228,7 +228,7 @@ namespace audio
             else if (curr_num_repeats > lbl->id)
             {
               auto it_rlp = stlutils::find_if(lbl->related_labels, [curr_num_repeats](const auto& rlp)
-                                              {
+              {
                 return rlp.second->id == curr_num_repeats;
               });
               if (it_rlp != lbl->related_labels.end())
