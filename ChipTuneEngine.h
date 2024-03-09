@@ -212,42 +212,33 @@ namespace audio
         }
 
         // N:th ending.
+        if (auto it = stlutils::find_if(m_labels, [note_idx](const auto& lp) { return lp.first == note_idx && lp.second->label == "ENDING"; });
+            it != m_labels.end())
         {
-          bool do_jmp = false;
-          for (auto it = m_labels.begin(); it != m_labels.end(); ++it)
+          auto* lbl = it->second.get();
+          if (lbl->src_goto != nullptr)
           {
-            if (it->first == note_idx && it->second->label == "ENDING")
+            // If we are standing at an ENDING for the following repetition(s).
+            int curr_num_repeats = lbl->src_goto->num_jumps();
+            if (curr_num_repeats < lbl->id)
             {
-              auto* lbl = it->second.get();
-              if (lbl->src_goto != nullptr)
+              note_idx = lbl->src_goto->note_idx - 1;
+              continue;
+            }
+            else if (curr_num_repeats > lbl->id)
+            {
+              auto it_rlp = stlutils::find_if(lbl->related_labels, [curr_num_repeats](const auto& rlp)
+                                              {
+                return rlp.second->id == curr_num_repeats;
+              });
+              if (it_rlp != lbl->related_labels.end())
               {
-                // If we are standing at an ENDING for the following repetition(s).
-                int curr_num_repeats = lbl->src_goto->num_jumps();
-                if (curr_num_repeats < lbl->id)
-                {
-                  note_idx = lbl->src_goto->note_idx - 1;
-                  do_jmp = true;
-                  continue;
-                }
-                else if (curr_num_repeats > lbl->id)
-                {
-                  auto it_rlp = stlutils::find_if(lbl->related_labels, [curr_num_repeats](const auto& rlp)
-                  {
-                    return rlp.second->id == curr_num_repeats;
-                  });
-                  if (it_rlp != lbl->related_labels.end())
-                  {
-                    int rl_note_idx = it_rlp->first;
-                    note_idx = rl_note_idx - 1;
-                    do_jmp = true;
-                    continue;
-                  }
-                }
+                int rl_note_idx = it_rlp->first;
+                note_idx = rl_note_idx - 1;
+                continue;
               }
             }
           }
-          if (do_jmp)
-            continue;
         }
       
         // Volume.
