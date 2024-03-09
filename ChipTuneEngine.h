@@ -99,6 +99,9 @@ namespace audio
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
       for (int note_idx = note_start_idx; note_idx < num_notes; ++note_idx)
       {
+        if (stop_audio_thread)
+          break;
+      
         // Branching.
         if (auto it_g = m_gotos.find(note_idx); it_g != m_gotos.end())
         {
