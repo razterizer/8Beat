@@ -270,7 +270,10 @@ namespace audio
           m_curr_time_step_ms = it_ts->second;
         Delay::sleep(m_curr_time_step_ms*1e3f);
       }
-      Delay::sleep(1e6f); // Cool-down. #FIXME: Find a better, more robust solution.
+
+      // Cooldown.
+      do {}
+      while (stlutils::contains_if(m_voices, [](const auto& voice) { return voice.src->is_playing(); }));
     }
     
     // Play the loaded tune in a separate thread
