@@ -106,6 +106,16 @@ namespace audio
           const auto& to_label = goto_data.to_label;
           auto& count = goto_data.count;
           
+          if (m_enable_print_notes)
+          {
+            if (from_label == "GOTO")
+              std::cout << from_label << " " << to_label << std::endl;
+            else if (from_label == "GOTO_TIMES")
+              std::cout << from_label << " " << to_label << " " << count << std::endl;
+            else if (count == -2)
+              std::cout << from_label << std::endl;
+          }
+          
           if (from_label == "DA_CAPO_AL_FINE")
           {
             m_al_fine = true;
@@ -170,6 +180,20 @@ namespace audio
           
           if (count == 0)
             goto_data.reset();
+        }
+        
+        if (m_enable_print_notes)
+        {
+          for (auto it = m_labels.begin(); it != m_labels.end(); ++it)
+            if (it->first == note_idx)
+            {
+              if (it->second->label == "ENDING")
+                std::cout << it->second->label << " " << it->second->id << std::endl;
+              else if (it->second->id == 0)
+                std::cout << "LABEL " << it->second->label << std::endl;
+              else if (it->second->id == -2)
+                std::cout << it->second->label << std::endl;
+            }
         }
         
         // Special labels.
@@ -247,6 +271,9 @@ namespace audio
           }
         }
         
+        if (m_enable_print_notes)
+          std::cout << "Note Idx: " << std::to_string(note_idx) << std::endl;
+                                      
         // Tempo.
         if (auto it_ts = m_time_step_ms.find(note_idx); it_ts != m_time_step_ms.end())
           m_curr_time_step_ms = it_ts->second;
@@ -281,6 +308,16 @@ namespace audio
     {
       if (audio_thread.joinable())
         audio_thread.join();
+    }
+    
+    void enable_print_notes()
+    {
+      m_enable_print_notes = true;
+    }
+    
+    void disable_print_notes()
+    {
+      m_enable_print_notes = false;
     }
 
   private:
@@ -403,6 +440,8 @@ namespace audio
     //std::vector<Instrument> m_instruments;
     int note_start_idx = 0;
     int num_notes_parsed = 0;
+    bool m_enable_print_notes = false;
+    
 
     bool parse_line(const std::string& line)
     {
