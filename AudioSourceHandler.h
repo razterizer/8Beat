@@ -16,7 +16,7 @@
 #include <memory>
 #include "../../lib/Core Lib/Math.h"
 #include "../../lib/Core Lib/Rand.h"
-#include "../../lib/Terminal Text Lib/Delay.h"
+#include "../../lib/Core Lib/Delay.h"
 #include <iostream>
 #include <numeric>
 #include <variant>
