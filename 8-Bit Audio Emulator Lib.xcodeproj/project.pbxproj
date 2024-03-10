@@ -17,6 +17,7 @@
 		071671282B7867B90043E9F2 /* Waveform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Waveform.h; sourceTree = "<group>"; };
 		0716712C2B7FA58F0043E9F2 /* WaveformIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformIO.h; sourceTree = "<group>"; };
 		0716712D2B7FF4DB0043E9F2 /* Spectrum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Spectrum.h; sourceTree = "<group>"; };
+		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
 		07880A572B8FE55000711230 /* OpenALCallbacks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenALCallbacks.h; sourceTree = "<group>"; };
@@ -40,6 +41,7 @@
 		07A763122B5B225500705D31 = {
 			isa = PBXGroup;
 			children = (
+				0760B6F12B9E3C610032CACD /* README.md */,
 				07880A572B8FE55000711230 /* OpenALCallbacks.h */,
 				07880A542B87CB9A00711230 /* Synthesizer.h */,
 				07880A532B87AAFA00711230 /* ADSR.h */,
