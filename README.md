@@ -5,7 +5,8 @@
 ### Syntax
 ```xml
 instrument <instrument_name> <waveform> [duty_cycle:<pwm_duty_cycle>]
- [ffx:<freq_preset_effect>] [afx:<ampl_preset_effect>] [pfx:<phase_preset_effect>] [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
+ [ffx:<freq_preset_effect>] [afx:<ampl_preset_effect>] [pfx:<phase_preset_effect>] 
+ [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
 
 instrument <instrument_name> ring_mod_A:<ring_mod_instr_A> ring_mod_B:<ring_mod_instr_B>
  [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
