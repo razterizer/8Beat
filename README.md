@@ -3,7 +3,7 @@
 
 ## Instrument Definitions
 ### Syntax
-```markdown
+```xml
 instrument <instrument_name> <waveform> [duty_cycle:<pwm_duty_cycle>]
  [ffx:<freq_preset_effect>] [afx:<ampl_preset_effect>] [pfx:<phase_preset_effect>] [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
 
@@ -20,8 +20,8 @@ instrument <instrument_name> &<lib_instrument_name>
  [ffx:<freq_preset_effect>] [afx:<ampl_preset_effect>] [pfx:<phase_preset_effect>]
  [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
  ```
- Where:
-```markdown
+ Where
+```xml
 <instrument_name> := [A-Za-z][A-Za-z0-9]*
 <waveform> := "sine"|"square"|"triangle"|"sawtooth"|"noise"|"pwm"
 <volume> := 0..1
@@ -29,7 +29,7 @@ instrument <instrument_name> &<lib_instrument_name>
 ```
 
 ### Examples
-```markdown
+```xml
 instrument PIANO ring_mod_A:I0 ring_mod_B:I1 adsr:0
 instrument I0 square adsr:1 flp:0 afx:VIBRATO
 instrument I1 pwm duty_cycle:0.3
@@ -45,12 +45,12 @@ instrument STEEL_PAN conv_A:FLUTE_VIB conv_B:SDRUM adsr:1
 
 ## Modulation Envelopes
 ### Syntax
-```markdown
+```xml
 adsr <adsr_nr> <attack_mode> <attack_ms> <decay_mode> <decay_ms> <sustain_level> <release_mode> <release_ms>
 adsr <adsr_nr> &<lib_adsr_name>
 ```
-Where:
-```markdown
+Where
+```xml
 <adsr_nr> := [0-9]+
 <attack_mode> := <adsr_mode>
 <decay_mode> := <adsr_mode>
@@ -61,7 +61,7 @@ Where:
 <release_ms> := [0-9]+
 ```
 ### Examples
-```markdown
+```xml
 adsr 0 LIN 100 EXP 300 50 LOG 500   ; Modulation envelope adsr0 with linear attack of 100 ms, exponential decay of 300 ms, sustain level of 50, and logarithmic release of 500 ms
 adsr 1 EXP 50 EXP 200 80 LIN 300
 adsr 2 &ORGAN_2
@@ -70,22 +70,88 @@ adsr 3 LOG 80 LOG 30 50 LOG 10
 
 ## Low Pass Filters
 ### Syntax
-```markdown
+```xml
 filter_lp <filter_lp_nr> [type] [order] [cutoff_frq_mult] [ripple]
 ```
 
 ### Examples
-```markdown
+```xml
 filter_lp 0 Butterworth 2 1.5 0.1
 ```
 
-## Note format:
-```markdown
+# Score
+## Notes
+### Syntax
+```xml
 <pitch> <duration_ms> <instrument>
 ```
+Where
+```xml
+<pitch> := [A-G](b|#)?[0-8]
+```
+
+### Examples
+```xml
+A3 33 MyInstrument_3
+Gb4 250 PIANO
+E#5 30 trumpet ; Same pitch as F5.
+```
+
+## Modifiers
+### Syntax
+```xml
+NUM_VOICES <num_voices>
+```
+Sets the number of voices. Can only be set once and before the score begins.
+```xml
+TIME_STEP_MS <time_step>
+```
+Time step (tempo) of the song. A shorter value will make the duration of each note row after it shorter. This can be set multiple times throughout the music.
+```xml
+VOLUME <volume>
+```
+Globally sets the (accumulated) volume. This volume is multiplied with every volume level of each note row that comes after it. This can be set multiple times throughout the music.
+
+## Branching
+```xml
+LABEL <label>
+```
+Destination label for jump with `GOTO` or `GOTO_TIMES`.
+```xml
+GOTO <label>
+```
+When execution arrives at this command, it will jump to the `LABEL` that matches `<label>`.
+```xml
+GOTO_TIMES <label> <count>
+```
+Same as `GOTO` but will only jump `<count>` times.
+```xml
+ENDING <jump_no>
+```
+Allows for structures like this:
+```xml
+LABEL my_label
+... ; Part A. Will be played every repeat.
+ENDING 0
+... ; Part B. Will be played the first time (0th jump).
+ENDING 1
+... ; Part C. Will be played the second time (1st jump).
+ENDING 2
+... ; Part D. Will be played the third time (2nd jump).
+GOTO_TIMES my_label 2
+```
+In this example, it will play: A, B, A, C, A, D and then move on to the notes below the `GOTO_TIMES` command.
+```xml
+CODA
+```
+This is a muscial notation that denotes a passage that leads the music to an end. It works like a specialized label.
+```xml
+SEGNO
+```
+
 
 Example:
-```markdown
+```xml
 TIME_STEP_MS 50
 NUM_VOICES 3
 
