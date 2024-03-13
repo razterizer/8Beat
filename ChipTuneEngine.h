@@ -96,6 +96,7 @@ namespace audio
         m_curr_volume = it_v->second;
         
       Delay::sleep(1e6f); // Warm-up. #FIXME: Find a better, more robust solution.
+      // ### Loop over voices ###
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
       for (int note_idx = note_start_idx; note_idx < num_notes; ++note_idx)
       {
