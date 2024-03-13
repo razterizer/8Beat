@@ -24,9 +24,12 @@ instrument <instrument_name> &<lib_instrument_name>
  Where
 ```xml
 <instrument_name> := [A-Za-z][A-Za-z0-9]*
-<waveform> := "sine"|"square"|"triangle"|"sawtooth"|"noise"|"pwm"
+<waveform> := "sine"|"square"|"triangle"|"sawtooth"|"noise"|"pwm" ; pwm uses the duty_cycle attribute.
 <volume> := 0..1
-<lib_instrument_name> := "PIANO"|"VIOLIN"|"ORGAN"|"TRUMPET"|"FLUTE"|"GUITAR"|"KICKDRUM"|"SNAREDRUM"|"HIHAT"|"ANVIL"
+<lib_instrument_name> := "PIANO"|"VIOLIN"|"ORGAN"|"TRUMPET"|"FLUTE"|"GUITAR"|"KICKDRUM"|"SNAREDRUM"|"HIHAT"|"ANVIL" ; Predefined instruments.
+<ffx> := "CONSTANT"|"JET_ENGINE_POWERUP"|"CHIRP_0"|"CHIRP_1"|"CHIRP_2" ; Frequency effect.
+<afx> := "CONSTANT"|"JET_ENGINE_POWERUP"|"VIBRATO_0" ; Amplitude effect.
+<pfx> := "ZERO" ; Phase effect.
 ```
 
 ### Examples
