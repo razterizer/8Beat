@@ -102,6 +102,14 @@ namespace audio
       {
         if (stop_audio_thread)
           break;
+          
+        if (auto it_p = m_print_switches.find(note_idx); it_p != m_print_switches.end())
+        {
+          if (it_p->second)
+            enable_print_notes();
+          else
+            disable_print_notes();
+        }
       
         // Branching.
         if (auto it_g = m_gotos.find(note_idx); it_g != m_gotos.end())
@@ -436,6 +444,8 @@ namespace audio
     bool m_al_coda = false;
     bool m_to_coda = false;
     
+    std::map<int, bool> m_print_switches;
+    
     int num_voices = 0;
     std::vector<Voice> m_voices;
     //std::vector<Instrument> m_instruments;
@@ -580,6 +590,15 @@ namespace audio
             int count = 0;
             iss >> count;
             m_labels[num_notes_parsed] = std::make_unique<Label>("ENDING", count);
+          }
+          else if (command == "PRINT")
+          {
+            std::string on_off;
+            iss >> on_off;
+            if (on_off == "ON")
+              m_print_switches[num_notes_parsed] = true;
+            else if (on_off == "OFF")
+              m_print_switches[num_notes_parsed] = false;
           }
           else if (command == "TAB")
           {
