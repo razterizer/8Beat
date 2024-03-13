@@ -52,7 +52,7 @@ namespace audio
       wd.sample_rate = sample_rate;
       wd.duration = duration;
       
-      float buffer_len = duration * sample_rate;
+      int buffer_len = duration * sample_rate;
       float freq_mod = frequency;
       float ampl_mod = 1.f;
       

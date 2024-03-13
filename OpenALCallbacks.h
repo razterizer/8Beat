@@ -7,8 +7,13 @@
 
 #pragma once
 
-#include <AL/al.h>
-#include <AL/alc.h>
+#ifdef _MSC_VER
+  #include <OpenAL_Soft/al.h>
+  #include <OpenAL_Soft/alc.h>
+#else
+  #include <AL/al.h>
+  #include <AL/alc.h>
+#endif
 #include <iostream>
 
 #define alCall(function, ...) alCallImpl(__FILE__, __LINE__, function, __VA_ARGS__)
