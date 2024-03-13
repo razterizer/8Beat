@@ -608,7 +608,7 @@ namespace audio
           else if (command == "END")
             return false;
           else if (command == "START")
-            note_start_idx = num_notes_parsed;
+            note_start_idx = num_notes_parsed + stlutils::contains_if(m_gotos, [this](const auto& gp) { return gp.first == num_notes_parsed; }); // #HACK! Is there a better way?
             
         }
         else
