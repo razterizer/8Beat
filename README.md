@@ -1,10 +1,10 @@
 # ChipTune Engine
 
-Documentation is a work in progress for the moment being. For example on how to use this lib, please clone repo `Pilot Episode` and follow the instructions there.
+Documentation is a work in progress for the moment being. For example on how to use this lib, please clone repo [`Pilot Episode`](https://github.com/razterizer/Pilot-Episode) and follow the instructions there.
 
 ## Getting Started
 
-This header-only library depends on the header-only library Core-Lib which should be located in a checkout-folder called `Core Lib` next to the checkout-folder for this lib (which I recommend you call `8-Bit Audio Emulator Lib`). I intend to change these paths names in the near future. The header only libs uses relative include paths (which is a bit suboptimal), but I'll see if I can find a better solution for this.
+This header-only library depends on the header-only library Core-Lib which should be located in a checkout-folder called [`Core Lib`](https://github.com/razterizer/Core-Lib) next to the checkout-folder for this lib (which I recommend you call `8-Bit Audio Emulator Lib`). I intend to change these paths names in the near future. The header only libs uses relative include paths (which is a bit suboptimal), but I'll see if I can find a better solution for this.
 
 ## Instrument Definitions
 ### Syntax
