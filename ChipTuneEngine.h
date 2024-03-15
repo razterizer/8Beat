@@ -56,7 +56,7 @@ namespace audio
           break;
       }
       for (auto& voice : m_voices)
-        voice.notes.emplace_back(std::make_unique<Note>());
+        voice.notes.emplace_back(std::make_unique<Note>(Note::create_separator()));
       
       std::cout << "Creating Instruments" << std::endl;
       create_instruments();
@@ -259,6 +259,7 @@ namespace audio
           m_curr_volume = it_v->second;
         
         // The Melody.
+        bool is_separator = m_voices[0].notes[note_idx].get()->separator;
         for (const auto& voice : m_voices)
         {
           auto* note = voice.notes[note_idx].get();
@@ -281,7 +282,8 @@ namespace audio
         // Tempo.
         if (auto it_ts = m_time_step_ms.find(note_idx); it_ts != m_time_step_ms.end())
           m_curr_time_step_ms = it_ts->second;
-        Delay::sleep(m_curr_time_step_ms*1e3f);
+        if (!is_separator)
+          Delay::sleep(m_curr_time_step_ms*1e3f);
       }
 
       // Cooldown.
@@ -330,9 +332,10 @@ namespace audio
   private:
     struct Note
     {
-      Note() : pause(true) {}
+      Note() = default;
       Note(float f, float d) : pause(false), frequency(f), duration_ms(d) {}
       bool pause = false;
+      bool separator = false; // Separates commands
       float frequency = 0.f;
       float duration_ms = 0.f;
       Waveform wave;
@@ -344,6 +347,23 @@ namespace audio
       int adsr_idx = -1;
       int flp_idx = -1;
       float volume = 1.f;
+      static Note create_pause()
+      {
+        Note n;
+        n.pause = true;
+        return n;
+      }
+      static Note create_separator()
+      {
+        Note n;
+        n.separator = true;
+        return n;
+      }
+      static Note create_note(float f, float d)
+      {
+        Note n(f, d);
+        return n;
+      }
     };
     struct InstrumentBase
     {
@@ -474,6 +494,8 @@ namespace audio
         std::string command;
         if (iss >> command)
         {
+          auto num_gotos_prev = m_gotos.size();
+          
           if (command == "instrument")
             parse_instrument(line, iss);
           else if (command == "adsr")
@@ -608,8 +630,14 @@ namespace audio
           else if (command == "END")
             return false;
           else if (command == "START")
-            note_start_idx = num_notes_parsed + stlutils::contains_if(m_gotos, [this](const auto& gp) { return gp.first == num_notes_parsed; }); // #HACK! Is there a better way?
-            
+            note_start_idx = num_notes_parsed; // + stlutils::contains_if(m_gotos, [this](const auto& gp) { return gp.first == num_notes_parsed; }); // #HACK! Is there a better way?
+          
+          if (m_gotos.size() > num_gotos_prev)
+          {
+            for (int v_idx = 0; v_idx < num_voices; ++v_idx)
+              m_voices[v_idx].notes.emplace_back(std::make_unique<Note>(Note::create_separator()));
+            num_notes_parsed++;
+          }
         }
         else
           std::cerr << "Error parsing instrument line: " << line << std::endl;
@@ -1071,7 +1099,7 @@ namespace audio
         if (modifier == "-")
         {
           for (auto& voice : m_voices)
-            voice.notes.emplace_back(std::make_unique<Note>());
+            voice.notes.emplace_back(std::make_unique<Note>(Note::create_pause()));
           voice_idx = num_voices;
           break;
         }
@@ -1088,12 +1116,12 @@ namespace audio
             iss >> delim;
             if (delim != "-")
               std::cerr << "Error: Incorrect format. Voice note must be closed with a '|' delimiter." << std::endl;
-            voice.notes.emplace_back(std::make_unique<Note>());
+            voice.notes.emplace_back(std::make_unique<Note>(Note::create_pause()));
           }
           else if (iss >> pitch >> duration_ms >> instrument)
           {
             auto freq_Hz = str2pitch(pitch);
-            auto* note = voice.notes.emplace_back(std::make_unique<Note>(freq_Hz, duration_ms)).get();
+            auto* note = voice.notes.emplace_back(std::make_unique<Note>(Note::create_note(freq_Hz, duration_ms))).get();
             
             auto f_match_instr = [instrument](const auto& instr) { return instr.name == instrument; };
             note->instrument_basic_idx = stlutils::find_if_idx(m_instruments_basic, f_match_instr);
@@ -1136,7 +1164,7 @@ namespace audio
       }
       
       for (int v_idx = voice_idx; v_idx < num_voices; ++v_idx)
-        m_voices[v_idx].notes.emplace_back(std::make_unique<Note>());
+        m_voices[v_idx].notes.emplace_back(std::make_unique<Note>(Note::create_separator()));
     }
     
     Waveform create_waveform(Note* note, const std::string& instr_name)
