@@ -67,7 +67,7 @@ namespace audio
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
       for (int note_idx = note_start_idx; note_idx < num_notes; ++note_idx)
       {
-        if (stop_audio_thread)
+        if (m_stop_audio_thread)
           break;
           
         if (auto it_p = m_print_switches.find(note_idx); it_p != m_print_switches.end())
@@ -267,28 +267,28 @@ namespace audio
     void play_tune_async()
     {
       // Use std::thread and std::atomic_flag to safely start and stop the thread
-      stop_audio_thread = false;
-      audio_thread = std::thread([this] { play_tune(); });
+      m_stop_audio_thread = false;
+      m_audio_thread = std::thread([this] { play_tune(); });
     
       // Detach the audio thread, allowing it to run independently
-      audio_thread.detach();
+      m_audio_thread.detach();
     }
 
     // Stop the audio playback thread
     void stop_tune_async()
     {
-      stop_audio_thread = true;
+      m_stop_audio_thread = true;
 
       // Optionally, you can join the thread here if you want to wait for it to finish
-      if (audio_thread.joinable())
-        audio_thread.join();
+      if (m_audio_thread.joinable())
+        m_audio_thread.join();
     }
 
     // Wait for the audio playback thread to finish
     void wait_for_completion()
     {
-      if (audio_thread.joinable())
-        audio_thread.join();
+      if (m_audio_thread.joinable())
+        m_audio_thread.join();
     }
     
     void enable_print_notes()
@@ -312,8 +312,8 @@ namespace audio
     }
     
   private:
-    std::thread audio_thread;
-    std::atomic<bool> stop_audio_thread { false };
+    std::thread m_audio_thread;
+    std::atomic<bool> m_stop_audio_thread { false };
     std::atomic<bool> m_pause = false;
     std::atomic<bool> m_enable_print_notes = false;
   };
