@@ -5,10 +5,10 @@
 //  Created by Rasmus Anthin on 2024-03-16.
 //
 
-#include "../../../lib/8-Bit Audio Emulator Lib/AudioSourceHandler.h"
-#include "../../../lib/8-Bit Audio Emulator Lib/WaveformGeneration.h"
-#include "../../../lib/8-Bit Audio Emulator Lib/WaveformHelper.h"
-#include "../../../lib/8-Bit Audio Emulator Lib/WaveformIO.h"
+#include "../AudioSourceHandler.h"
+#include "../WaveformGeneration.h"
+#include "../WaveformHelper.h"
+#include "../WaveformIO.h"
 #include <filesystem>
 
 

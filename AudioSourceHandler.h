@@ -8,6 +8,11 @@
 #pragma once
 
 #include "Waveform.h"
+
+#include "../Core/Math.h"
+#include "../Core/Rand.h"
+#include "../Core/Delay.h"
+
 #ifdef _MSC_VER
   #include <OpenAL_Soft/al.h>
   #include <OpenAL_Soft/alc.h>
@@ -18,9 +23,6 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "../../lib/Core Lib/Math.h"
-#include "../../lib/Core Lib/Rand.h"
-#include "../../lib/Core Lib/Delay.h"
 #include <iostream>
 #include <numeric>
 #include <variant>

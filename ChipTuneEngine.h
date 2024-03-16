@@ -10,8 +10,9 @@
 #include "Waveform.h"
 #include "WaveformGeneration.h"
 #include "Synthesizer.h"
-#include "../Core Lib/Delay.h"
-#include "../Core Lib/StringHelper.h"
+
+#include "../Core/Delay.h"
+#include "../Core/StringHelper.h"
 
 #include <iostream>
 #include <fstream>

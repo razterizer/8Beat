@@ -10,6 +10,7 @@
 #include "WaveformGeneration.h"
 #include "WaveformHelper.h"
 
+
 namespace audio
 {
   enum class InstrumentType
