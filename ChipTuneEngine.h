@@ -237,7 +237,7 @@ namespace audio
               if (interrupt_unfinished_note)
                 voice.src->stop();
               voice.src->update_buffer(note->wave);
-              voice.src->set_volume(m_curr_volume * note->volume);
+              voice.src->set_volume(m_ext_volume * m_curr_volume * note->volume);
               voice.src->play(PlaybackMode::NONE);
             }
           }
@@ -311,11 +311,17 @@ namespace audio
       m_pause = false;
     }
     
+    void set_volume(float vol)
+    {
+      m_ext_volume = vol;
+    }
+    
   private:
     std::thread m_audio_thread;
-    std::atomic<bool> m_stop_audio_thread { false };
+    std::atomic<bool> m_stop_audio_thread = false;
     std::atomic<bool> m_pause = false;
     std::atomic<bool> m_enable_print_notes = false;
+    std::atomic<float> m_ext_volume = 1.f;
   };
 
 }
