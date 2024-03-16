@@ -207,7 +207,6 @@ namespace audio
     //std::vector<Instrument> m_instruments;
     int note_start_idx = 0;
     int num_notes_parsed = 0;
-    bool m_enable_print_notes = false;
     
 
     bool parse_line(const std::string& line)
@@ -1059,8 +1058,6 @@ namespace audio
         voice.src = m_audio_handler.create_stream_source();
     }
     
-    std::thread audio_thread;
-    std::atomic<bool> stop_audio_thread { false };
   };
 
 }
