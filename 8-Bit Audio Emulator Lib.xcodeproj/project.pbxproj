@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0739D9CB2BA61E5900964E96 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0739D9CA2BA61E5900964E96 /* OpenAL.framework */; };
 		07A763292B5BC85300705D31 /* AudioSourceHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 07A763282B5BC85300705D31 /* AudioSourceHandler.h */; };
 		07A7632A2B5BDE4E00705D31 /* AudioSourceHandler.h in Sources */ = {isa = PBXBuildFile; fileRef = 07A763282B5BC85300705D31 /* AudioSourceHandler.h */; };
 		07A7633B2B5DAA8A00705D31 /* ChipTuneEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */; };
@@ -19,6 +20,10 @@
 		0716712D2B7FF4DB0043E9F2 /* Spectrum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Spectrum.h; sourceTree = "<group>"; };
 		0739D9C12BA2434200964E96 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		0739D9C32BA59D0200964E96 /* demo_1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_1.cpp; sourceTree = "<group>"; };
+		0739D9C42BA6111D00964E96 /* demo_2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_2.cpp; sourceTree = "<group>"; };
+		0739D9C72BA614D700964E96 /* Cat_Meow_2-Cat_Stevens-2034822903.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Cat_Meow_2-Cat_Stevens-2034822903.wav"; sourceTree = "<group>"; };
+		0739D9C82BA6199300964E96 /* 07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav"; sourceTree = "<group>"; };
+		0739D9CA2BA61E5900964E96 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
@@ -33,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0739D9CB2BA61E5900964E96 /* OpenAL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,9 +48,28 @@
 		0739D9C22BA59C8300964E96 /* demos */ = {
 			isa = PBXGroup;
 			children = (
+				0739D9C62BA6148E00964E96 /* sounds */,
 				0739D9C32BA59D0200964E96 /* demo_1.cpp */,
+				0739D9C42BA6111D00964E96 /* demo_2.cpp */,
 			);
 			path = demos;
+			sourceTree = "<group>";
+		};
+		0739D9C62BA6148E00964E96 /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				0739D9C82BA6199300964E96 /* 07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav */,
+				0739D9C72BA614D700964E96 /* Cat_Meow_2-Cat_Stevens-2034822903.wav */,
+			);
+			path = sounds;
+			sourceTree = "<group>";
+		};
+		0739D9C92BA61E5900964E96 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0739D9CA2BA61E5900964E96 /* OpenAL.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		07A763122B5B225500705D31 = {
@@ -63,6 +88,7 @@
 				07A763282B5BC85300705D31 /* AudioSourceHandler.h */,
 				07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */,
 				071671272B785CE00043E9F2 /* lib8-Bit Audio Emulator Lib.a */,
+				0739D9C92BA61E5900964E96 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -215,12 +241,18 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/opt/libsndfile/lib;
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/opt/libsndfile/lib;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					"/opt/homebrew/opt/openal-soft/include/",
+					/opt/homebrew/opt/libsndfile/include,
+				);
 			};
 			name = Debug;
 		};
@@ -270,11 +302,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/opt/libsndfile/lib;
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/opt/libsndfile/lib;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					"/opt/homebrew/opt/openal-soft/include/",
+					/opt/homebrew/opt/libsndfile/include,
+				);
 			};
 			name = Release;
 		};
