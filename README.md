@@ -65,8 +65,8 @@ First cd o folder `demos`. To build type `./build_demo_1.sh l`. Then run by typi
 
 You'll need OpenAL for all demos and [`sndfile`](https://github.com/libsndfile/libsndfile) for some of the demos.
 
-* **OpenAL on Windows**: Grab a copy of [`OpenAL_Soft`](https://www.openal-soft.org) and setup linking for that.
-* **OpenAL on MacOS**: Install openal using `brew install openal`. The build script(s) takes care of the rest (adjust script if paths differ).
+* **OpenAL on Windows**: Grab a copy of [`OpenAL Soft`](https://www.openal-soft.org) and setup linking for that.
+* **OpenAL on MacOS**: Install OpenAL Soft using `brew install openal-soft`. The build script(s) takes care of the rest (adjust script if paths differ).
 * **OpenAL on Linux**: Use whatever package management system that is available on your distro.
 
 * **LibSndFile on Windows**: No info here yet.
