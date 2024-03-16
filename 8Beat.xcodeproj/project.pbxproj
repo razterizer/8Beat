@@ -139,7 +139,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 07A763162B5B225500705D31 /* Build configuration list for PBXProject "8-Bit Audio Emulator Lib" */;
+			buildConfigurationList = 07A763162B5B225500705D31 /* Build configuration list for PBXProject "8Beat" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -343,7 +343,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		07A763162B5B225500705D31 /* Build configuration list for PBXProject "8-Bit Audio Emulator Lib" */ = {
+		07A763162B5B225500705D31 /* Build configuration list for PBXProject "8Beat" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				07A7631D2B5B225500705D31 /* Debug */,
