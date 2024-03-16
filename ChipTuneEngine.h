@@ -251,6 +251,9 @@ namespace audio
           m_curr_time_step_ms = it_ts->second;
         if (!is_separator)
           Delay::sleep(m_curr_time_step_ms*1e3f);
+        
+        do {}
+        while (m_pause);
       }
 
       // Cooldown.
@@ -297,6 +300,22 @@ namespace audio
     {
       m_enable_print_notes = false;
     }
+    
+    void pause()
+    {
+      m_pause = true;
+    }
+    
+    void resume()
+    {
+      m_pause = false;
+    }
+    
+  private:
+    std::thread audio_thread;
+    std::atomic<bool> stop_audio_thread { false };
+    std::atomic<bool> m_pause = false;
+    std::atomic<bool> m_enable_print_notes = false;
   };
 
 }
