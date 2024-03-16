@@ -56,10 +56,10 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 ## Getting Started
 
-This header-only library depends on the header-only library `Core` which should be located in a checkout-folder called [`Core`](https://github.com/razterizer/Core) next to the checkout-folder for this lib (which I recommend you call `8-Bit Audio Emulator Lib`). I intend to change these paths names in the near future. The header only libs uses relative include paths (which is a bit suboptimal), but I'll see if I can find a better solution for this.
+This header-only library depends on the header-only library [`Core`](https://github.com/razterizer/Core) which should be located in a checkout-folder called `Core` next to the checkout-folder for this lib. The header only libs uses relative include paths (which is mayhaps a bit suboptimal), but I'll see if I can find a better solution for this.
 
-There is currently one demo under the `demos` folder that you can build and run under linux / macos.
-First cd o folder `demos`. To build type `./build_demo_1.sh l`. Then run by typing `./bin_linux/demo_1`.
+There is currently two demos under the `demos` folder that you can build and run under linux / macos.
+First cd o folder `demos`. To build `demo_1` type `./build_demo_1.sh l`. Then run by typing `./bin_linux/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh`.
 
 ### 3rd-party Libraries
 
