@@ -150,10 +150,12 @@ ENDING 2
 GOTO_TIMES my_label 2
 ```
 In this example, it will play: A, B, A, C, A, D and then move on to the notes below the `GOTO_TIMES` command.
+---
 ```xml
 CODA
 ```
 This is a muscial notation that denotes a passage that leads the music to an end. It works like a specialized label.
+
 ```xml
 SEGNO
 ```
