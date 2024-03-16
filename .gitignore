@@ -1,3 +1,6 @@
+demos/bin_linux/
+demos/bin_windows/
+
 ### XCode ###
 
 # Ignore Xcode worspace settings
