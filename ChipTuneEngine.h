@@ -73,8 +73,11 @@ namespace audio
     }
 
     // Play the loaded tune
-    void play_tune(bool interrupt_unfinished_note = true)
+    bool play_tune(bool interrupt_unfinished_note = true)
     {
+      if (m_voices.empty())
+        return false; // No tune loaded.
+    
       std::cout << "Playing Tune" << std::endl;
       
       auto f_find_label = [this](const auto& label)
@@ -295,6 +298,8 @@ namespace audio
       // Cooldown.
       do {}
       while (stlutils::contains_if(m_voices, [](const auto& voice) { return voice.src->is_playing(); }));
+      
+      return true;
     }
     
     // Play the loaded tune in a separate thread
