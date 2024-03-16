@@ -39,12 +39,18 @@ namespace audio
     }
 
     // Load tune from a text file with a specific format
-    bool load_tune(const std::string& filePath)
+    bool load_tune(const std::string& file_path)
     {
-      std::ifstream file(filePath);
+      if (!file_path.ends_with(".ct"))
+      {
+        std::cerr << "Wrong file ending in filepath argument. Expected *.ct" << std::endl;
+        return false;
+      }
+    
+      std::ifstream file(file_path);
       if (!file.is_open())
       {
-        std::cerr << "Error opening tune file: " << filePath << std::endl;
+        std::cerr << "Error opening tune file: " << file_path << std::endl;
         return false;
       }
 
