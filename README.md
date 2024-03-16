@@ -38,8 +38,8 @@ We'll often use the term `waveform` as meaning an audio signal here.
   * `calc_dt()` utility function for waveform objects.
   * `calc_duration()` utility function for waveform objects.
   * `calc_num_samples()` utility function for waveform objects.
-* `ADSR.h` contains data structures to represent various aspects of an ADSR envelope. Also contains the namespace `adsr_presets` with a number of ADSR presets that will give you an `ADSR` struct.
-* `Synthesizer.h` contains class `Synthesizer` which allows you to produce a synthesized instrument sound via the static public functions `synthesize()`. These are the supported instruments at the moment:
+* `ADSR.h` <br/> contains data structures to represent various aspects of an ADSR envelope. Also contains the namespace `adsr_presets` with a number of ADSR presets that will give you an `ADSR` struct.
+* `Synthesizer.h` <br/> contains class `Synthesizer` which allows you to produce a synthesized instrument sound via the static public functions `synthesize()`. These are the supported instruments at the moment:
   * `PIANO` (Not really piano-like, but it's a start).
   * `VIOLIN` (Can perhaps serve as a violin-ish sound if you squint with your ears).
   * `ORGAN`.
@@ -50,8 +50,8 @@ We'll often use the term `waveform` as meaning an audio signal here.
   * `SNAREDRUM`.
   * `HIHAT`.
   * `ANVIL` (Well, it kind of sounds like an anvil doesn't it?).
-* `AudioSourceHandler.h` Contains class `AudioSourceHandler`, `AudioSource` and `AudioStreamSource`. `AudioSourceHandler` produces instances of `AudioSource` and `AudioStreamSource`.
-* `ChipTuneEngine.h` Contains class `ChipTuneEngine` which allows you to play a chiptune from a text-file in a threaded manner so that you can use it in games and what-not. In the beginning of the tune file you define the instruments, adsr envelopes, low-pass filters etc. Then after that you define the score where each column is a voice or channel if you will, and each column is a beat (bars are made up of beats, you could say). Refer to [this wiki page](https://github.com/razterizer/8Beat/wiki/ChipTuneEngine-Format) about the file format.
+* `AudioSourceHandler.h` <br/> Contains class `AudioSourceHandler`, `AudioSource` and `AudioStreamSource`. `AudioSourceHandler` produces instances of `AudioSource` and `AudioStreamSource`.
+* `ChipTuneEngine.h` <br/> Contains class `ChipTuneEngine` which allows you to play a chiptune from a text-file in a threaded manner so that you can use it in games and what-not. In the beginning of the tune file you define the instruments, adsr envelopes, low-pass filters etc. Then after that you define the score where each column is a voice or channel if you will, and each column is a beat (bars are made up of beats, you could say). Refer to [this wiki page](https://github.com/razterizer/8Beat/wiki/ChipTuneEngine-Format) about the file format.
 
 
 ## Getting Started
