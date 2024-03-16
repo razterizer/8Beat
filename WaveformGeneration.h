@@ -6,6 +6,7 @@
 //
 
 #pragma once
+
 #include "Waveform.h"
 
 // phi, param

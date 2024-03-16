@@ -6,11 +6,14 @@
 //
 
 #pragma once
+
 #include "Waveform.h"
 #include "Spectrum.h"
 #include "ADSR.h"
-#include "../../lib/Core Lib/MachineLearning/ann_cnn.h"
-#include "../../lib/Core Lib/Math.h"
+
+#include "../Core/MachineLearning/ann_cnn.h"
+#include "../Core/Math.h"
+
 #include <complex>
 
 using namespace std::complex_literals;
