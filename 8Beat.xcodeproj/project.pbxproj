@@ -24,6 +24,7 @@
 		0739D9C72BA614D700964E96 /* Cat_Meow_2-Cat_Stevens-2034822903.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Cat_Meow_2-Cat_Stevens-2034822903.wav"; sourceTree = "<group>"; };
 		0739D9C82BA6199300964E96 /* 07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav"; sourceTree = "<group>"; };
 		0739D9CA2BA61E5900964E96 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		0739D9E02BA6521800964E96 /* ChipTuneEngineParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineParser.h; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
@@ -72,6 +73,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0739D9DF2BA651A300964E96 /* ChipTuneEngine_Internals */ = {
+			isa = PBXGroup;
+			children = (
+				0739D9E02BA6521800964E96 /* ChipTuneEngineParser.h */,
+			);
+			path = ChipTuneEngine_Internals;
+			sourceTree = "<group>";
+		};
 		07A763122B5B225500705D31 = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +96,7 @@
 				07BB7BDB2B7794FD002899C9 /* WaveformHelper.h */,
 				07A763282B5BC85300705D31 /* AudioSourceHandler.h */,
 				07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */,
+				0739D9DF2BA651A300964E96 /* ChipTuneEngine_Internals */,
 				071671272B785CE00043E9F2 /* lib8-Bit Audio Emulator Lib.a */,
 				0739D9C92BA61E5900964E96 /* Frameworks */,
 			);
