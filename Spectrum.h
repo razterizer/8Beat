@@ -1,6 +1,6 @@
 //
 //  FFTResult.h
-//  8-Bit Audio Emulator Lib
+//  8Beat
 //
 //  Created by Rasmus Anthin on 2024-02-16.
 //

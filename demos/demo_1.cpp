@@ -1,6 +1,6 @@
 //
 //  demo_1.cpp
-//  8-Bit Audio Emulator Lib
+//  8Beat
 //
 //  Created by Rasmus Anthin on 2024-03-16.
 //
