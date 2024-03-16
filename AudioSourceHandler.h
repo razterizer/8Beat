@@ -1,6 +1,6 @@
 //
 //  AudioSourceHandler.h
-//  8-Bit Audio Emulator Lib
+//  8Beat
 //
 //  Created by Rasmus Anthin on 2024-01-19.
 //
