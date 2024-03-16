@@ -24,20 +24,20 @@ We'll often use the term `waveform` as meaning an audio signal here.
   * `fft()` this is the fast Fourier transform using the Cooley-Tukey algorithm.
   * `ifft()` this is the fast inverse Fourier transform using a variant of the Cooley-Tukey algorithm.
   * `find_min_max()` finds the min and max values of a given audio signal.
-  * `normalize_over()` 
-  * `scale()`
-  * `clamp()`
-  * `fir_moving_average()`
-  * `fir_sinc_window_low_pass()`
-  * `karplus_strong()`
-  * `envelope_adsr()`
-  * `resample()`
-  * `filter_low_pass()`
-  * `print_waveform_graph()`
-  * `calc_time_from_num_cycles()`
-  * `calc_dt()`
-  * `calc_duration()`
-  * `calc_num_samples()`
+  * `normalize_over()` only normalize if the amplitude is larger than a certain limit. If so then normalized to that limit. This is a kind of a normalized amplitude limiter.
+  * `scale()` simply just scale the waveform with a scale factor.
+  * `clamp()` clamps the samples of a waveform within a specified range.
+  * `fir_moving_average()` a moving average filter of sorts.
+  * `fir_sinc_window_low_pass()` a kind of a low-pass filter.
+  * `karplus_strong()` generates guitar-like string sounds.
+  * `envelope_adsr()` applies an adsr envelope to a specified waveform.
+  * `resample()` resamples a waveform to a specified sample-rate.
+  * `filter_low_pass()` filters a waveform using either a Butterworth, Chebyshev Type I or Chebyshev Type II low-pass filter.
+  * `print_waveform_graph()` prints the waveform shape in the terminal.
+  * `calc_time_from_num_cycles()` utility function for waveform objects.
+  * `calc_dt()` utility function for waveform objects.
+  * `calc_duration()` utility function for waveform objects.
+  * `calc_num_samples()` utility function for waveform objects.
 * `ADSR.h` contains data structures to represent various aspects of an ADSR envelope. Also contains the namespace `adsr_presets` with a number of ADSR presets that will give you an `ADSR` struct.
 * `Synthesizer.h` contains class `Synthesizer` which allows you to produce a synthesized instrument sound via the static public functions `synthesize()`. These are the supported instruments at the moment:
   * `PIANO` (Not really piano-like, but it's a start).
@@ -51,7 +51,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
   * `HIHAT`.
   * `ANVIL` (Well, it kind of sounds like an anvil doesn't it?).
 * `AudioSourceHandler.h` Contains class `AudioSourceHandler`, `AudioSource` and `AudioStreamSource`. `AudioSourceHandler` produces instances of `AudioSource` and `AudioStreamSource`.
-* `ChipTuneEngine.h` Contains class `ChipTuneEngine` which allows you to play a chiptune from a text-file in a threaded manner so that you can use it in games and what-not. In the beginning of the tune file you define the instruments, adsr envelopes, low-pass filters etc. Then after that you define the score where each column is a voice or channel if you will, and each column is a beat (bars are made up of beats, you could say). Refer to [this wiki page] about the file format.
+* `ChipTuneEngine.h` Contains class `ChipTuneEngine` which allows you to play a chiptune from a text-file in a threaded manner so that you can use it in games and what-not. In the beginning of the tune file you define the instruments, adsr envelopes, low-pass filters etc. Then after that you define the score where each column is a voice or channel if you will, and each column is a beat (bars are made up of beats, you could say). Refer to [this wiki page](https://github.com/razterizer/8Beat/wiki/ChipTuneEngine-Format) about the file format.
 
 
 ## Getting Started
