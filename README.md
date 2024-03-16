@@ -10,11 +10,12 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 8Beat is a header-only library that contains the following header files:
 
-* `Waveform.h` contains the struct `Waveform` that contains an audio buffer, and variables `frequency`, `sample_rate` and `duration`. This struct is very central as it holds the PCM audio waveform representation itself.
-* `WaveformIO.h`. contains class `WaveformIO` that has two static public functions: `load()` and `save()`. These functions rely on the [`sndfile`](https://github.com/libsndfile/libsndfile) library which allows you to import and export a `Waveform` object to many different types and formats.
-* `WaveformGeneration.h` contains class `WaveformGeneration` with a single public function `generate_waveform()`.
-* `Spectrum.h` contains struct `Spectrum` which is used in conjunction with functions such as public functions `fft()` and `ifft()` in class `WaveformHelper`.
-* `WaveformHelper.h` contains class `WaveformHelper` which has the following public static functions:
+* `Waveform.h` <br/> contains the struct `Waveform` that contains an audio buffer, and variables `frequency`, `sample_rate` and `duration`. This struct is very central as it holds the PCM audio waveform representation itself.
+
+* `WaveformIO.h` <br/> contains class `WaveformIO` that has two static public functions: `load()` and `save()`. These functions rely on the [`sndfile`](https://github.com/libsndfile/libsndfile) library which allows you to import and export a `Waveform` object to many different types and formats.
+* `WaveformGeneration.h` <br/> contains class `WaveformGeneration` with a single public function `generate_waveform()`.
+* `Spectrum.h` <br/> contains struct `Spectrum` which is used in conjunction with functions such as public functions `fft()` and `ifft()` in class `WaveformHelper`.
+* `WaveformHelper.h` <br/> contains class `WaveformHelper` which has the following public static functions:
   * `mix()` mixes two waveforms by lerping them or multiple waveforms by weighted average.
   * `ring_modulation()` multiplies two waveforms.
   * `reverb()` does reverb between a waveform and an impulse response waveform of an environment (response sound from a dirac pulse-like "trigger" sound) to create a reverb effect.
@@ -37,10 +38,20 @@ We'll often use the term `waveform` as meaning an audio signal here.
   * `calc_dt()`
   * `calc_duration()`
   * `calc_num_samples()`
-* `ADSR.h`
-* `Synthesizer.h`
-* `AudioSourceHandler.h`
-* `ChipTuneEngine.h`
+* `ADSR.h` contains data structures to represent various aspects of an ADSR envelope. Also contains the namespace `adsr_presets` with a number of ADSR presets that will give you an `ADSR` struct.
+* `Synthesizer.h` contains class `Synthesizer` which allows you to produce a synthesized instrument sound via the static public functions `synthesize()`. These are the supported instruments at the moment:
+  * `PIANO` (Not really piano-like, but it's a start).
+  * `VIOLIN` (Can perhaps serve as a violin-ish sound if you squint with your ears).
+  * `ORGAN`.
+  * `TRUMPET` (Not quite there yet, but not too shabby though).
+  * `FLUTE` (Sounds kind of flute-ish).
+  * `GUITAR` (Need to rework the Karplus-Strong algorithm to make it sound as it's supposed to).
+  * `KICKDRUM`.
+  * `SNAREDRUM`.
+  * `HIHAT`.
+  * `ANVIL` (Well, it kind of sounds like an anvil doesn't it?).
+* `AudioSourceHandler.h` Contains class `AudioSourceHandler`, `AudioSource` and `AudioStreamSource`. `AudioSourceHandler` produces instances of `AudioSource` and `AudioStreamSource`.
+* `ChipTuneEngine.h` Contains class `ChipTuneEngine` which allows you to play a chiptune from a text-file in a threaded manner so that you can use it in games and what-not. In the beginning of the tune file you define the instruments, adsr envelopes, low-pass filters etc. Then after that you define the score where each column is a voice or channel if you will, and each column is a beat (bars are made up of beats, you could say). Refer to [this wiki page] about the file format.
 
 
 ## Getting Started
