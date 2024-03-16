@@ -58,4 +58,5 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 This header-only library depends on the header-only library Core-Lib which should be located in a checkout-folder called [`Core Lib`](https://github.com/razterizer/Core-Lib) next to the checkout-folder for this lib (which I recommend you call `8-Bit Audio Emulator Lib`). I intend to change these paths names in the near future. The header only libs uses relative include paths (which is a bit suboptimal), but I'll see if I can find a better solution for this.
 
-
+There is currently one demo under the `demos` folder that you can build and run under linux / macos.
+First cd o folder `demos`. To build type `./build_demo_1.sh l`. Then run by typing `./bin_linux/demo_1`.
