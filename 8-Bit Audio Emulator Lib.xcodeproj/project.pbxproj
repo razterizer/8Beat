@@ -21,7 +21,6 @@
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
-		07880A572B8FE55000711230 /* OpenALCallbacks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenALCallbacks.h; sourceTree = "<group>"; };
 		07A763282B5BC85300705D31 /* AudioSourceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
 		07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngine.h; sourceTree = "<group>"; };
 		07BB7BDB2B7794FD002899C9 /* WaveformHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformHelper.h; sourceTree = "<group>"; };
@@ -44,7 +43,6 @@
 			children = (
 				0739D9C12BA2434200964E96 /* LICENSE */,
 				0760B6F12B9E3C610032CACD /* README.md */,
-				07880A572B8FE55000711230 /* OpenALCallbacks.h */,
 				07880A542B87CB9A00711230 /* Synthesizer.h */,
 				07880A532B87AAFA00711230 /* ADSR.h */,
 				0716712D2B7FF4DB0043E9F2 /* Spectrum.h */,
