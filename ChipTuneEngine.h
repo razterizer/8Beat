@@ -236,7 +236,13 @@ namespace audio
             {
               if (interrupt_unfinished_note)
                 voice.src->stop();
-              voice.src->update_buffer(note->wave);
+              if (m_ir_sound != nullptr)
+              {
+                auto wd_rev = WaveformHelper::reverb_fast(note->wave, *m_ir_sound);
+                voice.src->update_buffer(wd_rev);
+              }
+              else
+                voice.src->update_buffer(note->wave);
               voice.src->set_volume(m_ext_volume * m_curr_volume * note->volume);
               voice.src->play(PlaybackMode::NONE);
             }
@@ -316,12 +322,24 @@ namespace audio
       m_ext_volume = vol;
     }
     
+    void set_reverb_ir(const Waveform* ir)
+    {
+      m_ir_sound = ir;
+    }
+    
+    void reset_reverb()
+    {
+      m_ir_sound = nullptr;
+    }
+    
   private:
     std::thread m_audio_thread;
     std::atomic<bool> m_stop_audio_thread = false;
     std::atomic<bool> m_pause = false;
     std::atomic<bool> m_enable_print_notes = false;
     std::atomic<float> m_ext_volume = 1.f;
+    std::atomic<Waveform const *> m_ir_sound = nullptr;
+    std::atomic<bool> m_use_reverb = false;
   };
 
 }
