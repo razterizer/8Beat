@@ -9,13 +9,6 @@
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
 
-class Test : public audio::AudioStreamListener
-{
-  virtual float on_get_sample(float t) const override
-  {
-    return std::sin(2*M_PI*440*t);
-  }
-};
 
 
 int main(int argc, char** argv)
