@@ -26,6 +26,7 @@
 		0739D9CA2BA61E5900964E96 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		0739D9E02BA6521800964E96 /* ChipTuneEngineParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineParser.h; sourceTree = "<group>"; };
 		0739D9E22BA7886C00964E96 /* demo_3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_3.cpp; sourceTree = "<group>"; };
+		0739D9E32BA7904100964E96 /* demo_4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_4.cpp; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
@@ -54,6 +55,7 @@
 				0739D9C32BA59D0200964E96 /* demo_1.cpp */,
 				0739D9C42BA6111D00964E96 /* demo_2.cpp */,
 				0739D9E22BA7886C00964E96 /* demo_3.cpp */,
+				0739D9E32BA7904100964E96 /* demo_4.cpp */,
 			);
 			path = demos;
 			sourceTree = "<group>";
