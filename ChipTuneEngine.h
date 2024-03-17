@@ -270,11 +270,11 @@ namespace audio
     }
     
     // Play the loaded tune in a separate thread
-    void play_tune_async()
+    void play_tune_async(bool interrupt_unfinished_note = true)
     {
       // Use std::thread and std::atomic_flag to safely start and stop the thread
       m_stop_audio_thread = false;
-      m_audio_thread = std::thread([this] { play_tune(); });
+      m_audio_thread = std::thread([this, interrupt_unfinished_note] { play_tune(interrupt_unfinished_note); });
     
       // Detach the audio thread, allowing it to run independently
       m_audio_thread.detach();
@@ -322,6 +322,7 @@ namespace audio
       m_ext_volume = vol;
     }
     
+    // #WARNING: Super-slow!!!
     void set_reverb_ir(const Waveform* ir)
     {
       m_ir_sound = ir;
