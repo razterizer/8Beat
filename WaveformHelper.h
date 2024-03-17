@@ -39,6 +39,31 @@ namespace audio
   class WaveformHelper
   {
   public:
+    static Waveform subset(const Waveform& wave, size_t start_idx, size_t length = static_cast<size_t>(-1))
+    {
+      auto N = wave.buffer.size();
+      if (N == 0)
+        return {};
+        
+      Waveform output;
+      output.copy_properties(wave);
+      
+      if (start_idx < N)
+      {
+        if (length == static_cast<size_t>(-1))
+          length = N;
+        
+        size_t N_new = length;
+        if (start_idx + length > N)
+          N_new = N - start_idx;
+        output.buffer.resize(N_new);
+        std::memcpy(output.buffer.data(), wave.buffer.data() + start_idx, N_new * sizeof(wave.buffer[0]));
+      }
+        
+      output.update_duration();
+      return output;
+    }
+  
     static Waveform mix(const std::vector<std::pair<float, Waveform>>& weighted_waves)
     {
       const size_t Nw = weighted_waves.size();
