@@ -9,6 +9,9 @@
 #include "../WaveformGeneration.h"
 #include "../WaveformIO.h"
 #include "../WaveformHelper.h"
+#ifdef _MSC_VER
+  #include <conio.h>
+#endif
 
 
 
@@ -32,6 +35,11 @@ int main(int argc, char** argv)
   for (const auto& s : wd_ifft.buffer)
     std::cout << s << std::endl;
   std::cout << wd_ifft.sample_rate << std::endl;
+
+#ifdef _MSC_VER
+  std::cout << std::endl << "Press any key to exit." << std::endl;
+  _getch();
+#endif
   
   return 0;
 }

@@ -8,6 +8,9 @@
 #include "../AudioSourceHandler.h"
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
+#ifdef _MSC_VER
+#include <conio.h>
+#endif
 
 
 
@@ -121,6 +124,11 @@ int main(int argc, char** argv)
   audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::FILLED_BOTTOM_UP, width, height, start, end);
   std::cout << "filled from t-axis:\n";
   audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::FILLED_FROM_T_AXIS, width, height, start, end);
+
+#ifdef _MSC_VER
+  std::cout << std::endl << "Press any key to exit." << std::endl;
+  _getch();
+#endif
   
   return 0;
 }
