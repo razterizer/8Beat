@@ -17,7 +17,11 @@ int main(int argc, char** argv)
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
   
+#ifdef _MSC_VER
+  std::string wk_dir = "../sounds/";
+#else
   std::string wk_dir = "./sounds/";
+#endif
   std::cout << std::filesystem::current_path().string() << std::endl;
   auto wd_cat_ld = audio::WaveformIO::load(wk_dir + "Cat_Meow_2-Cat_Stevens-2034822903.wav", 3);
   if (wd_cat_ld.has_value())
