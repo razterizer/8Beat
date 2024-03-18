@@ -171,7 +171,7 @@ namespace audio
             duration_s, 0.f);
           wave_comp.emplace_back(0.7f, noise);
           sawtooth = wave_gen.generate_waveform(WaveformType::SAWTOOTH_WAVE, duration_s, frequency_Hz);
-          square = wave_gen.generate_waveform(WaveformType::SQUARE_WAVE, duration_s, frequency_Hz*1.1f, FrequencyType::CONSTANT, AmplitudeType::CONSTANT, [](float t, float /*dur*/) { return 2*M_PI*2.13f*t*(1 + 3.f*t); });
+          square = wave_gen.generate_waveform(WaveformType::SQUARE_WAVE, duration_s, frequency_Hz*1.1f, FrequencyType::CONSTANT, AmplitudeType::CONSTANT, [](float t, float /*dur*/) { return math::c_2pi*2.13f*t*(1 + 3.f*t); });
           wave_comp.emplace_back(0.25f, WaveformHelper::ring_modulation(sawtooth, square));
           wave_comp.emplace_back(0.05f, wave_gen.generate_waveform(WaveformType::TRIANGLE_WAVE, duration_s, 3.f*frequency_Hz));
           break;
@@ -185,8 +185,8 @@ namespace audio
           adsr = adsr_presets::SNAREDRUM;
           noise = wave_gen.generate_waveform(WaveformType::NOISE, duration_s);
           wave_comp.emplace_back(0.6f, noise);
-          wave_comp.emplace_back(0.15f, wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, 3.11*frequency_Hz));
-          wave_comp.emplace_back(0.25f, wave_gen.generate_waveform(WaveformType::TRIANGLE_WAVE, duration_s, 5.43*frequency_Hz));
+          wave_comp.emplace_back(0.15f, wave_gen.generate_waveform(WaveformType::SINE_WAVE, duration_s, 3.11f*frequency_Hz));
+          wave_comp.emplace_back(0.25f, wave_gen.generate_waveform(WaveformType::TRIANGLE_WAVE, duration_s, 5.43f*frequency_Hz));
           break;
         case InstrumentType::NUM_ITEMS:
           break;
