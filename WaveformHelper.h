@@ -427,7 +427,7 @@ namespace audio
       for (size_t i = 0; i < N; ++i)
       {
         // Calculate delay amount based on a sine wave
-        float delay_amount = depth * std::sin(2 * static_cast<float>(M_PI) * rate * i / sample_rate);
+        float delay_amount = depth * std::sin(math::c_2pi * rate * i / sample_rate);
         
         // Calculate delayed sample index
         int delay_index = (buffer_index - static_cast<int>(delay_amount)) % sample_rate;
@@ -456,7 +456,7 @@ namespace audio
       Waveform output(N, 0.f);
       output.copy_properties(wave);
       
-      float delay = modulation_depth * std::sin(2.f * static_cast<float>(M_PI) * modulation_freq / wave.sample_rate);
+      float delay = modulation_depth * std::sin(math::c_2pi * modulation_freq / wave.sample_rate);
       
       // FIR filter.
       for (size_t i = 0; i < N; ++i)
@@ -540,10 +540,10 @@ namespace audio
               env = math::linmap(t, t_a, t_ad, 0.f, 1.f);
               break;
             case ADSRMode::EXP:
-              env = std::exp(static_cast<float>(M_LN2) * (t - t_a)/attack_s) - 1;
+              env = std::exp(math::c_ln2 * (t - t_a)/attack_s) - 1;
               break;
             case ADSRMode::LOG:
-              env = std::log((t - t_a)/attack_s*(static_cast<float>(M_E) - 1) + 1);
+              env = std::log((t - t_a)/attack_s*(math::c_e - 1) + 1);
               break;
           }
         }
@@ -556,7 +556,7 @@ namespace audio
               env = math::linmap(t, t_ad, t_ds, 1.f, sustain_lvl);
               break;
             case ADSRMode::EXP:
-              env = (2 - 2.f*sustain_lvl)*std::exp(-static_cast<float>(M_LN2)*(t - t_ad)/decay_s) - (1 - 2.f*sustain_lvl);
+              env = (2 - 2.f*sustain_lvl)*std::exp(-math::c_ln2*(t - t_ad)/decay_s) - (1 - 2.f*sustain_lvl);
               break;
             case ADSRMode::LOG:
               env = std::log(1-(t - t_ad)/decay_s*(1.f-std::exp(sustain_lvl - 1))) + 1;
@@ -1020,14 +1020,14 @@ namespace audio
         case WindowType::HAMMING:
           for (size_t i = 0; i < N; ++i)
           {
-            float window_val = 0.54f - 0.46f * std::cos(2.0f * static_cast<float>(M_PI) * i / (N - 1));
+            float window_val = 0.54f - 0.46f * std::cos(math::c_2pi * i / (N - 1));
             wave.buffer[i] *= window_val;
           }
           break;
         case WindowType::HANNING:
           for (size_t i = 0; i < N; ++i)
           {
-            float window_val = 0.5f * (1.0f - std::cos(2.0f * static_cast<float>(M_PI) * i / (N - 1)));
+            float window_val = 0.5f * (1.0f - std::cos(math::c_2pi * i / (N - 1)));
             wave.buffer[i] *= window_val;
           }
           break;
