@@ -29,6 +29,9 @@
 		0739D9E32BA7904100964E96 /* demo_4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_4.cpp; sourceTree = "<group>"; };
 		0739D9E42BA82C4700964E96 /* demo_5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_5.cpp; sourceTree = "<group>"; };
 		0739D9E52BA82EBF00964E96 /* demo_6.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_6.cpp; sourceTree = "<group>"; };
+		0739D9E62BA8C5B100964E96 /* demo_7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_7.cpp; sourceTree = "<group>"; };
+		0739D9E72BA8EAA600964E96 /* attribution.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = attribution.txt; sourceTree = "<group>"; };
+		0739D9E82BA8EAB300964E96 /* chiptune3.ct */ = {isa = PBXFileReference; lastKnownFileType = text; path = chiptune3.ct; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
@@ -60,6 +63,7 @@
 				0739D9E32BA7904100964E96 /* demo_4.cpp */,
 				0739D9E42BA82C4700964E96 /* demo_5.cpp */,
 				0739D9E52BA82EBF00964E96 /* demo_6.cpp */,
+				0739D9E62BA8C5B100964E96 /* demo_7.cpp */,
 			);
 			path = demos;
 			sourceTree = "<group>";
@@ -67,6 +71,8 @@
 		0739D9C62BA6148E00964E96 /* sounds */ = {
 			isa = PBXGroup;
 			children = (
+				0739D9E82BA8EAB300964E96 /* chiptune3.ct */,
+				0739D9E72BA8EAA600964E96 /* attribution.txt */,
 				0739D9C82BA6199300964E96 /* 07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav */,
 				0739D9C72BA614D700964E96 /* Cat_Meow_2-Cat_Stevens-2034822903.wav */,
 			);
