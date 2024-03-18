@@ -856,7 +856,7 @@ namespace audio
           else if (iss >> pitch >> duration_ms >> instrument)
           {
             auto freq_Hz = str2pitch(pitch);
-            auto* note = voice.notes.emplace_back(std::make_unique<Note>(Note::create_note(freq_Hz, duration_ms))).get();
+            auto* note = voice.notes.emplace_back(std::make_unique<Note>(Note::create_note(freq_Hz, static_cast<float>(duration_ms)))).get();
             
             auto f_match_instr = [instrument](const auto& instr) { return instr.name == instrument; };
             note->instrument_basic_idx = stlutils::find_if_idx(m_instruments_basic, f_match_instr);

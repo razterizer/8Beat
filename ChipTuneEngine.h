@@ -62,7 +62,7 @@ namespace audio
       if (auto it_v = m_volume.find(0); it_v != m_volume.end())
         m_curr_volume = it_v->second;
         
-      Delay::sleep(1e6f); // Warm-up. #FIXME: Find a better, more robust solution.
+      Delay::sleep(static_cast<int>(1e6f)); // Warm-up. #FIXME: Find a better, more robust solution.
       // ### Loop over voices ###
       auto num_notes = static_cast<int>(m_voices[0].notes.size());
       for (int note_idx = note_start_idx; note_idx < num_notes; ++note_idx)
@@ -256,7 +256,7 @@ namespace audio
         if (auto it_ts = m_time_step_ms.find(note_idx); it_ts != m_time_step_ms.end())
           m_curr_time_step_ms = it_ts->second;
         if (!is_separator)
-          Delay::sleep(m_curr_time_step_ms*1e3f);
+          Delay::sleep(static_cast<int>(m_curr_time_step_ms*1e3f));
         
         do {}
         while (m_pause);
