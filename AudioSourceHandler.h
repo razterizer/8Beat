@@ -34,7 +34,7 @@
 namespace audio
 {
   enum class PlaybackMode { NONE, SLEEP, STATE_WAIT };
-  const float c_amplitude_0 = 32767.f;
+  const short c_amplitude_0 = 32767;
   
   class AudioSourceBase
   {
@@ -68,7 +68,7 @@ namespace audio
         case PlaybackMode::NONE:
           break;
         case PlaybackMode::SLEEP:
-          Delay::sleep(m_duration_s*1e6f);
+          Delay::sleep(static_cast<int>(m_duration_s*1e6f));
           break;
         case PlaybackMode::STATE_WAIT:
           do
@@ -141,7 +141,7 @@ namespace audio
         m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
       }
       
-      alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), static_cast<ALsizei>(N * sizeof(short)), wave.sample_rate);
+      alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), static_cast<ALsizei>(N * sizeof(short)), static_cast<ALsizei>(wave.sample_rate));
       
       // Attach buffer to source
       alSourcei(m_sourceID, AL_BUFFER, m_bufferID);
@@ -186,7 +186,7 @@ namespace audio
     
       m_buffer_i.resize(num_stream_samples);
       
-      float dt = 1./m_sample_rate;
+      float dt = 1.f/m_sample_rate;
       float t = 0.f;
       for (int i = 0; i < num_stream_samples; ++i)
       {
@@ -209,7 +209,7 @@ namespace audio
       auto Ns = static_cast<int>(wave.buffer.size());
       m_buffer_i.resize(Ns);
       
-      float dt = 1./wave.sample_rate;
+      float dt = 1.f/wave.sample_rate;
       float t = 0.f;
       for (int i = 0; i < Ns; ++i)
       {

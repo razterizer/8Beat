@@ -86,7 +86,7 @@ namespace audio
       
       // #FIXME: Fix proper stereo-support in the future.
       sf_read_float(file, buffer_in.data(), static_cast<sf_count_t>(input_buf_size));
-      for (size_t f_idx = 0; f_idx < sf_info.frames; ++f_idx)
+      for (int64_t f_idx = 0; f_idx < sf_info.frames; ++f_idx)
       {
         wd.buffer[f_idx] = 0;
         for (int c_idx = 0; c_idx < sf_info.channels; c_idx++)
@@ -459,6 +459,11 @@ namespace audio
         case AudioFileFormatSubType::DPCM_16: return "DPCM_16"; // 16 bit differential PCM (XI only)
         case AudioFileFormatSubType::VORBIS: return "VORBIS"; // Xiph Vorbis encoding
         case AudioFileFormatSubType::OPUS: return "OPUS"; // Xiph/Skype Opus encoding
+#ifdef _WIN32
+//#ifndef _MSC_VER
+        default: return ""; // Should not be necessary as switch scope is complete.
+//#endif
+#endif
       }
     }
     
@@ -509,7 +514,7 @@ namespace audio
     {
       const float bias = 132.0f;
       const float max_value = 32768.0f;
-      const float uLawMax = 32768.0f;
+      const int uLawMax = 32768;
       
       // Ensure the sample is within the valid range
       if (sample > max_value)
