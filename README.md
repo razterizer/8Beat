@@ -54,21 +54,53 @@ We'll often use the term `waveform` as meaning an audio signal here.
 * `ChipTuneEngine.h` <br/> contains class `ChipTuneEngine` which allows you to play a chiptune from a text-file (file ending `*.ct`) in a threaded manner so that you can use it in games and what-not. In the beginning of the tune file you define the instruments, adsr envelopes, low-pass filters etc. Then after that you define the score where each column is a voice or channel if you will, and each column is a beat (bars are made up of beats, you could say). Refer to [this wiki page](https://github.com/razterizer/8Beat/wiki/ChipTuneEngine-Format) about the file format.
 
 
-## Getting Started
+# Getting Started
 
 This header-only library depends on the header-only library [`Core`](https://github.com/razterizer/Core) which should be located in a checkout-folder called `Core` next to the checkout-folder for this lib. The header only libs uses relative include paths (which is mayhaps a bit suboptimal), but I'll see if I can find a better solution for this.
 
 There is currently two demos under the `demos` folder that you can build and run under linux / macos.
 First cd o folder `demos`. To build `demo_1` type `./build_demo_1.sh l`. Then run by typing `./bin_linux/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh`.
 
-### 3rd-party Libraries
+## 3rd-party Libraries
 
-You'll need OpenAL for all demos and [`sndfile`](https://github.com/libsndfile/libsndfile) for some of the demos.
+You'll need [`OpenAL Soft`](https://www.openal-soft.org) for all demos and [`sndfile`](https://github.com/libsndfile/libsndfile) for some of the demos.
 
-* **OpenAL on Windows**: Grab a copy of [`OpenAL Soft`](https://www.openal-soft.org) and setup linking for that.
-* **OpenAL on MacOS**: Install OpenAL Soft using `brew install openal-soft`. The build script(s) takes care of the rest (adjust script if paths differ).
-* **OpenAL on Linux**: Use whatever package management system that is available on your distro.
+### Windows:
 
-* **LibSndFile on Windows**: No info here yet.
-* **LibSndFile on MacOS**: Install using `brew install libsndfile`. The build script(s) takes care of the rest (adjust script if paths differ).
-* **LibSndFile on Linux**: Use whatever package management system that is available on your distro.
+Grab a copy of [`OpenAL Soft`](https://www.openal-soft.org). Then copy its files to below folders according to the instructions.
+
+You need the following 3rdparty folder with subfolders:
+```
+<my_source_code_dir>/lib/3rdparty/
+<my_source_code_dir>/lib/3rdparty/include/
+<my_source_code_dir>/lib/3rdparty/include/OpenAL_Soft/
+<my_source_code_dir>/lib/3rdparty/lib/
+```
+
+`<my_source_code_dir>/lib/3rdparty/lib/` should contain:
+* `OpenAL32.lib`.
+* `sndfile.lib`.
+* `sndfile.dll`.
+
+The dll `sndfile.dll` should then be copied to where the executable lands.
+
+`<my_source_code_dir>/lib/3rdparty/include/` should contain:
+* `sndfile.h`.
+
+`<my_source_code_dir>/lib/3rdparty/include/OpenAL_Soft/` should contain:
+* `al.h`.
+* `alc.h`.
+* `alext.h`.
+* `efx.h`.
+* `efx-creative.h`.
+* `efx-presets.h`.
+
+### MacOS:
+
+Install **OpenAL Soft** using `brew install openal-soft`. The build script(s) takes care of the rest (adjust script if paths differ).
+Install **libsndfile** using `brew install libsndfile`. The build script(s) takes care of the rest (adjust script if paths differ).
+
+### Linux:
+
+Use whatever package management system that is available on your distro.
+Instructions here in the future.
