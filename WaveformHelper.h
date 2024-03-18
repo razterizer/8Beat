@@ -264,12 +264,12 @@ namespace audio
     static Spectrum fft(const Waveform& wave)
     {
       auto sz = static_cast<int>(wave.buffer.size());
-      int N = std::pow<int>(2, std::ceil(std::log(sz)/std::log(2)));
+      auto N = static_cast<int>(std::pow<int>(2, std::ceil(std::log(sz)/std::log(2))));
     
       std::vector<std::complex<float>> input(std::begin(wave.buffer), std::end(wave.buffer));
       // Padding.
       for (int i = 0; i < N - sz; ++i)
-        input.emplace_back(0);
+        input.emplace_back(0.f);
       
       auto output = fft_rec(input);
       
@@ -285,12 +285,12 @@ namespace audio
     static Waveform ifft(const Spectrum& spectrum, Complex2Real c2r_filter = Complex2Real::REAL)
     {
       auto sz = static_cast<int>(spectrum.buffer.size());
-      int N = std::pow<int>(2, std::ceil(std::log(sz)/std::log(2)));
+      auto N = static_cast<int>(std::pow<int>(2, std::ceil(std::log(sz)/std::log(2))));
     
       std::vector<std::complex<float>> input(std::begin(spectrum.buffer), std::end(spectrum.buffer));
       // Padding.
       for (int i = 0; i < N - sz; ++i)
-        input.emplace_back(0);
+        input.emplace_back(0.f);
       
       auto output = ifft_rec(input);
       
@@ -427,7 +427,7 @@ namespace audio
       for (size_t i = 0; i < N; ++i)
       {
         // Calculate delay amount based on a sine wave
-        float delay_amount = depth * std::sin(2 * M_PI * rate * i / sample_rate);
+        float delay_amount = depth * std::sin(math::c_2pi * rate * i / sample_rate);
         
         // Calculate delayed sample index
         int delay_index = (buffer_index - static_cast<int>(delay_amount)) % sample_rate;
@@ -456,7 +456,7 @@ namespace audio
       Waveform output(N, 0.f);
       output.copy_properties(wave);
       
-      float delay = modulation_depth * std::sin(2.f * M_PI * modulation_freq / wave.sample_rate);
+      float delay = modulation_depth * std::sin(math::c_2pi * modulation_freq / wave.sample_rate);
       
       // FIR filter.
       for (size_t i = 0; i < N; ++i)
@@ -475,20 +475,20 @@ namespace audio
     static Waveform karplus_strong(float duration_s, float frequency,
                                    float sample_rate = 44100.f)
     {
-      auto Ns = calc_num_samples(duration_s, sample_rate);
+      auto Ns = static_cast<int>(calc_num_samples(duration_s, static_cast<int>(sample_rate)));
       Waveform wave(Ns, 0.f);
       wave.duration = duration_s;
       wave.frequency = frequency;
       
-      auto Nb = std::min<size_t>(Ns, std::round(sample_rate / frequency));
+      auto Nb = std::min(Ns, static_cast<int>(std::round(sample_rate / frequency)));
       
       std::vector<float> noise(Nb);
-      for (size_t s_idx = 0; s_idx < Nb; ++s_idx)
+      for (int s_idx = 0; s_idx < Nb; ++s_idx)
         noise[s_idx] = rnd::rand_float(-1.f, +1.f);
       
       // y(n) = x(n) + (y(n-N) + y(n-N+1))/2
       
-      for (size_t s_idx = 0; s_idx < Ns; ++s_idx)
+      for (int s_idx = 0; s_idx < Ns; ++s_idx)
       {
         float avg = 0.5f * (wave.buffer[(s_idx - Nb)%Ns] + wave.buffer[(s_idx - Nb + 1)%Ns]);
         wave.buffer[s_idx] = avg + noise[s_idx % Nb];
@@ -540,10 +540,10 @@ namespace audio
               env = math::linmap(t, t_a, t_ad, 0.f, 1.f);
               break;
             case ADSRMode::EXP:
-              env = std::exp(M_LN2 * (t - t_a)/attack_s) - 1;
+              env = std::exp(math::c_ln2 * (t - t_a)/attack_s) - 1;
               break;
             case ADSRMode::LOG:
-              env = std::log((t - t_a)/attack_s*(M_E - 1) + 1);
+              env = std::log((t - t_a)/attack_s*(math::c_e - 1) + 1);
               break;
           }
         }
@@ -556,7 +556,7 @@ namespace audio
               env = math::linmap(t, t_ad, t_ds, 1.f, sustain_lvl);
               break;
             case ADSRMode::EXP:
-              env = (2 - 2.f*sustain_lvl)*std::exp(-M_LN2*(t - t_ad)/decay_s) - (1 - 2.f*sustain_lvl);
+              env = (2 - 2.f*sustain_lvl)*std::exp(-math::c_ln2*(t - t_ad)/decay_s) - (1 - 2.f*sustain_lvl);
               break;
             case ADSRMode::LOG:
               env = std::log(1-(t - t_ad)/decay_s*(1.f-std::exp(sustain_lvl - 1))) + 1;
@@ -577,10 +577,10 @@ namespace audio
               env = math::linmap(t, t_sr, t_r, sustain_lvl, 0.f);
               break;
             case ADSRMode::EXP:
-              env = 2.f*sustain_lvl*std::exp(-M_LN2*(t - t_sr)/release_s) - sustain_lvl;
+              env = 2.f*sustain_lvl*std::exp(-static_cast<float>(M_LN2)*(t - t_sr)/release_s) - sustain_lvl;
               break;
             case ADSRMode::LOG:
-              env = sustain_lvl*(std::log(1-(t - t_sr)/release_s*(1-1./M_E)) + 1);
+              env = sustain_lvl*(static_cast<float>(std::log(1-(t - t_sr))/release_s*(1-1./static_cast<float>(M_E))) + 1);
               break;
           }
         }
@@ -800,11 +800,11 @@ namespace audio
                                      float t_start = 0.f, std::optional<float> t_end = std::nullopt)
     {
       float dt = 1/wave.sample_rate;
-      int tot_buffer_len = wave.duration / dt;
-      int idx_start = t_start / dt;
+      auto tot_buffer_len = static_cast<int>(wave.duration / dt);
+      auto idx_start = static_cast<int>(t_start / dt);
       int idx_end = tot_buffer_len - 1;
       if (t_end.has_value())
-        idx_end = t_end.value() / dt;
+        idx_end = static_cast<int>(t_end.value() / dt);
       if (idx_end >= tot_buffer_len)
         idx_end = tot_buffer_len - 1;
       
@@ -831,7 +831,7 @@ namespace audio
     
     static size_t calc_num_samples(float duration_s, int sample_rate)
     {
-      return std::round(duration_s * sample_rate);
+      return static_cast<size_t>(std::round(duration_s * sample_rate));
     }
     
   private:
@@ -1020,14 +1020,14 @@ namespace audio
         case WindowType::HAMMING:
           for (size_t i = 0; i < N; ++i)
           {
-            float window_val = 0.54f - 0.46f * std::cos(2.0f * M_PI * i / (N - 1));
+            float window_val = 0.54f - 0.46f * std::cos(math::c_2pi * i / (N - 1));
             wave.buffer[i] *= window_val;
           }
           break;
         case WindowType::HANNING:
           for (size_t i = 0; i < N; ++i)
           {
-            float window_val = 0.5f * (1.0f - std::cos(2.0f * M_PI * i / (N - 1)));
+            float window_val = 0.5f * (1.0f - std::cos(math::c_2pi * i / (N - 1)));
             wave.buffer[i] *= window_val;
           }
           break;

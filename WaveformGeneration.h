@@ -53,7 +53,7 @@ namespace audio
       wd.sample_rate = sample_rate;
       wd.duration = duration;
       
-      int buffer_len = duration * sample_rate;
+      auto buffer_len = static_cast<int>(duration * sample_rate);
       float freq_mod = frequency;
       float ampl_mod = 1.f;
       
@@ -81,7 +81,7 @@ namespace audio
         
         // Apply phase modulation similar to Octave code
         float phi = phase_func(t, duration);
-        float phase_modulation = 2 * M_PI * accumulated_frequency / sample_rate + phi;
+        auto phase_modulation = static_cast<float>(math::c_2pi * accumulated_frequency / sample_rate + phi);
         float sample = ampl_mod * wave_func(phase_modulation, param);
         wd.buffer[i] = sample;
       }
@@ -257,7 +257,7 @@ namespace audio
       //return args.amplitude * sin(w * t);
       auto a = std::fmod(f * t, 1.f);
 #else
-      auto a = std::fmod(phi / (2*M_PI), 1.f);
+      auto a = std::fmod(phi / math::c_2pi, 1.f);
 #endif
       if (0 <= a && a < 0.5f)
         return +1.f;
@@ -272,7 +272,7 @@ namespace audio
       //return args.amplitude * sin(w * t);
       auto a = std::fmod(f * t, 1.f);
 #else
-      auto a = std::fmod(phi / (2*M_PI), 1.f);
+      auto a = std::fmod(phi / math::c_2pi, 1.f);
 #endif
       if (0 <= a && a < 0.5f)
         return math::lerp(2*a, -1.f, +1.f);
@@ -287,7 +287,7 @@ namespace audio
       //return args.amplitude * sin(w * t);
       auto a = std::fmod(f * t, 1.f);
 #else
-      auto a = std::fmod(phi / (2*M_PI), 1.f);
+      auto a = std::fmod(phi / math::c_2pi, 1.f);
 #endif
       return 2*a-1;
     };
@@ -300,7 +300,7 @@ namespace audio
     const WaveformFunc waveform_pwm = [](float phi, float param) -> float
     {
       auto duty_cycle = param;
-      auto a = std::fmod(phi / (2*M_PI), 1.f);
+      auto a = std::fmod(phi / math::c_2pi, 1.f);
       if (0 <= a && a < duty_cycle)
         return +1.f;
       else
@@ -350,7 +350,7 @@ namespace audio
     
     const AmplitudeFunc ampl_func_vibrato_0 = [](float t, float duration)
     {
-      return 0.8f + 0.2f*std::sin(2*M_PI*2.2f*t*(1 + std::min(0.8f, 0.4f*t)));
+      return 0.8f + 0.2f*std::sin(math::c_2pi * 2.2f*t*(1 + std::min(0.8f, 0.4f*t)));
     };
     
     // //////////////////
