@@ -1,0 +1,282 @@
+; This song is copyrighted by Björn Rasmus Anthin 2024
+;
+; Instrument Definitions
+; Syntax:
+; instrument <instrument_name> <waveform> [duty_cycle:<pwm_duty_cycle>]
+;   [ffx:<freq_preset_effect>] [afx:<ampl_preset_effect>] [pfx:<phase_preset_effect>]
+;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
+; instrument <instrument_name> ring_mod_A:<ring_mod_instr_A> ring_mod_B:<ring_mod_instr_B>
+;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
+; instrument <instrument_name> conv_A:<conv_instr_A> conv_B:<conv_instr_B>
+;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
+; instrument <instrument_name> ((<w0>, <instrument_name0>), (<w1>, <instrument_name1>), ...)
+;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
+; instrument <instrument_name> &<lib_instrument_name>
+;   [ffx:<freq_preset_effect>] [afx:<ampl_preset_effect>] [pfx:<phase_preset_effect>]
+;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
+; <instrument_name> := [A-Za-z][A-Za-z0-9]*
+; <waveform> := "sine"|"square"|"triangle"|"sawtooth"|"noise"|"pwm"
+; <volume> := 0..1
+; Example:
+instrument PIANO ring_mod_A:I0 ring_mod_B:I1 adsr:0
+instrument I0 square adsr:1 flp:0 afx:VIBRATO
+instrument I1 pwm duty_cycle:0.3
+instrument ORGAN ((0.5, PIANO), (0.2, I0)) flp:0
+instrument FLUTE_VIB &FLUTE ffx:CONSTANT afx:VIBRATO_0 pfx:ZERO vol:0.15
+instrument TRUMPET &TRUMPET ffx:CONSTANT afx:CONSTANT pfx:ZERO vol:0.6
+instrument TRUMPET_VIB &TRUMPET ffx:CHIRP_2 afx:VIBRATO_0 pfx:ZERO vol:0.6
+instrument KDRUM &KICKDRUM vol:2
+instrument SDRUM &SNAREDRUM
+instrument HIHAT &HIHAT
+instrument STEEL_PAN conv_A:FLUTE_VIB conv_B:SDRUM adsr:1
+
+; Modulation Envelopes
+; Syntax:
+; adsr <adsr_nr> <attack_mode> <attack_ms> <decay_mode> <decay_ms> <sustain_level> <release_mode> <release_ms>
+; adsr <adsr_nr> &<lib_adsr_name>
+; Where:
+; <adsr_nr> := [0-9]+
+; <attack_mode> := <adsr_mode>
+; <decay_mode> := <adsr_mode>
+; <release_mode> := <adsr_mode>
+; <adsr_mode> := "LIN"|"EXP"|"LOG"
+; <attack_ms> := [0-9]+
+; <decay_ms> := [0-9]+
+; <release_ms> := [0-9]+
+; Example:
+adsr 0 LIN 100 EXP 300 50 LOG 500   ; Modulation envelope adsr0 with linear attack of 100 ms, exponential decay of 300 ms, sustain level of 50, and logarithmic release of 500 ms
+adsr 1 EXP 50 EXP 200 80 LIN 300    ; Modulation envelope adsr1 with exponential attack of 50 ms, exponential decay of 200 ms, sustain level of 80, and linear release of 300 ms
+adsr 2 &ORGAN_2
+adsr 3 LOG 80 LOG 30 50 LOG 10
+
+; Low Pass Filters
+; Syntax:
+; filter_lp <filter_lp_nr> [type] [order] [cutoff_frq_mult] [ripple]
+filter_lp 0 Butterworth 2 1.5 0.1
+
+; Note format:
+; <pitch> <duration_ms> <instrument>
+
+TIME_STEP_MS 50
+NUM_VOICES 4
+
+
+PRINT OFF
+VOLUME 1
+LABEL lbl0
+TAB | A2 50 KDRUM
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT
+TAB -
+TAB -
+TAB -
+GOTO_TIMES lbl0 6
+#LABEL lbl1
+#START
+TAB | A2 50 KDRUM |
+TAB -
+TAB | A2 50 KDRUM |
+TAB -
+TAB | A6 20 HIHAT |
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT |
+PRINT OFF
+LABEL lbl1
+TAB -
+TAB -
+TAB -
+TAB | A2 50 KDRUM | C4 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | C4 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | C4 80 PIANO
+TAB -
+TAB -
+TAB | - | - | - |
+TAB | A2 50 KDRUM | C5 50 PIANO
+TAB -
+TAB | - | C5 50 PIANO
+TAB -
+TAB | A6 20 HIHAT | C4 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | C4 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | A2 50 KDRUM | Bb3 50 PIANO
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | Bb4 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | Bb3 50 PIANO
+TAB -
+TAB | - |
+TAB -
+TAB | A2 50 KDRUM | Bb4 80 PIANO
+TAB -
+TAB | - | Bb4 50 PIANO
+TAB -
+TAB | A6 20 HIHAT | Bb3 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | Bb3 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | A2 50 KDRUM | G2 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | G3 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | G2 80 PIANO
+TAB -
+TAB | - |
+TAB -
+TAB | A2 50 KDRUM | G3 50 PIANO
+TAB -
+TAB | - | G3 50 PIANO
+TAB -
+TAB | A6 20 HIHAT | G2 50 PIANO
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM | G2 50 PIANO
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | Gb2 50 PIANO
+TAB -
+TAB -
+TAB -
+TAB | A2 50 KDRUM | F2 50 PIANO
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT |
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM | F3 80 PIANO
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT |
+TAB -
+TAB -
+TAB -
+#START
+#TIME_STEP_MS 200
+TAB | A2 50 KDRUM | F2 50 PIANO
+TAB -
+TAB | - | F2 50 PIANO
+TAB -
+TAB | A6 20 HIHAT | G#2 50 PIANO
+TAB -
+TAB | - | Bb2 50 PIANO
+TAB -
+TAB | B4 50 SDRUM | C2 50 PIANO vol:2
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT | B2 100 PIANO
+GOTO_TIMES lbl1 1
+TAB -
+TAB -
+TAB -
+TAB | A2 50 KDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT |
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT |
+TAB -
+TAB -
+TAB -
+TAB | A2 50 KDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT |
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT |
+TAB -
+TAB -
+TAB -
+TAB | A2 50 KDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT |
+TAB -
+TAB -
+TAB -
+TAB | B4 50 SDRUM |
+TAB -
+TAB -
+TAB -
+TAB | A6 20 HIHAT |
+TAB -
+TAB -
+TAB -
