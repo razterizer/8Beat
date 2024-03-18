@@ -4,3 +4,4 @@
 ./build_demo_4.sh l
 ./build_demo_5.sh l
 ./build_demo_6.sh l
+./build_demo_7.sh l
