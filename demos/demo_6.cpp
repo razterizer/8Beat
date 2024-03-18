@@ -16,6 +16,13 @@ int main(int argc, char** argv)
 {
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
+  
+  
+#ifdef _MSC_VER
+  std::string wk_dir = "../sounds/";
+#else
+  std::string wk_dir = "./sounds/";
+#endif
 
 #if 0
   // Mysterious fade-in behaviour. #FIXME: Investigate!
