@@ -94,43 +94,45 @@ namespace audio
     {
       WaveformFunc wave_func = waveform_sine;
       std::visit([&wave_func, this, verbose](auto&& val)
-                 {
+      {
         using T = std::decay_t<decltype(val)>;
         if constexpr (std::is_same_v<T, WaveformType>)
         {
           // Handle enum class case
+          if (verbose) std::cout << "WaveformType: ";
           switch (val)
           {
             case WaveformType::SINE_WAVE:
               wave_func = waveform_sine;
-              if (verbose) std::cout << "Waveform: SINE_WAVE" << std::endl;
+              if (verbose) std::cout << "SINE_WAVE" << std::endl;
               break;
             case WaveformType::SQUARE_WAVE:
               wave_func = waveform_square;
-              if (verbose) std::cout << "Waveform: SQUARE_WAVE" << std::endl;
+              if (verbose) std::cout << "SQUARE_WAVE" << std::endl;
               break;
             case WaveformType::TRIANGLE_WAVE:
               wave_func = waveform_triangle;
-              if (verbose) std::cout << "Waveform: TRIANGLE_WAVE" << std::endl;
+              if (verbose) std::cout << "TRIANGLE_WAVE" << std::endl;
               break;
             case WaveformType::SAWTOOTH_WAVE:
               wave_func = waveform_sawtooth;
-              if (verbose) std::cout << "Waveform: SAWTOOTH_WAVE" << std::endl;
+              if (verbose) std::cout << "SAWTOOTH_WAVE" << std::endl;
               break;
             case WaveformType::NOISE:
               wave_func = waveform_noise;
-              if (verbose) std::cout << "Waveform: NOISE" << std::endl;
+              if (verbose) std::cout << "NOISE" << std::endl;
               break;
             case WaveformType::PWM:
               wave_func = waveform_pwm;
-              if (verbose) std::cout << "Waveform: PWM" << std::endl;
+              if (verbose) std::cout << "PWM" << std::endl;
+              break;
           }
         }
         else if constexpr (std::is_invocable_v<T, WAVEFORM_FUNC_ARGS>)
         {
           // Handle std::function case
           wave_func = val;
-          if (verbose) std::cout << "Waveform: Custom" << std::endl;
+          if (verbose) std::cout << "WaveformType: Custom" << std::endl;
         }
       }, wave_func_arg);
       return wave_func;
@@ -140,32 +142,33 @@ namespace audio
     {
       FrequencyFunc freq_func = freq_func_constant;
       std::visit([&freq_func, this, verbose](auto&& val)
-                 {
+      {
         using T = std::decay_t<decltype(val)>;
         if constexpr (std::is_same_v<T, FrequencyType>)
         {
           // Handle enum class case
+          if (verbose) std::cout << "FrequencyType: ";
           switch (val)
           {
             case FrequencyType::CONSTANT:
               freq_func = freq_func_constant;
-              if (verbose) std::cout << "Frequency: CONSTANT" << std::endl;
+              if (verbose) std::cout << "CONSTANT" << std::endl;
               break;
             case FrequencyType::JET_ENGINE_POWERUP:
               freq_func = freq_func_jet_engine_powerup;
-              if (verbose) std::cout << "Frequency: JET_ENGINE_POWERUP" << std::endl;
+              if (verbose) std::cout << "JET_ENGINE_POWERUP" << std::endl;
               break;
             case FrequencyType::CHIRP_0:
               freq_func = freq_func_chirp_0;
-              if (verbose) std::cout << "Frequency: CHIRP_0" << std::endl;
+              if (verbose) std::cout << "CHIRP_0" << std::endl;
               break;
             case FrequencyType::CHIRP_1:
               freq_func = freq_func_chirp_1;
-              if (verbose) std::cout << "Frequency: CHIRP_1" << std::endl;
+              if (verbose) std::cout << "CHIRP_1" << std::endl;
               break;
             case FrequencyType::CHIRP_2:
               freq_func = freq_func_chirp_2;
-              if (verbose) std::cout << "Frequency: CHIRP_2" << std::endl;
+              if (verbose) std::cout << "CHIRP_2" << std::endl;
               break;
           }
         }
@@ -173,7 +176,7 @@ namespace audio
         {
           // Handle std::function case
           freq_func = val;
-          if (verbose) std::cout << "Frequency: Custom" << std::endl;
+          if (verbose) std::cout << "FrequencyType: Custom" << std::endl;
         }
       }, freq_func_arg);
       return freq_func;
@@ -183,16 +186,17 @@ namespace audio
     {
       AmplitudeFunc ampl_func = ampl_func_constant;
       std::visit([&ampl_func, this, verbose](auto&& val)
-                 {
+      {
         using T = std::decay_t<decltype(val)>;
         if constexpr (std::is_same_v<T, AmplitudeType>)
         {
           // Handle enum class case
+          if (verbose) std::cout << "AmplitudeType: ";
           switch (val)
           {
             case AmplitudeType::CONSTANT:
               ampl_func = ampl_func_constant;
-              if (verbose) std::cout << "Amplitude: CONSTANT" << std::endl;
+              if (verbose) std::cout << "CONSTANT" << std::endl;
               break;
             case AmplitudeType::JET_ENGINE_POWERUP:
               ampl_func = ampl_func_jet_engine_powerup;
@@ -200,7 +204,7 @@ namespace audio
               break;
             case AmplitudeType::VIBRATO_0:
               ampl_func = ampl_func_vibrato_0;
-              if (verbose) std::cout << "Amplitude: VIBRATO_0" << std::endl;
+              if (verbose) std::cout << "VIBRATO_0" << std::endl;
               break;
           }
         }
@@ -208,7 +212,7 @@ namespace audio
         {
           // Handle std::function case
           ampl_func = val;
-          if (verbose) std::cout << "Amplitude: Custom" << std::endl;
+          if (verbose) std::cout << "AmplitudeType: Custom" << std::endl;
         }
       }, ampl_func_arg);
       return ampl_func;
@@ -218,16 +222,17 @@ namespace audio
     {
       PhaseFunc phase_func = phase_func_zero;
       std::visit([&phase_func, this, verbose](auto&& val)
-                 {
+      {
         using T = std::decay_t<decltype(val)>;
         if constexpr (std::is_same_v<T, PhaseType>)
         {
           // Handle enum class case
+          if (verbose) std::cout << "PhaseType: ";
           switch (val)
           {
             case PhaseType::ZERO:
               phase_func = phase_func_zero;
-              if (verbose) std::cout << "Phase: ZERO" << std::endl;
+              if (verbose) std::cout << "ZERO" << std::endl;
               break;
           }
         }
@@ -235,7 +240,7 @@ namespace audio
         {
           // Handle std::function case
           phase_func = val;
-          if (verbose) std::cout << "Phase: Custom" << std::endl;
+          if (verbose) std::cout << "PhaseType: Custom" << std::endl;
         }
       }, phase_func_arg);
       return phase_func;
