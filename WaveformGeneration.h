@@ -200,7 +200,7 @@ namespace audio
               break;
             case AmplitudeType::JET_ENGINE_POWERUP:
               ampl_func = ampl_func_jet_engine_powerup;
-              if (verbose) std::cout << "Amplitude: JET_ENGINE_POWERUP" << std::endl;
+              if (verbose) std::cout << "JET_ENGINE_POWERUP" << std::endl;
               break;
             case AmplitudeType::VIBRATO_0:
               ampl_func = ampl_func_vibrato_0;
