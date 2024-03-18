@@ -6,17 +6,12 @@
 //
 
 #include "../AudioSourceHandler.h"
-#include "../WaveformGeneration.h"
-#include "../WaveformIO.h"
 #include "../WaveformHelper.h"
 
 
 
 int main(int argc, char** argv)
-{
-  audio::AudioSourceHandler src_handler;
-  audio::WaveformGeneration wave_gen;
-  
+{  
   std::cout << "FFT:\n";
   audio::Waveform wd_fft;
   wd_fft.buffer = { -4, 2, 1, -5 };
