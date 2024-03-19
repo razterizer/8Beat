@@ -21,6 +21,15 @@ Here OpenAL Soft is also only used as a dependency and `8Beat` is not to be cons
 
 One issue however is that the newer OpenAL Soft repository on github (https://github.com/kcat/openal-soft) seems to be under GPL-v2 license. This could be a potential issue!!!
 
+Edit: See this discussion with the author of the lib: https://github.com/kcat/openal-soft/issues/187:
+```
+kcat:
+
+Hi.
+
+Generally speaking, as long as OpenAL Soft is unmodified and distributed as a shared library, you can use it in any project you wish. Unless your code is also (L)GPL, that's typically the easiest way to deal with LGPL libraries. Otherwise, if OpenAL Soft itself is static-linked into a binary, then any distribution must also offer the source or object files of the binary so a user can relink with another version of OpenAL Soft.
+```
+
 ## Definitions
 
 We'll often use the term `waveform` as meaning an audio signal here.
