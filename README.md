@@ -2,6 +2,34 @@
 
 Documentation is a work in progress for the moment being. For example on how to use this lib, please clone repo [`Pilot Episode`](https://github.com/razterizer/Pilot-Episode) and follow the instructions there.
 
+## Licensing
+
+### LibSndFile
+
+`WaveformIO.h` uses [`libsndfile`](https://github.com/libsndfile/libsndfile?tab=LGPL-2.1-1-ov-file) which is under the LGPL-2.1 license. There is no derivative work of the library whatsoever. `libsndfile` is only a dependency. 
+In order to be able to use `WaveformIO.h` you need to supply the libsnd binaries (libs or dlls) and headers yourself. These are not included.
+
+Since `libsndfile` is under LGPL, this means that whenever a release build is created, its source code has to be included as well. So that is important to remember.
+
+See this online discussion for more info: https://softwareengineering.stackexchange.com/questions/141847/how-does-using-a-lgpl-gem-affect-my-mit-licensed-application
+
+### OpenAL Soft
+
+This library (which is under the MIT license) heavily relies on the OpenAL Soft license which is under the LGPL license (see https://www.openal-soft.org/).
+
+Here OpenAL Soft is also only used as a dependency and `8Beat` is not to be considered as derived work. There are no binaries (libs or dlls), nor headers from OpenAL Soft included in this repository. The user has to supply those him/her-self.
+
+One issue however is that the newer OpenAL Soft repository on github (https://github.com/kcat/openal-soft) seems to be under GPL-v2 license. This could be a potential issue!!!
+
+Edit: See this discussion with the author of the lib: https://github.com/kcat/openal-soft/issues/187:
+```
+kcat:
+
+Hi.
+
+Generally speaking, as long as OpenAL Soft is unmodified and distributed as a shared library, you can use it in any project you wish. Unless your code is also (L)GPL, that's typically the easiest way to deal with LGPL libraries. Otherwise, if OpenAL Soft itself is static-linked into a binary, then any distribution must also offer the source or object files of the binary so a user can relink with another version of OpenAL Soft.
+```
+
 ## Definitions
 
 We'll often use the term `waveform` as meaning an audio signal here.
