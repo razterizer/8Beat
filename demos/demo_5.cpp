@@ -17,7 +17,7 @@ int main(int argc, char** argv)
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
   
-  int sample_rate = 441100;
+  float sample_rate = 441100.f; // #FIXME: Convert to int.
 
   auto wd = wave_gen.generate_waveform(audio::WaveformType::SQUARE_WAVE, 3.f, 500.f,
                                       audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, sample_rate);

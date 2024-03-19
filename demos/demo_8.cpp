@@ -13,7 +13,7 @@ class Test : public audio::AudioStreamListener
 {
   virtual float on_get_sample(float t) const override
   {
-    return std::sin(2*M_PI*440*t);
+    return std::sin(math::c_2pi*440*t);
   }
 };
 
@@ -48,13 +48,13 @@ int main(int argc, char** argv)
   stream_src_2->update_buffer(wave_square);
   stream_src_1->play(audio::PlaybackMode::NONE);
   stream_src_2->play(audio::PlaybackMode::NONE);
-  Delay::sleep(3.f*1e6);
+  Delay::sleep(3*1e6);
   
   stream_src_1->stop();
   stream_src_2->update_buffer(wave_triangle);
   stream_src_1->play(audio::PlaybackMode::NONE);
   stream_src_2->play(audio::PlaybackMode::NONE);
-  Delay::sleep(3.f*1e6);
+  Delay::sleep(3*1e6);
   
   src_handler.remove_source(stream_src_1);
   src_handler.remove_source(stream_src_2);
