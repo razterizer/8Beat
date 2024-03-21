@@ -490,7 +490,8 @@ namespace audio
       
       for (int s_idx = 0; s_idx < Ns; ++s_idx)
       {
-        float avg = 0.5f * (wave.buffer[(s_idx - Nb)%Ns] + wave.buffer[(s_idx - Nb + 1)%Ns]);
+        size_t idx_offs = s_idx < Nb ? s_idx : s_idx - Nb;
+        float avg = 0.5f * (wave.buffer[idx_offs % Ns] + wave.buffer[idx_offs % Ns]);
         wave.buffer[s_idx] = avg + noise[s_idx % Nb];
         // Low-pass filter
         //wave.buffer[s_idx] = 0.5f * (wave.buffer[s_idx] + wave.buffer[s_idx - 1]);
