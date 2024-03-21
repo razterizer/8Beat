@@ -74,7 +74,7 @@ namespace audio
           std::cout << "Successfully loaded WaveForm from file: \"" << filepath << "\".\n";
       }
       
-      wd.sample_rate = static_cast<float>(sf_info.samplerate);
+      wd.sample_rate = sf_info.samplerate;
       wd.duration = static_cast<float>(sf_info.frames) / wd.sample_rate;
       //std::cout << "Fs: " << wd.sample_rate << std::endl;
       //std::cout << "duration: " << wd.duration << std::endl;
@@ -110,7 +110,7 @@ namespace audio
     {
       SF_INFO sf_info;
       
-      sf_info.samplerate = static_cast<int>(wd.sample_rate);
+      sf_info.samplerate = wd.sample_rate;
       sf_info.frames = static_cast<sf_count_t>(wd.buffer.size());
       sf_info.channels = 1;  // Use 1 for mono, update for stereo support.
       
@@ -278,7 +278,7 @@ namespace audio
         return false;
       }
       
-      sf_info.samplerate = static_cast<int>(wd.sample_rate);
+      sf_info.samplerate = wd.sample_rate;
       sf_info.frames = static_cast<sf_count_t>(wd.buffer.size());
       sf_info.channels = 1;  // Use 1 for mono, update for stereo support.
       

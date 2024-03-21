@@ -24,7 +24,7 @@ namespace audio
   
     std::vector<float> buffer;
     float frequency = 440.f; // A4
-    float sample_rate = 44100.f;
+    int sample_rate = 44100;
     float duration = 5.f;
     
     void copy_properties(const Waveform& wave)
@@ -36,7 +36,7 @@ namespace audio
     
     void update_duration()
     {
-      float dt = 1/sample_rate;
+      float dt = 1.f/sample_rate;
       size_t num_samples = buffer.size();
       this->duration = num_samples * dt;
     }

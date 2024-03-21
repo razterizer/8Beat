@@ -69,7 +69,7 @@ namespace audio
       const size_t Nw = weighted_waves.size();
       size_t Nmin = static_cast<size_t>(-1);
       std::vector<std::pair<float, Waveform>> res_weighted_waves(weighted_waves.size());
-      float common_sample_rate = 0.f;
+      int common_sample_rate = 0;
       float frequency = 0.f;
       float weight_sum = 0.f;
       for (const auto& ww : weighted_waves)
@@ -110,7 +110,7 @@ namespace audio
     static Waveform mix(float t, const Waveform& wave_A, const Waveform& wave_B)
     {
       // Resample both signals to a common sample rate
-      float common_sample_rate = std::max(wave_A.sample_rate, wave_B.sample_rate);
+      int common_sample_rate = std::max(wave_A.sample_rate, wave_B.sample_rate);
       Waveform res_A = resample(wave_A, common_sample_rate, LowPassFilterType::Butterworth);
       Waveform res_B = resample(wave_B, common_sample_rate, LowPassFilterType::Butterworth);
       
@@ -128,7 +128,7 @@ namespace audio
     static Waveform ring_modulation(const Waveform& wave_A, const Waveform& wave_B)
     {
       // Resample both signals to a common sample rate
-      float common_sample_rate = std::max(wave_A.sample_rate, wave_B.sample_rate);
+      int common_sample_rate = std::max(wave_A.sample_rate, wave_B.sample_rate);
       Waveform res_A = resample(wave_A, common_sample_rate, LowPassFilterType::Butterworth);
       Waveform res_B = resample(wave_B, common_sample_rate, LowPassFilterType::Butterworth);
       
@@ -157,7 +157,7 @@ namespace audio
     static Waveform reverb(const Waveform& wave, const Waveform& kernel)
     {
       // Resample both signals to a common sample rate.
-      float common_sample_rate = std::max(wave.sample_rate, kernel.sample_rate);
+      int common_sample_rate = std::max(wave.sample_rate, kernel.sample_rate);
       Waveform res_wave = resample(wave, common_sample_rate, LowPassFilterType::Butterworth);
       Waveform res_kernel = resample(kernel, common_sample_rate, LowPassFilterType::Butterworth);
       
@@ -181,7 +181,7 @@ namespace audio
     static Waveform reverb_fast(const Waveform& wave, const Waveform& kernel)
     {
       // Resample both signals to a common sample rate.
-      float common_sample_rate = std::max(wave.sample_rate, kernel.sample_rate);
+      int common_sample_rate = std::max(wave.sample_rate, kernel.sample_rate);
       Waveform res_wave = resample(wave, common_sample_rate, LowPassFilterType::Butterworth);
       Waveform res_kernel = resample(kernel, common_sample_rate, LowPassFilterType::Butterworth);
       
@@ -301,7 +301,7 @@ namespace audio
       Waveform result;
       result.buffer = complex2real(output, c2r_filter);
       // Calculate frequency axis.
-      result.sample_rate = spectrum.freq_end * 2.f;
+      result.sample_rate = static_cast<int>(spectrum.freq_end * 2.f);
       
       return result;
     }
@@ -419,7 +419,7 @@ namespace audio
     {
       auto N = wave.buffer.size();
       Waveform output = wave;
-      auto sample_rate = static_cast<int>(wave.sample_rate);
+      auto sample_rate = wave.sample_rate;
       std::vector<float> delay_buffer(sample_rate, 0.f);
       
       int buffer_index = 0;
@@ -473,9 +473,9 @@ namespace audio
     
     // Emulates string instrument sounds.
     static Waveform karplus_strong(float duration_s, float frequency,
-                                   float sample_rate = 44100.f)
+                                   int sample_rate = 44100)
     {
-      auto Ns = static_cast<int>(calc_num_samples(duration_s, static_cast<int>(sample_rate)));
+      auto Ns = static_cast<int>(calc_num_samples(duration_s, sample_rate));
       Waveform wave(Ns, 0.f);
       wave.duration = duration_s;
       wave.frequency = frequency;
@@ -601,7 +601,7 @@ namespace audio
       return envelope_adsr(wave, adsr);
     }
     
-    static Waveform resample(const Waveform& wave, float new_sample_rate = 44100.f,
+    static Waveform resample(const Waveform& wave, int new_sample_rate = 44100,
                                  LowPassFilterType filter_type = LowPassFilterType::Butterworth,
                                  int filter_order = 1, float cutoff_freq_multiplier = 2.5f, float ripple = 0.1f)
     {
@@ -613,7 +613,7 @@ namespace audio
       resampled_wave.sample_rate = new_sample_rate;
       
       // Calculate the resampling factor
-      float resampling_factor = wave.sample_rate / new_sample_rate;
+      float resampling_factor = static_cast<float>(wave.sample_rate) / new_sample_rate;
       
       //resampled_wave.duration = wave.duration * resampling_factor;
       
@@ -800,7 +800,7 @@ namespace audio
                                      int width = 100, int height = 20,
                                      float t_start = 0.f, std::optional<float> t_end = std::nullopt)
     {
-      float dt = 1/wave.sample_rate;
+      float dt = 1.f/wave.sample_rate;
       auto tot_buffer_len = static_cast<int>(wave.duration / dt);
       auto idx_start = static_cast<int>(t_start / dt);
       int idx_end = tot_buffer_len - 1;
@@ -820,12 +820,12 @@ namespace audio
     
     static float calc_dt(const Waveform& wave)
     {
-      return 1/wave.sample_rate;
+      return 1.f/wave.sample_rate;
     }
     
     static float calc_duration(const Waveform& wave)
     {
-      float dt = 1/wave.sample_rate;
+      float dt = 1.f/wave.sample_rate;
       size_t num_samples = wave.buffer.size();
       return num_samples * dt;
     }
@@ -848,7 +848,7 @@ namespace audio
     
     // Example of applying a Butterworth low-pass filter
     static void apply_Butterworth_low_pass_filter(std::vector<float>& signal, int filter_order,
-                                                  float cutoff_frequency, float sample_rate)
+                                                  float cutoff_frequency, int sample_rate)
     {
       if (filter_order <= 0)
       {
@@ -885,7 +885,7 @@ namespace audio
     
     // Example of applying a first-order Chebyshev low-pass filter (Type I)
     static void apply_ChebyshevI_low_pass_filter(std::vector<float>& signal, int filter_order,
-                                                 float cutoff_frequency, float sample_rate, float ripple)
+                                                 float cutoff_frequency, int sample_rate, float ripple)
     {
       if (ripple <= 0.0)
       {
@@ -919,7 +919,7 @@ namespace audio
     
     // Example of applying a first-order Chebyshev low-pass filter (Type II)
     static void apply_ChebyshevII_low_pass_filter(std::vector<float>& signal, int filter_order,
-                                                  float cutoff_frequency, float sample_rate, float ripple)
+                                                  float cutoff_frequency, int sample_rate, float ripple)
     {
       if (ripple <= 0.0)
       {
