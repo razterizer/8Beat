@@ -98,6 +98,9 @@ int main(int argc, char** argv)
   
 // Plot Audio
 
+  std::cout << "Please make sure your terminal window is at least 150 chars wide.\n";
+  pressAnyKey();
+
   int width = 150;
   int height = 20;
 #if 1
@@ -124,11 +127,6 @@ int main(int argc, char** argv)
   audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::FILLED_BOTTOM_UP, width, height, start, end);
   std::cout << "filled from t-axis:\n";
   audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::FILLED_FROM_T_AXIS, width, height, start, end);
-
-#ifdef _MSC_VER
-  std::cout << std::endl << "Press any key to exit." << std::endl;
-  _getch();
-#endif
   
   pressAnyKey();
   
