@@ -57,9 +57,9 @@ int main(int argc, char** argv)
   audio::Waveform wd;
   
 #if 1
-  float sample_rate = 44'100;
+  int sample_rate = 44'100;
 #else
-  float sample_rate = 10'000;
+  int sample_rate = 10'000;
 #endif
 
   switch (test)

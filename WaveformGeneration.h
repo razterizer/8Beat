@@ -45,7 +45,7 @@ namespace audio
                                const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
                                const PhaseFuncArg& phase_func_arg = PhaseType::ZERO,
                                float pwm_duty_cycle = 0.5f,
-                               float sample_rate = 44100.f,
+                               int sample_rate = 44100,
                                bool verbose = false) const
     {
       Waveform wd;

@@ -56,9 +56,9 @@ int main(int argc, char** argv)
   audio::Waveform wd;
   
 #if 1
-  float sample_rate = 44'100;
+  int sample_rate = 44'100;
 #else
-  float sample_rate = 10'000;
+  int sample_rate = 10'000;
 #endif
 
   switch (test)
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 #if 1
   auto T = audio::WaveformHelper::calc_time_from_num_cycles(wd2, 1);
   float start = 0.f; //100*T;
-  //float dt = 1/wd.sample_rate;
+  //float dt = 1.f/wd.sample_rate;
   //float end = 100*dt;
   float end = start + 10*T;
 #else
