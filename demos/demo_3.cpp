@@ -8,14 +8,14 @@
 #include "../AudioSourceHandler.h"
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
-#ifdef _MSC_VER
-#include <conio.h>
-#endif
+#include "../../Consolation/Keyboard.h"
 
 
 
 int main(int argc, char** argv)
 {
+  enableRawMode();
+
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
   
@@ -129,6 +129,8 @@ int main(int argc, char** argv)
   std::cout << std::endl << "Press any key to exit." << std::endl;
   _getch();
 #endif
+  
+  pressAnyKey();
   
   return 0;
 }

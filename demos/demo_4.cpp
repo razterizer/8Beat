@@ -7,14 +7,14 @@
 
 #include "../AudioSourceHandler.h"
 #include "../WaveformHelper.h"
-#ifdef _MSC_VER
-  #include <conio.h>
-#endif
+#include "../../Consolation/Keyboard.h"
 
 
 
 int main(int argc, char** argv)
-{  
+{
+  enableRawMode();
+
   std::cout << "FFT:\n";
   audio::Waveform wd_fft;
   wd_fft.buffer = { -4, 2, 1, -5 };
@@ -35,6 +35,8 @@ int main(int argc, char** argv)
   std::cout << std::endl << "Press any key to exit." << std::endl;
   _getch();
 #endif
+  
+  pressAnyKey();
   
   return 0;
 }

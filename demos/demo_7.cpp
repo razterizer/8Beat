@@ -8,11 +8,14 @@
 #include "../AudioSourceHandler.h"
 #include "../WaveformGeneration.h"
 #include "../ChipTuneEngine.h"
+#include "../../Consolation/Keyboard.h"
 
 
 
 int main(int argc, char** argv)
 {
+  enableRawMode();
+  
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
   
@@ -26,6 +29,8 @@ int main(int argc, char** argv)
   chiptune_engine.load_tune(wk_dir + "chiptune3.ct");
   chiptune_engine.set_volume(0.8f);
   chiptune_engine.play_tune(false);
+  
+  pressAnyKey();
   
   return 0;
 }

@@ -9,11 +9,14 @@
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
 #include "../WaveformIO.h"
+#include "../../Consolation/Keyboard.h"
 #include <filesystem>
 
 
 int main(int argc, char** argv)
 {
+  enableRawMode();
+
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
   
@@ -66,5 +69,7 @@ int main(int argc, char** argv)
     }
   }
  
+  pressAnyKey();
+  
   return 0;
 }
