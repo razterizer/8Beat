@@ -8,10 +8,13 @@
 #include "../AudioSourceHandler.h"
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
+#include "../../Consolation/Keyboard.h"
 
 
 int main(int argc, char** argv)
 {
+  enableRawMode();
+
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
   
@@ -104,6 +107,8 @@ int main(int argc, char** argv)
   auto src = src_handler.create_source_from_waveform(wd2);
   src->play(audio::PlaybackMode::STATE_WAIT);
 #endif
+
+  pressAnyKey();
   
   return 0;
 }

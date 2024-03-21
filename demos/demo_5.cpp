@@ -9,11 +9,14 @@
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
 #include "../ADSR.h"
+#include "../../Consolation/Keyboard.h"
 
 
 
 int main(int argc, char** argv)
 {
+  enableRawMode();
+  
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
   
@@ -27,6 +30,8 @@ int main(int argc, char** argv)
   auto src_wd_adsr = src_handler.create_source_from_waveform(wd_adsr);
   src_wd_adsr->set_volume(0.5);
   src_wd_adsr->play(audio::PlaybackMode::STATE_WAIT);
+
+  pressAnyKey();
   
   return 0;
 }

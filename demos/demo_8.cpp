@@ -7,6 +7,7 @@
 
 #include "../AudioSourceHandler.h"
 #include "../WaveformGeneration.h"
+#include "../../Consolation/Keyboard.h"
 
 
 class Test : public audio::AudioStreamListener
@@ -20,6 +21,8 @@ class Test : public audio::AudioStreamListener
 
 int main(int argc, char** argv)
 {
+  enableRawMode();
+
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
 
@@ -59,6 +62,8 @@ int main(int argc, char** argv)
   src_handler.remove_source(stream_src_1);
   src_handler.remove_source(stream_src_2);
 #endif
+  
+  pressAnyKey();
   
   return 0;
 }

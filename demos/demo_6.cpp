@@ -9,11 +9,14 @@
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
 #include "../Synthesizer.h"
+#include "../../Consolation/Keyboard.h"
 #include <stdio.h>
 
 
 int main(int argc, char** argv)
 {
+  enableRawMode();
+  
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
   
@@ -78,6 +81,8 @@ int main(int argc, char** argv)
   for (auto* src_synth : synth_sources)
     src_handler.remove_source(src_synth);
   synth_sources.clear();
+  
+  pressAnyKey();
   
   return 0;
 }
