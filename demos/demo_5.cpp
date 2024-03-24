@@ -30,6 +30,15 @@ int main(int argc, char** argv)
   auto src_wd_adsr = src_handler.create_source_from_waveform(wd_adsr);
   src_wd_adsr->set_volume(0.5);
   src_wd_adsr->play(audio::PlaybackMode::STATE_WAIT);
+  
+  pressAnyKey();
+  
+  wd_adsr = audio::WaveformHelper::envelope_adsr(wd,
+      { audio::ADSRMode::LIN, 300, 0.2f, 0.5f }, { audio::ADSRMode::EXP, 500, 1.f }, 0.4f, { audio::ADSRMode::EXP, 360, 0.3f, 0.8f });
+  audio::WaveformHelper::print_waveform_graph(wd_adsr, audio::GraphType::PLOT_THICK0, 100, 30, 0.f, std::nullopt);
+  src_wd_adsr = src_handler.create_source_from_waveform(wd_adsr);
+  src_wd_adsr->set_volume(0.5);
+  src_wd_adsr->play(audio::PlaybackMode::STATE_WAIT);
 
   pressAnyKey();
   

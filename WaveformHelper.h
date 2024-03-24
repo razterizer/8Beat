@@ -505,16 +505,16 @@ namespace audio
       auto N = wave.buffer.size();
       Waveform output = wave;
       
-      const auto& attack = adsr.attack;
-      const auto& decay = adsr.decay;
-      const auto& sustain = adsr.sustain;
-      const auto& release = adsr.release;
+      //const auto& attack = adsr.attack;
+      //const auto& decay = adsr.decay;
+      //const auto& sustain = adsr.sustain;
+      //const auto& release = adsr.release;
       
       const float gate_s = output.duration;
-      const float attack_s = attack.attack_time_ms * 1e-3f;
-      const float decay_s = decay.decay_time_ms * 1e-3f;
-      const float sustain_lvl = sustain.sustain_level;
-      const float release_s = release.release_time_ms * 1e-3f;
+      const float attack_s = adsr.get_time_A_ms() * 1e-3f;
+      const float decay_s = adsr.get_time_D_ms() * 1e-3f;
+      //const float sustain_lvl = sustain.sustain_level;
+      const float release_s = adsr.get_time_R_ms() * 1e-3f;
       
       const float t_a = 0.f;
       const float t_adr = std::max(gate_s - release_s, 0.f);
@@ -531,59 +531,76 @@ namespace audio
         //std::cout << t << '\n';
         auto& s = output.buffer[i];
         float env = 0.f;
+        float p = 0.f; // Param.
+        float pl = 0.f; // Linear Param.
         
         if (math::in_range<float>(t, t_a, t_ad, Range::Closed))
         {
           //std::cout << "A";
-          switch (attack.mode)
+          pl = math::value_to_param(t, t_a, t_ad);
+          switch (adsr.get_shape_A())
           {
             case ADSRMode::LIN:
-              env = math::linmap(t, t_a, t_ad, 0.f, 1.f);
+              p = pl;
+              //env = math::linmap(t, t_a, t_ad, 0.f, 1.f);
               break;
             case ADSRMode::EXP:
-              env = std::exp(math::c_ln2 * (t - t_a)/attack_s) - 1;
+              p = std::exp(pl * math::c_ln2) - 1;
+              //env = std::exp(math::c_ln2 * (t - t_a)/attack_s) - 1;
               break;
             case ADSRMode::LOG:
-              env = std::log((t - t_a)/attack_s*(math::c_e - 1) + 1);
+              p = std::log(pl * (math::c_e - 1) + 1);
+              //env = std::log((t - t_a)/attack_s*(math::c_e - 1) + 1);
               break;
           }
+          env = math::lerp(p, adsr.get_level_A0(), adsr.get_level_A1());
         }
         else if (math::in_range<float>(t, t_ad, t_ds, Range::OpenClosed))
         {
           //std::cout << "D";
-          switch (decay.mode)
+          pl = math::value_to_param(t, t_ad, t_ds);
+          switch (adsr.get_shape_D())
           {
             case ADSRMode::LIN:
-              env = math::linmap(t, t_ad, t_ds, 1.f, sustain_lvl);
+              p = pl;
+              //env = math::linmap(t, t_ad, t_ds, 1.f, sustain_lvl);
               break;
             case ADSRMode::EXP:
-              env = (2 - 2.f*sustain_lvl)*std::exp(-math::c_ln2*(t - t_ad)/decay_s) - (1 - 2.f*sustain_lvl);
+              p = 2 - 2*std::exp(-pl * math::c_ln2);
+              //env = (2 - 2.f*sustain_lvl)*std::exp(-math::c_ln2*(t - t_ad)/decay_s) - (1 - 2.f*sustain_lvl);
               break;
             case ADSRMode::LOG:
-              env = std::log(1-(t - t_ad)/decay_s*(1.f-std::exp(sustain_lvl - 1))) + 1;
+              p = -std::log(1 - pl*(1 - math::c_1_e));
+              //env = std::log(1-(t - t_ad)/decay_s*(1.f-std::exp(sustain_lvl - 1))) + 1;
               break;
           }
+          env = math::lerp(p, adsr.get_level_D0(), adsr.get_level_D1());
         }
         else if (math::in_range<float>(t, t_ds, t_sr, Range::OpenClosed))
         {
           //std::cout << "S";
-          env = sustain_lvl;
+          env = adsr.get_level_S();
         }
         else if (math::in_range<float>(t, t_sr, t_r, Range::OpenClosed))
         {
           //std::cout << "R";
-          switch (release.mode)
+          pl = math::value_to_param(t, t_sr, t_r);
+          switch (adsr.get_shape_R())
           {
             case ADSRMode::LIN:
-              env = math::linmap(t, t_sr, t_r, sustain_lvl, 0.f);
+              p = pl;
+              //env = math::linmap(t, t_sr, t_r, sustain_lvl, 0.f);
               break;
             case ADSRMode::EXP:
-              env = 2.f*sustain_lvl*std::exp(-static_cast<float>(M_LN2)*(t - t_sr)/release_s) - sustain_lvl;
+              p = 2 - 2*std::exp(-pl * math::c_ln2);
+              //env = 2.f*sustain_lvl*std::exp(-static_cast<float>(M_LN2)*(t - t_sr)/release_s) - sustain_lvl;
               break;
             case ADSRMode::LOG:
-              env = sustain_lvl*(static_cast<float>(std::log(1-(t - t_sr))/release_s*(1-1./static_cast<float>(M_E))) + 1);
+              p = -std::log(1 - pl*(1 - math::c_1_e));
+              //env = sustain_lvl*(static_cast<float>(std::log(1-(t - t_sr))/release_s*(1-1./static_cast<float>(M_E))) + 1);
               break;
           }
+          env = math::lerp(p, adsr.get_level_R0(), adsr.get_level_R1());
         }
         
         //std::cout << env << ", ";
