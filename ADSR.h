@@ -10,6 +10,7 @@
 #define ADSR_ENTRY(name) { #name, name },
 
 #include <map>
+#include <optional>
 
 
 namespace audio
@@ -20,22 +21,32 @@ namespace audio
   struct Attack
   {
     Attack() = default;
-    Attack(ADSRMode m, float time_ms)
+    Attack(ADSRMode m, float time_ms,
+           std::optional<float> lvl_0 = std::nullopt, std::optional<float> lvl_1 = std::nullopt)
       : mode(m)
       , attack_time_ms(time_ms)
+      , level_0(lvl_0)
+      , level_1(lvl_1)
     {}
     ADSRMode mode = ADSRMode::LIN;
     float attack_time_ms = 0.f;
+    std::optional<float> level_0;
+    std::optional<float> level_1;
   };
   struct Decay
   {
     Decay() = default;
-    Decay(ADSRMode m, float time_ms)
+    Decay(ADSRMode m, float time_ms,
+          std::optional<float> lvl_0 = std::nullopt, std::optional<float> lvl_1 = std::nullopt)
       : mode(m)
       , decay_time_ms(time_ms)
+      , level_0(lvl_0)
+      , level_1(lvl_1)
     {}
     ADSRMode mode = ADSRMode::LIN;
     float decay_time_ms = 0.f;
+    std::optional<float> level_0;
+    std::optional<float> level_1;
   };
   struct Sustain
   {
@@ -43,29 +54,72 @@ namespace audio
     Sustain(float level)
       : sustain_level(level)
     {}
-    float sustain_level = 0.f;
+    float sustain_level = 0.5f;
   };
   struct Release
   {
     Release() = default;
-    Release(ADSRMode m, float time_ms)
+    Release(ADSRMode m, float time_ms,
+            std::optional<float> lvl_0 = std::nullopt, std::optional<float> lvl_1 = std::nullopt)
       : mode(m)
       , release_time_ms(time_ms)
+      , level_0(lvl_0)
+      , level_1(lvl_1)
     {}
     ADSRMode mode = ADSRMode::LIN;
     float release_time_ms = 0.f;
+    std::optional<float> level_0;
+    std::optional<float> level_1;
   };
-  struct ADSR
+  class ADSR
   {
-    ADSR() = default;
-    ADSR(const Attack& a, const Decay& d, const Sustain& s, const Release& r)
-      : attack(a), decay(d), sustain(s), release(r)
-    {}
-  
     Attack attack;
     Decay decay;
     Sustain sustain;
     Release release;
+  
+    float level_a0 = 0.f;
+    float level_a1 = 1.f;
+    float level_d0 = 1.f;
+    float level_d1 = 0.8f;
+    float level_s = 0.8f;
+    float level_r0 = 0.8f;
+    float level_r1 = 0.f;
+    
+  public:
+    ADSR() = default;
+    ADSR(const Attack& a, const Decay& d, const Sustain& s, const Release& r)
+      : attack(a), decay(d), sustain(s), release(r)
+    {
+      adjust_levels();
+    }
+    
+    void adjust_levels()
+    {
+      level_a0 = attack.level_0.value_or(0.f);
+      level_a1 = attack.level_1.value_or(decay.level_0.value_or(1.f));
+      level_d0 = decay.level_0.value_or(attack.level_1.value_or(1.f));
+      level_d1 = decay.level_1.value_or(sustain.sustain_level);
+      level_s = sustain.sustain_level;
+      level_r0 = release.level_0.value_or(sustain.sustain_level);
+      level_r1 = release.level_1.value_or(0.f);
+    }
+    
+    float get_level_A0() const { return level_a0; }
+    float get_level_A1() const { return level_a1; }
+    float get_level_D0() const { return level_d0; }
+    float get_level_D1() const { return level_d1; }
+    float get_level_S() const { return level_s; }
+    float get_level_R0() const { return level_r0; }
+    float get_level_R1() const { return level_r1; }
+    
+    float get_time_A_ms() const { return attack.attack_time_ms; }
+    float get_time_D_ms() const { return decay.decay_time_ms; }
+    float get_time_R_ms() const { return release.release_time_ms; }
+    
+    ADSRMode get_shape_A() const { return attack.mode; }
+    ADSRMode get_shape_D() const { return decay.mode; }
+    ADSRMode get_shape_R() const { return release.mode; }
   };
   
   namespace adsr_presets

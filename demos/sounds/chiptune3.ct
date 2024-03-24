@@ -2,18 +2,18 @@
 ;
 ; Instrument Definitions
 ; Syntax:
-; instrument <instrument_name> <waveform> [duty_cycle:<pwm_duty_cycle>]
-;   [ffx:<freq_preset_effect>] [afx:<ampl_preset_effect>] [pfx:<phase_preset_effect>]
-;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
-; instrument <instrument_name> ring_mod_A:<ring_mod_instr_A> ring_mod_B:<ring_mod_instr_B>
-;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
-; instrument <instrument_name> conv_A:<conv_instr_A> conv_B:<conv_instr_B>
-;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
-; instrument <instrument_name> ((<w0>, <instrument_name0>), (<w1>, <instrument_name1>), ...)
-;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
-; instrument <instrument_name> &<lib_instrument_name>
-;   [ffx:<freq_preset_effect>] [afx:<ampl_preset_effect>] [pfx:<phase_preset_effect>]
-;   [adsr:<adsr_id>] [flp:<low_pass_filter_id>] [vol:<volume>]
+; instrument <instrument_name> <waveform> ["duty_cycle:"<pwm_duty_cycle>]
+;   ["ffx:"<freq_preset_effect>] ["afx:"<ampl_preset_effect>] ["pfx:"<phase_preset_effect>]
+;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
+; instrument <instrument_name> "ring_mod_A:"<ring_mod_instr_A> "ring_mod_B:"<ring_mod_instr_B>
+;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
+; instrument <instrument_name> "conv_A:"<conv_instr_A> "conv_B:"<conv_instr_B>
+;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
+; instrument <instrument_name> "(("<w0>, <instrument_name0>"), ("<w1>, <instrument_name1>")," ...")"
+;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
+; instrument <instrument_name> "&"<lib_instrument_name>
+;   ["ffx:"<freq_preset_effect>] ["afx:"<ampl_preset_effect>] ["pfx:"<phase_preset_effect>]
+;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
 ; <instrument_name> := [A-Za-z][A-Za-z0-9]*
 ; <waveform> := "sine"|"square"|"triangle"|"sawtooth"|"noise"|"pwm"
 ; <volume> := 0..1
@@ -32,7 +32,10 @@ instrument STEEL_PAN conv_A:FLUTE_VIB conv_B:SDRUM adsr:1
 
 ; Modulation Envelopes
 ; Syntax:
-; adsr <adsr_nr> <attack_mode> <attack_ms> <decay_mode> <decay_ms> <sustain_level> <release_mode> <release_ms>
+; adsr <adsr_nr> "["<attack_mode> <attack_ms> [<level_begin>] [<level_end>]"]"
+                 "["<decay_mode> <decay_ms> [<level_begin>] [<level_end>]"]"
+                 <sustain_level>
+                 "["<release_mode> <release_ms> [<level_begin>] [<level_end>]"]"
 ; adsr <adsr_nr> &<lib_adsr_name>
 ; Where:
 ; <adsr_nr> := [0-9]+
@@ -43,11 +46,14 @@ instrument STEEL_PAN conv_A:FLUTE_VIB conv_B:SDRUM adsr:1
 ; <attack_ms> := [0-9]+
 ; <decay_ms> := [0-9]+
 ; <release_ms> := [0-9]+
+; <sustain_level> := 0..100
+; <level_begin> := 0..100
+; <level_end> := 0..100
 ; Example:
-adsr 0 LIN 100 EXP 300 50 LOG 500   ; Modulation envelope adsr0 with linear attack of 100 ms, exponential decay of 300 ms, sustain level of 50, and logarithmic release of 500 ms
-adsr 1 EXP 50 EXP 200 80 LIN 300    ; Modulation envelope adsr1 with exponential attack of 50 ms, exponential decay of 200 ms, sustain level of 80, and linear release of 300 ms
+adsr 0 [LIN 15 0 50] [EXP 10 100] 50 [LOG 100]
+adsr 1 [EXP 16] [EXP 20] 80 [LIN 70]
 adsr 2 &ORGAN_2
-adsr 3 LOG 80 LOG 30 50 LOG 10
+adsr 3 [LOG 60] [LOG 30] 50 [LOG 10]
 
 ; Low Pass Filters
 ; Syntax:

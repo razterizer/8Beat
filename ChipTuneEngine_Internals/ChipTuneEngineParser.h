@@ -681,8 +681,7 @@ namespace audio
     {
       // adsr <adsr_nr> <attack_mode> <attack_ms> <decay_mode> <decay_ms> <sustain_level> <release_mode> <release_ms>
       int adsr_nr = -1;
-      std::string attack_mode, decay_mode, release_mode;
-      float attack_ms = 0.f, decay_ms = 0.f, sustain_level = 0.f, release_ms = 0.f;
+      float sustain_level = 0.f;
       
       iss >> adsr_nr;
       
@@ -703,8 +702,6 @@ namespace audio
       }
       else
       {
-        iss >> attack_mode >> attack_ms >> decay_mode >> decay_ms >> sustain_level >> release_mode >> release_ms;
-        
         auto str2mode = [](const std::string& str)
         {
           if (str == "LIN")
@@ -716,10 +713,57 @@ namespace audio
           return ADSRMode::LIN;
         };
         
-        Attack attack { str2mode(attack_mode), attack_ms };
-        Decay decay { str2mode(decay_mode), decay_ms };
+        ADSRMode mode = ADSRMode::LIN;
+        float duration_ms = 0.f;
+        std::optional<float> level_0 = std::nullopt;
+        std::optional<float> level_1 = std::nullopt;
+        
+        auto parse_adr = [&iss, &str2mode](ADSRMode& mode, float& dur_ms, std::optional<float>& level_0, std::optional<float>& level_1)
+        {
+          char bracket;
+          std::string mode_str;
+          float lvl_0 = 0.f;
+          float lvl_1 = 0.f;
+          
+          iss >> bracket; // Consume begin bracket.
+          iss >> mode_str >> dur_ms;
+          mode = str2mode(mode_str);
+          
+          std::string unread = iss.eof()  ?  "" : iss.str().substr(iss.tellg());
+          std::string op = str::ltrim_ret(unread);
+          
+          if (op[0] != ']')
+          {
+            iss >> lvl_0;
+            level_0 = lvl_0 / 100;
+          }
+          else
+            level_0 = std::nullopt;
+            
+          unread = iss.eof()  ?  "" : iss.str().substr(iss.tellg());
+          op = str::ltrim_ret(unread);
+          if (op[0] != ']')
+          {
+            iss >> lvl_1;
+            level_1 = lvl_1 / 100;
+          }
+          else
+            level_1 = std::nullopt;
+            
+          iss >> bracket; // Consume end bracket.
+        };
+        //[LIN 100 0 50] [EXP 300] 50 [LOG 500]
+        parse_adr(mode, duration_ms, level_0, level_1);
+        Attack attack { mode, duration_ms, level_0, level_1 };
+        
+        parse_adr(mode, duration_ms, level_0, level_1);
+        Decay decay { mode, duration_ms, level_0, level_1 };
+        
+        iss >> sustain_level;
         Sustain sustain { sustain_level / 100 };
-        Release release { str2mode(release_mode), release_ms };
+        
+        parse_adr(mode, duration_ms, level_0, level_1);
+        Release release { mode, duration_ms, };
         
         m_envelopes[adsr_nr] = { attack, decay, sustain, release };
       }
@@ -931,8 +975,7 @@ namespace audio
     Waveform create_instrument_basic(Note* note, const InstrumentBasic& ib)
     {
       Waveform wave;
-      wave = m_waveform_gen.generate_waveform(ib.waveform, note->duration_ms*1e-3f, note->frequency,
-                                              ib.freq_effect, ib.ampl_effect, ib.phase_effect, ib.duty_cycle);
+      wave = m_waveform_gen.generate_waveform(ib.waveform, note->duration_ms*1e-3f, note->frequency, ib.freq_effect, ib.ampl_effect, ib.phase_effect, ib.duty_cycle);
       
       return wave;
     }
