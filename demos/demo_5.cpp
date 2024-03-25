@@ -20,10 +20,10 @@ int main(int argc, char** argv)
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
   
-  int sample_rate = 441100;
+  int sample_rate = 44100;
 
   auto wd = wave_gen.generate_waveform(audio::WaveformType::SQUARE_WAVE, 3.f, 500.f,
-                                      audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, sample_rate);
+                                      audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, 0.5f, sample_rate, true);
   auto wd_adsr = audio::WaveformHelper::envelope_adsr(wd,
       { audio::ADSRMode::LOG, 300 }, { audio::ADSRMode::LOG, 500}, 0.4f, { audio::ADSRMode::LOG, 360 });
   audio::WaveformHelper::print_waveform_graph(wd_adsr, audio::GraphType::PLOT_THICK0, 100, 30, 0.f, std::nullopt);
