@@ -7,7 +7,7 @@
 
 #include "../AudioSourceHandler.h"
 #include "../WaveformGeneration.h"
-#include "../../Termin8or/Keyboard.h"
+#include "../Termin8or/Keyboard.h"
 
 
 class Test : public audio::AudioStreamListener
