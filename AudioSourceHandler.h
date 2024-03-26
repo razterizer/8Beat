@@ -9,9 +9,9 @@
 
 #include "Waveform.h"
 
-#include "../Core/Math.h"
-#include "../Core/Rand.h"
-#include "../Core/Delay.h"
+#include "Core/Math.h"
+#include "Core/Rand.h"
+#include "Core/Delay.h"
 
 #ifdef _MSC_VER
   #include <OpenAL_Soft/al.h>
