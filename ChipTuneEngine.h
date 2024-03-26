@@ -11,8 +11,8 @@
 #include "Waveform.h"
 #include "WaveformGeneration.h"
 
-#include "Core/Delay.h"
-#include "Core/StringHelper.h"
+#include "../Core/Delay.h"
+#include "../Core/StringHelper.h"
 
 #include <vector>
 #include <chrono>

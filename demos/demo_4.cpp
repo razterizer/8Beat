@@ -7,8 +7,8 @@
 
 #include "../AudioSourceHandler.h"
 #include "../WaveformHelper.h"
-#include "../Termin8or/Keyboard.h"
-#include "../Core/StringHelper.h"
+#include "../../Termin8or/Keyboard.h"
+#include "../../Core/StringHelper.h"
 
 
 
