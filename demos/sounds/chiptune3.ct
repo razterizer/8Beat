@@ -36,7 +36,7 @@ instrument STEEL_PAN conv_A:FLUTE_VIB conv_B:SDRUM adsr:1
                  "["<decay_mode> <decay_ms> [<level_begin>] [<level_end>]"]"
                  <sustain_level>
                  "["<release_mode> <release_ms> [<level_begin>] [<level_end>]"]"
-; adsr <adsr_nr> &<lib_adsr_name>
+; adsr <adsr_nr> "&"<lib_adsr_name>
 ; Where:
 ; <adsr_nr> := [0-9]+
 ; <attack_mode> := <adsr_mode>
