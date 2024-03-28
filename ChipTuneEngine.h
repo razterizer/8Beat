@@ -31,12 +31,13 @@ namespace audio
     ~ChipTuneEngine() = default;
 
     // Play the loaded tune
-    bool play_tune(bool interrupt_unfinished_note = true)
+    bool play_tune(bool interrupt_unfinished_note = true, bool verbose = false)
     {
       if (m_voices.empty())
         return false; // No tune loaded.
     
-      std::cout << "Playing Tune" << std::endl;
+      if (verbose)
+        std::cout << "Playing Tune" << std::endl;
       
       auto f_find_label = [this](const auto& label)
       {
