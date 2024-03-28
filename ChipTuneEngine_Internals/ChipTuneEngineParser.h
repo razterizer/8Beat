@@ -32,7 +32,7 @@ namespace audio
     }
   
     // Load tune from a text file with a specific format
-    bool load_tune(const std::string& file_path)
+    bool load_tune(const std::string& file_path, bool verbose = false)
     {
       if (!file_path.ends_with(".ct"))
       {
@@ -47,7 +47,8 @@ namespace audio
         return false;
       }
 
-      std::cout << "Parsing Tune" << std::endl;
+      if (verbose)
+        std::cout << "Parsing Tune" << std::endl;
       std::string line;
       while (std::getline(file, line))
       {
@@ -57,9 +58,11 @@ namespace audio
       for (auto& voice : m_voices)
         voice.notes.emplace_back(std::make_unique<Note>(Note::create_separator()));
       
-      std::cout << "Creating Instruments" << std::endl;
+      if (verbose)
+        std::cout << "Creating Instruments" << std::endl;
       create_instruments();
-      std::cout << "Initializing Sources" << std::endl;
+      if (verbose)
+        std::cout << "Initializing Sources" << std::endl;
       init_voice_sources();
 
       return true;
