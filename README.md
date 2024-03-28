@@ -144,5 +144,7 @@ Install **libsndfile** using `brew install libsndfile`. The build script(s) take
 
 ### Linux:
 
+Install **OpenAL Soft** using `sudo apt install libopenal-dev`.
+
 Use whatever package management system that is available on your distro.
 Instructions here in the future.
