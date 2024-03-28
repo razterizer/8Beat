@@ -84,7 +84,21 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 # Getting Started
 
-This header-only library depends on the header-only library [`Core`](https://github.com/razterizer/Core) and uses the header-only library [`Termin8or`](https://github.com/razterizer/Termin8or) for the demos. These should be located in a checkout-folder called `Core` (and `Termin8or` in order to run the demos) next to the checkout-folder for this lib. The header only libs uses relative include paths (which is mayhaps a bit suboptimal), but I'll see if I can find a better solution for this.
+This header-only library depends on the following header-only libraries:
+* [`Core`](https://github.com/razterizer/Core)
+* [`AudioLibSwitcher_OpenAL`](https://github.com/razterizer/AudioLibSwitcher_OpenAL)
+
+and uses the header-only library [`Termin8or`](https://github.com/razterizer/Termin8or) for the demos.
+
+These libs are expected to be located in checkout dirs with the same names and next to each other. Like this:
+```xml
+<source>/<lib>/Core
+<source>/<lib>/AudioLibSwitcher_OpenAL
+<source>/<lib>/Termin8or
+```
+where `<source>` is where you normally put your git repos and `<lib>` is recommended to be "`lib`" but can be named something different or left out all-together. The game [`Pilot_Episode`](https://github.com/razterizer/Pilot_Episode) however, requires them to be located in a sub-folder called "`lib`" or else the game will not build.
+
+The header only libs uses relative include paths (which is mayhaps a bit suboptimal), but I'll see if I can find a better solution for this in the future.
 
 There are currently eight demos under the `demos` folder that you can build and run under linux / macos.
 First cd o folder `demos`. To build `demo_1` type `./build_demo_1.sh l`. Then run by typing `./bin_linux/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh`.
