@@ -12,14 +12,8 @@
 #include "../Core/Math.h"
 #include "../Core/Rand.h"
 #include "../Core/Delay.h"
+#include "../AudioLibSwitcher_OpenAL/AudioLibSwitcher_OpenAL.h"
 
-#ifdef _MSC_VER
-  #include <OpenAL_Soft/al.h>
-  #include <OpenAL_Soft/alc.h>
-#else
-  #include <AL/al.h>
-  #include <AL/alc.h>
-#endif
 #include <vector>
 #include <string>
 #include <memory>
@@ -35,33 +29,30 @@ namespace audio
 {
   enum class PlaybackMode { NONE, SLEEP, STATE_WAIT };
   const short c_amplitude_0 = 32767;
+  AudioLibSwitcher_OpenAL m_audio_lib;
   
   class AudioSourceBase
   {
   protected:
-    ALuint m_sourceID = 0;
-    ALuint m_bufferID = 0;
+    unsigned int m_sourceID = 0;
+    unsigned int m_bufferID = 0;
     float m_duration_s = 0.f;
     
   public:
     AudioSourceBase()
     {
-      // Generate OpenAL source
-      alGenSources(1, &m_sourceID);
-      
-      // Generate OpenAL buffer
-      alGenBuffers(1, &m_bufferID);
+      m_sourceID = m_audio_lib.create_source();
+      m_bufferID = m_audio_lib.create_buffer();
     }
     virtual ~AudioSourceBase()
     {
-      // Clean up OpenAL source
-      alDeleteSources(1, &m_sourceID);
-      alDeleteBuffers(1, &m_bufferID);
+      m_audio_lib.destroy_buffer(m_bufferID);
+      m_audio_lib.destroy_source(m_sourceID);
     }
   
     virtual void play(PlaybackMode playback_mode = PlaybackMode::NONE)
     {
-      alSourcePlay(m_sourceID);
+      m_audio_lib.play_source(m_sourceID);
       
       switch (playback_mode)
       {
@@ -80,39 +71,37 @@ namespace audio
     
     bool is_playing() const
     {
-      ALint source_state = 0;
-      alGetSourcei(m_sourceID, AL_SOURCE_STATE, &source_state);
-      return source_state == AL_PLAYING;
+      return m_audio_lib.is_source_playing(m_sourceID);
     }
     
     void pause()
     {
-      alSourcePause(m_sourceID);
+      m_audio_lib.pause_source(m_sourceID);
     }
     
     void stop()
     {
-      alSourceStop(m_sourceID);
+      m_audio_lib.stop_source(m_sourceID);
     }
     
     void set_volume(float volume)
     {
-      alSourcef(m_sourceID, AL_GAIN, volume);
+      m_audio_lib.set_source_volume(m_sourceID, volume);
     }
     
     void set_pitch(float pitch)
     {
-      alSourcef(m_sourceID, AL_PITCH, pitch);
+      m_audio_lib.set_source_pitch(m_sourceID, pitch);
     }
     
     void set_looping(bool loop)
     {
-      alSourcei(m_sourceID, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
+      m_audio_lib.set_source_looping(m_sourceID, loop);
     }
     
     void detach()
     {
-      alSourcei(m_sourceID, AL_BUFFER, 0);
+      m_audio_lib.detach_source(m_sourceID);
     }
   };
   
@@ -122,16 +111,11 @@ namespace audio
     AudioSource(const Waveform& wave)
     {
       // Set source parameters (adjust as needed)
-      alSourcef(m_sourceID, AL_PITCH, 1.0f);
-      alSourcef(m_sourceID, AL_GAIN, 1.0f);
-      alSource3f(m_sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
-      alSource3f(m_sourceID, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-      alSourcei(m_sourceID, AL_LOOPING, AL_FALSE); // Adjust as needed
+      m_audio_lib.set_source_standard_params(m_sourceID);
       
       m_duration_s = wave.duration;
       
       // Load buffer data
-      //alIsExtensionPresent("AL_EXT_float32");
       m_buffer_i.resize(wave.buffer.size());
       int N = static_cast<int>(wave.buffer.size());
       for (int i = 0; i < N; ++i)
@@ -141,18 +125,15 @@ namespace audio
         m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
       }
       
-      alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), static_cast<ALsizei>(N * sizeof(short)), static_cast<ALsizei>(wave.sample_rate));
+      m_audio_lib.set_buffer_data_mono_16(m_bufferID, m_buffer_i, wave.sample_rate);
       
       // Attach buffer to source
-      alSourcei(m_sourceID, AL_BUFFER, m_bufferID);
+      m_audio_lib.attach_buffer_to_source(m_sourceID, m_bufferID);
       
       // Check for errors
-      ALenum error = alGetError();
-      if (error != AL_NO_ERROR)
-      {
-        // Handle error
-        std::cerr << "Error creating audio source: " << alGetString(error) << std::endl;
-      }
+      auto error_msg = m_audio_lib.check_error();
+      if (!error_msg.empty())
+        std::cerr << "Error creating audio source: " << error_msg << std::endl;
     }
     
   private:
@@ -175,7 +156,7 @@ namespace audio
     
     virtual void play(PlaybackMode playback_mode = PlaybackMode::NONE) override
     {
-      alSourcei(m_sourceID, AL_BUFFER, m_bufferID);
+      m_audio_lib.attach_buffer_to_source(m_sourceID, m_bufferID);
       AudioSourceBase::play(playback_mode);
     }
     
@@ -198,10 +179,10 @@ namespace audio
       
       m_duration_s = t;
       
-      alDeleteBuffers(1, &m_bufferID);
-      alGenBuffers(1, &m_bufferID);
+      m_audio_lib.destroy_buffer(m_bufferID);
+      m_bufferID = m_audio_lib.create_buffer();
       
-      alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), num_stream_samples * sizeof(short), m_sample_rate);
+      m_audio_lib.set_buffer_data_mono_16(m_bufferID, m_buffer_i, m_sample_rate);
     }
     
     void update_buffer(const Waveform& wave)
@@ -221,10 +202,10 @@ namespace audio
       
       m_duration_s = wave.duration;
       
-      alDeleteBuffers(1, &m_bufferID);
-      alGenBuffers(1, &m_bufferID);
+      m_audio_lib.destroy_buffer(m_bufferID);
+      m_bufferID = m_audio_lib.create_buffer();
       
-      alBufferData(m_bufferID, AL_FORMAT_MONO16, m_buffer_i.data(), Ns * sizeof(short), m_sample_rate);
+      m_audio_lib.set_buffer_data_mono_16(m_bufferID, m_buffer_i, m_sample_rate);
     }
     
   private:
@@ -239,30 +220,12 @@ namespace audio
   public:
     AudioSourceHandler()
     {
-      // Initialize OpenAL context and device
-      m_device = alcOpenDevice(nullptr);
-      if (m_device == nullptr)
-      {
-        // Handle error: Unable to open audio device
-        std::cerr << "ERROR: Unable to open audio device in AudioSourceHandler().\n";
-      }
-      
-      m_context = alcCreateContext(m_device, nullptr);
-      if (m_context == nullptr)
-      {
-        // Handle error: Unable to create audio context
-        std::cerr << "ERROR: Unable to create audio context in AudioSourceHandler().\n";
-      }
-      
-      alcMakeContextCurrent(m_context);
+      m_audio_lib.init();
     }
     
     ~AudioSourceHandler()
     {
-      // Clean up OpenAL resources
-      alcMakeContextCurrent(nullptr);
-      alcDestroyContext(m_context);
-      alcCloseDevice(m_device);
+      m_audio_lib.finish();
     }
     
     // Function to create a sound source with programmatically created buffer
@@ -331,9 +294,6 @@ namespace audio
     // ///////////////////////////////////
     
   private:
-    ALCdevice* m_device = nullptr;
-    ALCcontext* m_context = nullptr;
-    
     std::vector<std::unique_ptr<AudioSource>> m_sources;
     
     std::vector<std::unique_ptr<AudioStreamSource>> m_stream_sources;
