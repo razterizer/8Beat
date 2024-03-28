@@ -459,7 +459,7 @@ namespace audio
         case AudioFileFormatSubType::DPCM_16: return "DPCM_16"; // 16 bit differential PCM (XI only)
         case AudioFileFormatSubType::VORBIS: return "VORBIS"; // Xiph Vorbis encoding
         case AudioFileFormatSubType::OPUS: return "OPUS"; // Xiph/Skype Opus encoding
-#ifdef _WIN32
+#ifndef __APPLE__
 //#ifndef _MSC_VER
         default: return ""; // Should not be necessary as switch scope is complete.
 //#endif
