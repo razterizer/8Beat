@@ -140,9 +140,11 @@ The dll `sndfile.dll` should then be copied to where the executable lands.
 ### MacOS:
 
 Install **OpenAL Soft** using `brew install openal-soft`. The build script(s) takes care of the rest (adjust script if paths differ).
+
 Install **libsndfile** using `brew install libsndfile`. The build script(s) takes care of the rest (adjust script if paths differ).
 
-### Linux:
+### Linux (Ubuntu):
 
-Use whatever package management system that is available on your distro.
-Instructions here in the future.
+Install **OpenAL Soft** using `sudo apt install libopenal-dev`.
+
+Install **libsndfile** using `sudo apt install libsndfile-dev`.
