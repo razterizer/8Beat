@@ -22,7 +22,7 @@ int main(int argc, char** argv)
   
   int sample_rate = 44100;
 
-  auto wd = wave_gen.generate_waveform(audio::WaveformType::SQUARE_WAVE, 3.f, 500.f,
+  auto wd = wave_gen.generate_waveform(audio::WaveformType::SQUARE, 3.f, 500.f,
                                       audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, 0.5f, sample_rate, true);
   auto wd_adsr = audio::WaveformHelper::envelope_adsr(wd,
       { audio::ADSRMode::LOG, 300 }, { audio::ADSRMode::LOG, 500}, 0.4f, { audio::ADSRMode::LOG, 360 });

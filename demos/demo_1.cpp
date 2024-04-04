@@ -65,7 +65,7 @@ int main(int argc, char** argv)
   switch (test)
   {
     case TestType::TEST_SIMPLE:
-      wd = wave_gen.generate_waveform(audio::WaveformType::SINE_WAVE, duration_s, freq,
+      wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
         audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, 44100);
       break;
     case TestType::TEST_WAVE_LAMBDA:
@@ -79,11 +79,11 @@ int main(int argc, char** argv)
 #endif
       break;
     case TestType::TEST_FREQ_LAMBDA:
-      wd = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE_WAVE, duration_s, freq,
+      wd = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE, duration_s, freq,
                                       freq_func, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, 0.f);
       break;
     case TestType::TEST_AMPL_LAMBDA:
-      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH_WAVE, duration_s, freq,
+      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
                                       audio::FrequencyType::CONSTANT, ampl_func, audio::PhaseType::ZERO, 0.f);
       break;
     case TestType::TEST_ALL_LAMBDA:
@@ -91,13 +91,13 @@ int main(int argc, char** argv)
                                       freq_func, ampl_func, audio::PhaseType::ZERO, 0.f);
       break;
     case TestType::TEST_ALL_ENUM:
-      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH_WAVE, duration_s, freq,
+      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
                                       audio::FrequencyType::JET_ENGINE_POWERUP, audio::AmplitudeType::JET_ENGINE_POWERUP, audio::PhaseType::ZERO, 0.f);
       break;
   }
   
 #if 0
-  auto wd2 = audio.generate_waveform(audio::WaveformType::SINE_WAVE, duration_s, freq*12);
+  auto wd2 = audio.generate_waveform(audio::WaveformType::SINE, duration_s, freq*12);
   auto wd3 = audio.ring_modulation(wd, wd2);
   auto wd4 = audio::WaveformHelper::resample(wd3, 44'100, audio::LowPassFilterType::Butterworth, 2, 1.2f, 1.f);
   auto src = src_handler.create_source_from_waveform(wd4);

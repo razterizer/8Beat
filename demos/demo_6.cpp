@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 
 #if 0
   // Mysterious fade-in behaviour. #FIXME: Investigate!
-  auto wd_sine = wave_gen.generate_waveform(audio::WaveformType::SINE_WAVE, 3.f, 460.f,
+  auto wd_sine = wave_gen.generate_waveform(audio::WaveformType::SINE, 3.f, 460.f,
                                       audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT);
   auto src_sine = src_handler.create_source_from_waveform(wd_sine);
   src_sine->set_volume(0.8f);
