@@ -21,7 +21,7 @@
 
 namespace audio
 {
-  enum class WaveformType { SINE_WAVE, SQUARE_WAVE, TRIANGLE_WAVE, SAWTOOTH_WAVE, NOISE, PWM };
+  enum class WaveformType { SINE, SQUARE, TRIANGLE, SAWTOOTH, NOISE, PWM };
   enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP, CHIRP_0, CHIRP_1, CHIRP_2 };
   enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP, VIBRATO_0 };
   enum class PhaseType { ZERO };
@@ -39,7 +39,7 @@ namespace audio
     using PhaseFuncArg = std::variant<PhaseType, PhaseFunc>;
     
     // Function to generate a simple waveform buffer
-    Waveform generate_waveform(const WaveformFuncArg& wave_func_arg = WaveformType::SINE_WAVE,
+    Waveform generate_waveform(const WaveformFuncArg& wave_func_arg = WaveformType::SINE,
                                float duration = 10.f, float frequency = 440.f,
                                const FrequencyFuncArg& freq_func_arg = FrequencyType::CONSTANT,
                                const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
@@ -102,21 +102,21 @@ namespace audio
           if (verbose) std::cout << "WaveformType: ";
           switch (val)
           {
-            case WaveformType::SINE_WAVE:
+            case WaveformType::SINE:
               wave_func = waveform_sine;
-              if (verbose) std::cout << "SINE_WAVE" << std::endl;
+              if (verbose) std::cout << "SINE" << std::endl;
               break;
-            case WaveformType::SQUARE_WAVE:
+            case WaveformType::SQUARE:
               wave_func = waveform_square;
-              if (verbose) std::cout << "SQUARE_WAVE" << std::endl;
+              if (verbose) std::cout << "SQUARE" << std::endl;
               break;
-            case WaveformType::TRIANGLE_WAVE:
+            case WaveformType::TRIANGLE:
               wave_func = waveform_triangle;
-              if (verbose) std::cout << "TRIANGLE_WAVE" << std::endl;
+              if (verbose) std::cout << "TRIANGLE" << std::endl;
               break;
-            case WaveformType::SAWTOOTH_WAVE:
+            case WaveformType::SAWTOOTH:
               wave_func = waveform_sawtooth;
-              if (verbose) std::cout << "SAWTOOTH_WAVE" << std::endl;
+              if (verbose) std::cout << "SAWTOOTH" << std::endl;
               break;
             case WaveformType::NOISE:
               wave_func = waveform_noise;

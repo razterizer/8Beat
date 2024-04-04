@@ -33,9 +33,9 @@ int main(int argc, char** argv)
 #else
   auto* stream_src_1 = src_handler.create_stream_source();
   auto* stream_src_2 = src_handler.create_stream_source();
-  auto wave_sine = wave_gen.generate_waveform(audio::WaveformType::SINE_WAVE, 3.f, 440.f);
-  auto wave_square = wave_gen.generate_waveform(audio::WaveformType::SQUARE_WAVE, 3.f, 360.f);
-  auto wave_triangle = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE_WAVE, 3.f, 1298.f);
+  auto wave_sine = wave_gen.generate_waveform(audio::WaveformType::SINE, 3.f, 440.f);
+  auto wave_square = wave_gen.generate_waveform(audio::WaveformType::SQUARE, 3.f, 360.f);
+  auto wave_triangle = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE, 3.f, 1298.f);
 #endif
   
 #ifdef USE_CALLBACK

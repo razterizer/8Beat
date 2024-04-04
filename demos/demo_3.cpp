@@ -64,7 +64,7 @@ int main(int argc, char** argv)
   switch (test)
   {
     case TestType::TEST_SIMPLE:
-      wd = wave_gen.generate_waveform(audio::WaveformType::SINE_WAVE, duration_s, freq,
+      wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
         audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, 44100);
       break;
     case TestType::TEST_WAVE_LAMBDA:
@@ -76,11 +76,11 @@ int main(int argc, char** argv)
       //  audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, 0.f, 10'000);
       break;
     case TestType::TEST_FREQ_LAMBDA:
-      wd = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE_WAVE, duration_s, freq,
+      wd = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE, duration_s, freq,
                                       freq_func, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, 0.f);
       break;
     case TestType::TEST_AMPL_LAMBDA:
-      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH_WAVE, duration_s, freq,
+      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
                                       audio::FrequencyType::CONSTANT, ampl_func, audio::PhaseType::ZERO, 0.f);
       break;
     case TestType::TEST_ALL_LAMBDA:
@@ -88,7 +88,7 @@ int main(int argc, char** argv)
                                       freq_func, ampl_func, audio::PhaseType::ZERO, 0.f);
       break;
     case TestType::TEST_ALL_ENUM:
-      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH_WAVE, duration_s, freq,
+      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
                                       audio::FrequencyType::JET_ENGINE_POWERUP, audio::AmplitudeType::JET_ENGINE_POWERUP, audio::PhaseType::ZERO, 0.f);
       break;
   }

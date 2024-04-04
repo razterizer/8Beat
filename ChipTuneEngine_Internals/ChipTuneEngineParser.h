@@ -113,7 +113,7 @@ namespace audio
     };
     struct InstrumentBasic : InstrumentBase
     {
-      WaveformType waveform = WaveformType::SINE_WAVE;
+      WaveformType waveform = WaveformType::SINE;
       float duty_cycle = 0.5f;
       FrequencyType freq_effect = FrequencyType::CONSTANT;
       AmplitudeType ampl_effect = AmplitudeType::CONSTANT;
@@ -661,15 +661,15 @@ namespace audio
           }
         }
         
-        WaveformType wf_type = WaveformType::SINE_WAVE;
+        WaveformType wf_type = WaveformType::SINE;
         if (waveform_name == "sine")
-          wf_type = WaveformType::SINE_WAVE;
+          wf_type = WaveformType::SINE;
         else if (waveform_name == "square")
-          wf_type = WaveformType::SQUARE_WAVE;
+          wf_type = WaveformType::SQUARE;
         else if (waveform_name == "triangle")
-          wf_type = WaveformType::TRIANGLE_WAVE;
+          wf_type = WaveformType::TRIANGLE;
         else if (waveform_name == "sawtooth")
-          wf_type = WaveformType::SAWTOOTH_WAVE;
+          wf_type = WaveformType::SAWTOOTH;
         else if (waveform_name == "noise")
           wf_type = WaveformType::NOISE;
         else if (waveform_name == "pwm")
