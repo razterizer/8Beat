@@ -978,7 +978,9 @@ namespace audio
     Waveform create_instrument_basic(Note* note, const InstrumentBasic& ib)
     {
       Waveform wave;
-      wave = m_waveform_gen.generate_waveform(ib.waveform, note->duration_ms*1e-3f, note->frequency, ib.freq_effect, ib.ampl_effect, ib.phase_effect, ib.duty_cycle);
+      WaveformGenerationParams params;
+      params.pwm_duty_cycle = ib.duty_cycle;
+      wave = m_waveform_gen.generate_waveform(ib.waveform, note->duration_ms*1e-3f, note->frequency, ib.freq_effect, ib.ampl_effect, ib.phase_effect, params);
       
       return wave;
     }

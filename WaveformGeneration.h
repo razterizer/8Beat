@@ -26,6 +26,14 @@ namespace audio
   enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP, VIBRATO_0 };
   enum class PhaseType { ZERO };
   
+  struct WaveformGenerationParams
+  {
+    float pwm_duty_cycle = 0.5f;
+    std::optional<float> min_frequency_cutoff = std::nullopt;
+    std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
+    std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
+  };
+  
   class WaveformGeneration
   {
   public:
@@ -44,7 +52,7 @@ namespace audio
                                const FrequencyFuncArg& freq_func_arg = FrequencyType::CONSTANT,
                                const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
                                const PhaseFuncArg& phase_func_arg = PhaseType::ZERO,
-                               float pwm_duty_cycle = 0.5f,
+                               WaveformGenerationParams params = {},
                                int sample_rate = 44100,
                                bool verbose = false) const
     {
@@ -68,12 +76,17 @@ namespace audio
       double accumulated_frequency = 0.0;
       
       float param = 0.f;
-      param = pwm_duty_cycle; // #FIXME: Only set when using PWM waveform.
+      param = params.pwm_duty_cycle; // #FIXME: Only set when using PWM waveform.
       
       for (int i = 0; i < buffer_len; ++i)
       {
         float t = static_cast<float>(i) / sample_rate;
         freq_mod = freq_func(t, duration, frequency);
+        freq_mod *= std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t);
+        // Ensure frequency doesn't go below min_frequency_cutoff
+        if (params.min_frequency_cutoff.has_value())
+        math::maximize(freq_mod, params.min_frequency_cutoff.value());
+        
         ampl_mod = ampl_func(t, duration);
         
         // Accumulate frequency for phase modulation
