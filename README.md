@@ -112,7 +112,7 @@ You'll need [`OpenAL Soft`](https://www.openal-soft.org) for all demos and [`snd
 Grab a copy of [`OpenAL Soft`](https://www.openal-soft.org). Then copy its files to below folders according to the instructions.
 
 You need the following 3rdparty folder with subfolders:
-```
+```xml
 <my_source_code_dir>/lib/3rdparty/
 <my_source_code_dir>/lib/3rdparty/include/
 <my_source_code_dir>/lib/3rdparty/include/OpenAL_Soft/
