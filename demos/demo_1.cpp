@@ -47,8 +47,8 @@ int main(int argc, char** argv)
   
   // //////////////////////
   
-  enum class TestType { TEST_SIMPLE, TEST_WAVE_LAMBDA, TEST_FREQ_LAMBDA, TEST_AMPL_LAMBDA, TEST_ALL_LAMBDA, TEST_ALL_ENUM, TEST_FREQ_SLIDE };
-  TestType test = TestType::TEST_FREQ_SLIDE;
+  enum class TestType { TEST_SIMPLE, TEST_WAVE_LAMBDA, TEST_FREQ_LAMBDA, TEST_AMPL_LAMBDA, TEST_ALL_LAMBDA, TEST_ALL_ENUM, TEST_FREQ_SLIDE, TEST_VIBRATO };
+  TestType test = TestType::TEST_VIBRATO;
   
   auto duration_s = 2.f;
   
@@ -96,9 +96,17 @@ int main(int argc, char** argv)
       wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
                                       audio::FrequencyType::JET_ENGINE_POWERUP, audio::AmplitudeType::JET_ENGINE_POWERUP, audio::PhaseType::ZERO, params);
       break;
-      case TestType::TEST_FREQ_SLIDE:
+    case TestType::TEST_FREQ_SLIDE:
       params.freq_slide_vel = 0.1f;
       params.freq_slide_acc = -0.1f;
+      wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
+        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
+      break;
+    case TestType::TEST_VIBRATO:
+      params.vibrato_depth = 0.2f;
+      params.vibrato_vel = 2.2f;
+      params.vibrato_acc = 10.f;
+      params.vibrato_acc_max_vel_limit = 20.f;
       wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
         audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
       break;

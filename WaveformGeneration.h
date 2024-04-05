@@ -29,9 +29,16 @@ namespace audio
   struct WaveformGenerationParams
   {
     float pwm_duty_cycle = 0.5f;
-    std::optional<float> min_frequency_cutoff = std::nullopt;
+    std::optional<float> min_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
     std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
+    std::optional<float> vibrato_depth = std::nullopt;
+    std::optional<float> vibrato_vel = std::nullopt;
+    std::optional<float> vibrato_acc = std::nullopt;
+    std::optional<float> vibrato_acc_max_vel_limit = std::nullopt;
+    //0.8f + 0.2f*std::sin(math::c_2pi * 2.2f*t*(1 + std::min(0.8f, 0.4f*t)));
+    //0.8f + 0.2f*std::sin(math::c_2pi * 2.2f*t + std::min(2.2f*0.8f*t, 2.2f*0.4f*t^2))
+    //(1 - vibrato_depth) + vibrato_depth*sin(2pi * vibrato_vel*t + std::min(vibrato_acc_vel_limit*t, 0.5f*vibrato_acc*t*t)
   };
   
   class WaveformGeneration
@@ -84,10 +91,18 @@ namespace audio
         freq_mod = freq_func(t, duration, frequency);
         freq_mod *= std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t);
         // Ensure frequency doesn't go below min_frequency_cutoff
-        if (params.min_frequency_cutoff.has_value())
-        math::maximize(freq_mod, params.min_frequency_cutoff.value());
+        if (params.min_frequency_limit.has_value())
+          math::maximize(freq_mod, params.min_frequency_limit.value());
         
         ampl_mod = ampl_func(t, duration);
+        float vib_depth = params.vibrato_depth.value_or(0.f);
+        float vib_vel = params.vibrato_vel.value_or(0.f);
+        float vib_acc = params.vibrato_acc.value_or(0.f);
+        float vib_acc_term = 0.5f*vib_acc*t;
+        if (params.vibrato_acc_max_vel_limit.has_value())
+          math::minimize(vib_acc_term, params.vibrato_acc_max_vel_limit.value());
+        float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi * vib_vel*t + vib_acc_term*t);
+        ampl_mod *= vibrato;
         
         // Accumulate frequency for phase modulation
         accumulated_frequency += freq_mod;
