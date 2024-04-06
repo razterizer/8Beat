@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Waveform.h"
+#include <vector>
 
 // phi, param
 #define WAVEFORM_FUNC_ARGS float, float
@@ -26,6 +27,12 @@ namespace audio
   enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP, VIBRATO_0 };
   enum class PhaseType { ZERO };
   
+  struct ArpeggioPair
+  {
+    ArpeggioPair(float t, float fm) : time(t), freq_mult(fm) {}
+    float time = 0.f;
+    float freq_mult = 1.f;
+  };
   struct WaveformGenerationParams
   {
     float pwm_duty_cycle = 0.5f;
@@ -39,6 +46,7 @@ namespace audio
     //0.8f + 0.2f*std::sin(math::c_2pi * 2.2f*t*(1 + std::min(0.8f, 0.4f*t)));
     //0.8f + 0.2f*std::sin(math::c_2pi * 2.2f*t + std::min(2.2f*0.8f*t, 2.2f*0.4f*t^2))
     //(1 - vibrato_depth) + vibrato_depth*sin(2pi * vibrato_vel*t + std::min(vibrato_acc_vel_limit*t, 0.5f*vibrato_acc*t*t)
+    std::vector<ArpeggioPair> arpeggio;
   };
   
   class WaveformGeneration
@@ -85,24 +93,36 @@ namespace audio
       float param = 0.f;
       param = params.pwm_duty_cycle; // #FIXME: Only set when using PWM waveform.
       
+      float t_prev = 0.f;
+      float t = 0.f;
+      stlutils::sort(params.arpeggio,
+        [](const auto& ap1, const auto& ap2) { return ap1.time < ap2.time; });
       for (int i = 0; i < buffer_len; ++i)
       {
-        float t = static_cast<float>(i) / sample_rate;
+        t_prev = t;
+        t = static_cast<float>(i) / sample_rate;
+        
         freq_mod = freq_func(t, duration, frequency);
         freq_mod *= std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t);
+        for (auto& ap : params.arpeggio)
+          if (ap.time <= t)
+            freq_mod *= ap.freq_mult;
         // Ensure frequency doesn't go below min_frequency_cutoff
         if (params.min_frequency_limit.has_value())
           math::maximize(freq_mod, params.min_frequency_limit.value());
         
         ampl_mod = ampl_func(t, duration);
-        float vib_depth = params.vibrato_depth.value_or(0.f);
-        float vib_vel = params.vibrato_vel.value_or(0.f);
-        float vib_acc = params.vibrato_acc.value_or(0.f);
-        float vib_acc_term = 0.5f*vib_acc*t;
-        if (params.vibrato_acc_max_vel_limit.has_value())
-          math::minimize(vib_acc_term, params.vibrato_acc_max_vel_limit.value());
-        float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi * vib_vel*t + vib_acc_term*t);
-        ampl_mod *= vibrato;
+        if (params.vibrato_depth.has_value())
+        {
+          float vib_depth = params.vibrato_depth.value_or(0.f);
+          float vib_vel = params.vibrato_vel.value_or(0.f);
+          float vib_acc = params.vibrato_acc.value_or(0.f);
+          float vib_acc_term = 0.5f*vib_acc*t;
+          if (params.vibrato_acc_max_vel_limit.has_value())
+            math::minimize(vib_acc_term, params.vibrato_acc_max_vel_limit.value());
+          float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi * vib_vel*t + vib_acc_term*t);
+          ampl_mod *= vibrato;
+        }
         
         // Accumulate frequency for phase modulation
         accumulated_frequency += freq_mod;
