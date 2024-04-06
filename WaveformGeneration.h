@@ -35,7 +35,7 @@ namespace audio
   };
   struct WaveformGenerationParams
   {
-    float pwm_duty_cycle = 0.5f;
+    std::optional<float> duty_cycle = std::nullopt; // default: 0.5 for PWM and 1 for SAWTOOTH.
     std::optional<float> min_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
     std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
@@ -83,7 +83,7 @@ namespace audio
       wd.buffer.resize(buffer_len);
       
       // Argument Functions
-      auto wave_func = extract_waveform_func(wave_func_arg, verbose);
+      auto [wave_func, wave_enum] = extract_waveform_func(wave_func_arg, verbose);
       auto freq_func = extract_frequency_func(freq_func_arg, verbose);
       auto ampl_func = extract_amplitude_func(ampl_func_arg, verbose);
       auto phase_func = extract_phase_func(phase_func_arg, verbose);
@@ -91,7 +91,17 @@ namespace audio
       double accumulated_frequency = 0.0;
       
       float param = 0.f;
-      param = params.pwm_duty_cycle; // #FIXME: Only set when using PWM waveform.
+      bool is_sawtooth = (wave_enum == static_cast<int>(WaveformType::SAWTOOTH));
+      bool is_pwm = (wave_enum == static_cast<int>(WaveformType::PWM));
+      if (is_sawtooth || is_pwm)
+      {
+        if (params.duty_cycle.has_value())
+          param = params.duty_cycle.value();
+        else if (is_sawtooth)
+          param = 1.f;
+        else if (is_pwm)
+          param = 0.5f;
+      }
       
       float t_prev = 0.f;
       float t = 0.f;
@@ -138,14 +148,16 @@ namespace audio
     }
     
   private:
-    WaveformFunc extract_waveform_func(const WaveformFuncArg& wave_func_arg, bool verbose) const
+    std::pair<WaveformFunc, int> extract_waveform_func(const WaveformFuncArg& wave_func_arg, bool verbose) const
     {
+      int enum_val = -1;
       WaveformFunc wave_func = waveform_sine;
-      std::visit([&wave_func, this, verbose](auto&& val)
+      std::visit([&wave_func, this, &enum_val, verbose](auto&& val)
       {
         using T = std::decay_t<decltype(val)>;
         if constexpr (std::is_same_v<T, WaveformType>)
         {
+          enum_val = static_cast<int>(val);
           // Handle enum class case
           if (verbose) std::cout << "WaveformType: ";
           switch (val)
@@ -183,7 +195,7 @@ namespace audio
           if (verbose) std::cout << "WaveformType: Custom" << std::endl;
         }
       }, wave_func_arg);
-      return wave_func;
+      return { wave_func, enum_val };
     }
     
     FrequencyFunc extract_frequency_func(const FrequencyFuncArg& freq_func_arg, bool verbose) const
@@ -333,8 +345,10 @@ namespace audio
         return math::lerp(2*a-1, +1.f, -1.f);
     };
     
-    const WaveformFunc waveform_sawtooth = [](float phi, float /*param*/) -> float
+    const WaveformFunc waveform_sawtooth = [](float phi, float param) -> float
     {
+      auto duty_cycle = param;
+      // x = max(0, mod(f*t, 1) - (1 - duty_cycle))/duty_cycle;
 #if false
       float f = args.frequency;
       //return args.amplitude * sin(w * t);
@@ -342,6 +356,7 @@ namespace audio
 #else
       auto a = std::fmod(phi / math::c_2pi, 1.f);
 #endif
+      a = std::max(0.f, a - (1.f - duty_cycle))/duty_cycle;
       return 2*a-1;
     };
     
