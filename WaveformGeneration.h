@@ -35,6 +35,8 @@ namespace audio
   };
   struct WaveformGenerationParams
   {
+    std::optional<float> sample_range_min = std::nullopt; // default: -1
+    std::optional<float> sample_range_max = std::nullopt; // default: +1
     std::optional<float> duty_cycle = std::nullopt; // default: 0.5 for SQUARE and 1 for SAWTOOTH.
     std::optional<float> min_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
@@ -90,17 +92,17 @@ namespace audio
       
       double accumulated_frequency = 0.0;
       
-      float param = 0.f;
+      float arg = 0.f;
       bool is_sawtooth = (wave_enum == static_cast<int>(WaveformType::SAWTOOTH));
       bool is_square = (wave_enum == static_cast<int>(WaveformType::SQUARE));
       if (is_sawtooth || is_square)
       {
         if (params.duty_cycle.has_value())
-          param = params.duty_cycle.value();
+          arg = params.duty_cycle.value();
         else if (is_sawtooth)
-          param = 1.f;
+          arg = 1.f;
         else if (is_square)
-          param = 0.5f;
+          arg = 0.5f;
       }
       
       float t_prev = 0.f;
@@ -140,7 +142,9 @@ namespace audio
         // Apply phase modulation similar to Octave code
         float phi = phase_func(t, duration);
         auto phase_modulation = static_cast<float>(math::c_2pi * accumulated_frequency / sample_rate + phi);
-        float sample = ampl_mod * wave_func(phase_modulation, param);
+        float sample = ampl_mod * wave_func(phase_modulation, arg);
+        if (params.sample_range_min.has_value() || params.sample_range_max.has_value())
+          sample = math::linmap(sample, -1.f, +1.f, params.sample_range_min.value_or(-1.f), params.sample_range_max.value_or(+1.f));
         wd.buffer[i] = sample;
       }
       
