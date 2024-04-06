@@ -112,8 +112,8 @@ namespace audio
           break;
         case InstrumentType::TRUMPET:
           adsr = adsr_presets::TRUMPET_0;
-          params.pwm_duty_cycle = 0.1f;
-          wave_comp.emplace_back(0.7f, wave_gen.generate_waveform(WaveformType::PWM, duration_s, frequency_Hz, frequency_effect, amplitude_effect, phase_effect, params));
+          params.duty_cycle = 0.1f;
+          wave_comp.emplace_back(0.7f, wave_gen.generate_waveform(WaveformType::SQUARE, duration_s, frequency_Hz, frequency_effect, amplitude_effect, phase_effect, params));
           wave_comp.emplace_back(0.2f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, frequency_Hz));
           
           sine = wave_gen.generate_waveform(WaveformType::SINE, duration_s, 1.011f*frequency_Hz);

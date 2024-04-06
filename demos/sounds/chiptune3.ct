@@ -2,7 +2,7 @@
 ;
 ; Instrument Definitions
 ; Syntax:
-; instrument <instrument_name> <waveform> ["duty_cycle:"<pwm_duty_cycle>]
+; instrument <instrument_name> <waveform> ["duty_cycle:"<duty_cycle>]
 ;   ["ffx:"<freq_preset_effect>] ["afx:"<ampl_preset_effect>] ["pfx:"<phase_preset_effect>]
 ;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
 ; instrument <instrument_name> "ring_mod_A:"<ring_mod_instr_A> "ring_mod_B:"<ring_mod_instr_B>
@@ -15,12 +15,12 @@
 ;   ["ffx:"<freq_preset_effect>] ["afx:"<ampl_preset_effect>] ["pfx:"<phase_preset_effect>]
 ;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
 ; <instrument_name> := [A-Za-z][A-Za-z0-9]*
-; <waveform> := "sine"|"square"|"triangle"|"sawtooth"|"noise"|"pwm"
+; <waveform> := "sine"|"square"|"triangle"|"sawtooth"|"noise"
 ; <volume> := 0..1
 ; Example:
 instrument PIANO ring_mod_A:I0 ring_mod_B:I1 adsr:0
 instrument I0 square adsr:1 flp:0 afx:VIBRATO
-instrument I1 pwm duty_cycle:0.3
+instrument I1 square duty_cycle:0.3
 instrument ORGAN ((0.5, PIANO), (0.2, I0)) flp:0
 instrument FLUTE_VIB &FLUTE ffx:CONSTANT afx:VIBRATO_0 pfx:ZERO vol:0.5
 instrument TRUMPET &TRUMPET ffx:CONSTANT afx:CONSTANT pfx:ZERO vol:0.6
