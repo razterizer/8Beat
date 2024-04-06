@@ -47,8 +47,8 @@ int main(int argc, char** argv)
   
   // //////////////////////
   
-  enum class TestType { TEST_SIMPLE, TEST_WAVE_LAMBDA, TEST_FREQ_LAMBDA, TEST_AMPL_LAMBDA, TEST_ALL_LAMBDA, TEST_ALL_ENUM, TEST_FREQ_SLIDE, TEST_VIBRATO, TEST_ARPEGGIO, TEST_DUTY_CYCLE_SAWTOOTH, TEST_DUTY_CYCLE_PWM };
-  TestType test = TestType::TEST_DUTY_CYCLE_PWM;
+  enum class TestType { TEST_SIMPLE, TEST_WAVE_LAMBDA, TEST_FREQ_LAMBDA, TEST_AMPL_LAMBDA, TEST_ALL_LAMBDA, TEST_ALL_ENUM, TEST_FREQ_SLIDE, TEST_VIBRATO, TEST_ARPEGGIO, TEST_DUTY_CYCLE_SAWTOOTH, TEST_DUTY_CYCLE_SQUARE };
+  TestType test = TestType::TEST_DUTY_CYCLE_SQUARE;
   
   auto duration_s = 2.f;
   
@@ -121,9 +121,9 @@ int main(int argc, char** argv)
       wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
         audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
       break;
-    case TestType::TEST_DUTY_CYCLE_PWM:
+    case TestType::TEST_DUTY_CYCLE_SQUARE:
       params.duty_cycle = 0.2f;
-      wd = wave_gen.generate_waveform(audio::WaveformType::PWM, duration_s, freq,
+      wd = wave_gen.generate_waveform(audio::WaveformType::SQUARE, duration_s, freq,
         audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
       break;
   }

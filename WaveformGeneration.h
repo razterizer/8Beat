@@ -22,7 +22,7 @@
 
 namespace audio
 {
-  enum class WaveformType { SINE, SQUARE, TRIANGLE, SAWTOOTH, NOISE, PWM };
+  enum class WaveformType { SINE, SQUARE, TRIANGLE, SAWTOOTH, NOISE };
   enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP, CHIRP_0, CHIRP_1, CHIRP_2 };
   enum class AmplitudeType { CONSTANT, JET_ENGINE_POWERUP, VIBRATO_0 };
   enum class PhaseType { ZERO };
@@ -35,7 +35,7 @@ namespace audio
   };
   struct WaveformGenerationParams
   {
-    std::optional<float> duty_cycle = std::nullopt; // default: 0.5 for PWM and 1 for SAWTOOTH.
+    std::optional<float> duty_cycle = std::nullopt; // default: 0.5 for SQUARE and 1 for SAWTOOTH.
     std::optional<float> min_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
     std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
@@ -92,14 +92,14 @@ namespace audio
       
       float param = 0.f;
       bool is_sawtooth = (wave_enum == static_cast<int>(WaveformType::SAWTOOTH));
-      bool is_pwm = (wave_enum == static_cast<int>(WaveformType::PWM));
-      if (is_sawtooth || is_pwm)
+      bool is_square = (wave_enum == static_cast<int>(WaveformType::SQUARE));
+      if (is_sawtooth || is_square)
       {
         if (params.duty_cycle.has_value())
           param = params.duty_cycle.value();
         else if (is_sawtooth)
           param = 1.f;
-        else if (is_pwm)
+        else if (is_square)
           param = 0.5f;
       }
       
@@ -181,10 +181,6 @@ namespace audio
             case WaveformType::NOISE:
               wave_func = waveform_noise;
               if (verbose) std::cout << "NOISE" << std::endl;
-              break;
-            case WaveformType::PWM:
-              wave_func = waveform_pwm;
-              if (verbose) std::cout << "PWM" << std::endl;
               break;
           }
         }
@@ -315,8 +311,9 @@ namespace audio
       return std::sin(phi);
     };
     
-    const WaveformFunc waveform_square = [](float phi, float /*param*/) -> float
+    const WaveformFunc waveform_square = [](float phi, float param) -> float
     {
+      auto duty_cycle = param;
 #if false
       float f = args.frequency;
       //return args.amplitude * sin(w * t);
@@ -324,7 +321,7 @@ namespace audio
 #else
       auto a = std::fmod(phi / math::c_2pi, 1.f);
 #endif
-      if (0 <= a && a < 0.5f)
+      if (0 <= a && a < duty_cycle)
         return +1.f;
       else
         return -1.f;
@@ -363,16 +360,6 @@ namespace audio
     const WaveformFunc waveform_noise = [](float phi, float /*param*/) -> float
     {
       return rnd::rand()*2.0f - 1.0f;
-    };
-    
-    const WaveformFunc waveform_pwm = [](float phi, float param) -> float
-    {
-      auto duty_cycle = param;
-      auto a = std::fmod(phi / math::c_2pi, 1.f);
-      if (0 <= a && a < duty_cycle)
-        return +1.f;
-      else
-        return 0.f;
     };
     
     // //////////////////////
