@@ -38,6 +38,7 @@ namespace audio
     std::optional<float> sample_range_min = std::nullopt; // default: -1
     std::optional<float> sample_range_max = std::nullopt; // default: +1
     std::optional<float> duty_cycle = std::nullopt; // default: 0.5 for SQUARE and 1 for SAWTOOTH.
+    std::optional<float> duty_cycle_sweep = std::nullopt; // unit/s.
     std::optional<float> min_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
     std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
@@ -92,23 +93,25 @@ namespace audio
       
       double accumulated_frequency = 0.0;
       
-      float arg = 0.f;
+      float duty_cycle_0 = 0.f;
       bool is_sawtooth = (wave_enum == static_cast<int>(WaveformType::SAWTOOTH));
       bool is_square = (wave_enum == static_cast<int>(WaveformType::SQUARE));
       if (is_sawtooth || is_square)
       {
         if (params.duty_cycle.has_value())
-          arg = params.duty_cycle.value();
+          duty_cycle_0 = params.duty_cycle.value();
         else if (is_sawtooth)
-          arg = 1.f;
+          duty_cycle_0 = 1.f;
         else if (is_square)
-          arg = 0.5f;
+          duty_cycle_0 = 0.5f;
       }
+      float duty_cycle = duty_cycle_0;
       
       float t_prev = 0.f;
       float t = 0.f;
       stlutils::sort(params.arpeggio,
         [](const auto& ap1, const auto& ap2) { return ap1.time < ap2.time; });
+      
       for (int i = 0; i < buffer_len; ++i)
       {
         t_prev = t;
@@ -136,13 +139,16 @@ namespace audio
           ampl_mod *= vibrato;
         }
         
+        if (params.duty_cycle_sweep.has_value())
+          duty_cycle = math::clamp(duty_cycle_0 + t * params.duty_cycle_sweep.value(), 0.f, 1.f);
+        
         // Accumulate frequency for phase modulation
         accumulated_frequency += freq_mod;
         
         // Apply phase modulation similar to Octave code
         float phi = phase_func(t, duration);
         auto phase_modulation = static_cast<float>(math::c_2pi * accumulated_frequency / sample_rate + phi);
-        float sample = ampl_mod * wave_func(phase_modulation, arg);
+        float sample = ampl_mod * wave_func(phase_modulation, duty_cycle);
         if (params.sample_range_min.has_value() || params.sample_range_max.has_value())
           sample = math::linmap(sample, -1.f, +1.f, params.sample_range_min.value_or(-1.f), params.sample_range_max.value_or(+1.f));
         wd.buffer[i] = sample;
