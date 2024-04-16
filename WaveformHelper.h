@@ -1058,9 +1058,6 @@ namespace audio
           fade_in = static_cast<float>(n) / fade_length;
         if (n > N - fade_length)
           fade_out = static_cast<float>(N - n) / fade_length;
-          
-        if (fade_in < 1.f || fade_out < 1.f)
-          std::cout << "fade_in: " << fade_in << ", fade_out: " << fade_out << std::endl;
 
         y[n] = (1.f - feedback) * x[n] * fade_in + feedback * xd[tap_idx] * fade_out;
         xd[q] = x[n];
