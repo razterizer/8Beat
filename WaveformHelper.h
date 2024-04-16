@@ -414,38 +414,58 @@ namespace audio
       return output;
     }
     
-    // #FIXME: It's a bit glitchy about midways through the sound.
-    static Waveform fir_flange(const Waveform& wave, float depth = 0.1f, float rate = 1.f, float feedback = 0.2f)
+    static Waveform flanger(const Waveform& wave, float delay_time, float rate, float feedback)
     {
-      auto N = wave.buffer.size();
       Waveform output = wave;
-      auto sample_rate = wave.sample_rate;
-      std::vector<float> delay_buffer(sample_rate, 0.f);
       
-      int buffer_index = 0;
-      
-      for (size_t i = 0; i < N; ++i)
-      {
-        // Calculate delay amount based on a sine wave
-        float delay_amount = depth * std::sin(math::c_2pi * rate * i / sample_rate);
-        
-        // Calculate delayed sample index
-        int delay_index = (buffer_index - static_cast<int>(delay_amount)) % sample_rate;
-        if (delay_index < 0)
-          delay_index += sample_rate;
-        
-        // Apply flange effect and update delay buffer
-        float delayed_sample = delay_buffer[delay_index];
-        delay_buffer[buffer_index] = output.buffer[i] + feedback * delayed_sample;
-        
-        // Update buffer index
-        buffer_index = (buffer_index + 1) % sample_rate;
-        
-        // Apply the flange effect to the input signal
-        output.buffer[i] += delayed_sample;
-      }
-      
+      output.buffer = flanger(wave.buffer, delay_time, rate, feedback, wave.sample_rate);
+   
       return output;
+    }
+    
+    // Inspired by flanger from https://github.com/abaga129/lib_dsp .
+    static std::vector<float> flanger(const std::vector<float>& x, float delay_time, float lfo_freq, float feedback, float Fs)
+    {
+      size_t N = x.size();
+      std::vector<float> y(N, 0);
+      
+      size_t D = std::round(delay_time*Fs);
+      std::vector<float> xd(D + 1, 0);
+      
+      int q = 0;
+      
+      // Calculate fade in/out lengths (10% of delay time)
+      size_t fade_length = static_cast<size_t>(0.1 * D);
+      
+      for (size_t n = 0; n < N; ++n)
+      {
+        float t = n/Fs;
+        int d = static_cast<int>(std::round(0.5f*D*std::sin(math::c_2pi * lfo_freq * t)));
+        int tap_idx = q + d;
+        if (tap_idx < 0)
+          tap_idx += D + 1;
+        if (tap_idx >= D + 1)
+          tap_idx -= D + 1;
+        
+        // Apply crossfade at the start and end of the buffer
+        float fade_in = 1.0f;
+        float fade_out = 1.0f;
+        if (n < fade_length)
+          fade_in = static_cast<float>(n) / fade_length;
+        if (n > N - fade_length)
+          fade_out = static_cast<float>(N - n) / fade_length;
+          
+        if (fade_in < 1.f || fade_out < 1.f)
+          std::cout << "fade_in: " << fade_in << ", fade_out: " << fade_out << std::endl;
+
+        y[n] = (1.f - feedback) * x[n] * fade_in + feedback * xd[tap_idx] * fade_out;
+        xd[q] = x[n];
+        q--;
+        if (q < 0)
+          q = D;
+      }
+    
+      return y;
     }
     
     // #FIXME: Why you not work!?!?
