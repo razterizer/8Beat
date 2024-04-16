@@ -423,51 +423,6 @@ namespace audio
       return output;
     }
     
-    // Inspired by flanger from https://github.com/abaga129/lib_dsp .
-    static std::vector<float> flanger(const std::vector<float>& x, float delay_time, float lfo_freq, float feedback, float Fs)
-    {
-      size_t N = x.size();
-      std::vector<float> y(N, 0);
-      
-      size_t D = std::round(delay_time*Fs);
-      std::vector<float> xd(D + 1, 0);
-      
-      int q = 0;
-      
-      // Calculate fade in/out lengths (10% of delay time)
-      size_t fade_length = static_cast<size_t>(0.1 * D);
-      
-      for (size_t n = 0; n < N; ++n)
-      {
-        float t = n/Fs;
-        int d = static_cast<int>(std::round(0.5f*D*std::sin(math::c_2pi * lfo_freq * t)));
-        int tap_idx = q + d;
-        if (tap_idx < 0)
-          tap_idx += D + 1;
-        if (tap_idx >= D + 1)
-          tap_idx -= D + 1;
-        
-        // Apply crossfade at the start and end of the buffer
-        float fade_in = 1.0f;
-        float fade_out = 1.0f;
-        if (n < fade_length)
-          fade_in = static_cast<float>(n) / fade_length;
-        if (n > N - fade_length)
-          fade_out = static_cast<float>(N - n) / fade_length;
-          
-        if (fade_in < 1.f || fade_out < 1.f)
-          std::cout << "fade_in: " << fade_in << ", fade_out: " << fade_out << std::endl;
-
-        y[n] = (1.f - feedback) * x[n] * fade_in + feedback * xd[tap_idx] * fade_out;
-        xd[q] = x[n];
-        q--;
-        if (q < 0)
-          q = D;
-      }
-    
-      return y;
-    }
-    
     // #FIXME: Why you not work!?!?
     static Waveform fir_chorus(const Waveform& wave, float modulation_freq = 1.f, float modulation_depth = 5e-3f, const std::vector<float> coeffs = { 1.f, .5f, -.2f, .1f })
     {
@@ -1070,6 +1025,51 @@ namespace audio
           }
           break;
       }
+    }
+    
+    // Inspired by flanger from https://github.com/abaga129/lib_dsp .
+    static std::vector<float> flanger(const std::vector<float>& x, float delay_time, float lfo_freq, float feedback, float Fs)
+    {
+      size_t N = x.size();
+      std::vector<float> y(N, 0);
+      
+      size_t D = std::round(delay_time*Fs);
+      std::vector<float> xd(D + 1, 0);
+      
+      int q = 0;
+      
+      // Calculate fade in/out lengths (10% of delay time)
+      size_t fade_length = static_cast<size_t>(0.1 * D);
+      
+      for (size_t n = 0; n < N; ++n)
+      {
+        float t = n/Fs;
+        int d = static_cast<int>(std::round(0.5f*D*std::sin(math::c_2pi * lfo_freq * t)));
+        int tap_idx = q + d;
+        if (tap_idx < 0)
+          tap_idx += D + 1;
+        if (tap_idx >= D + 1)
+          tap_idx -= D + 1;
+        
+        // Apply crossfade at the start and end of the buffer
+        float fade_in = 1.0f;
+        float fade_out = 1.0f;
+        if (n < fade_length)
+          fade_in = static_cast<float>(n) / fade_length;
+        if (n > N - fade_length)
+          fade_out = static_cast<float>(N - n) / fade_length;
+          
+        if (fade_in < 1.f || fade_out < 1.f)
+          std::cout << "fade_in: " << fade_in << ", fade_out: " << fade_out << std::endl;
+
+        y[n] = (1.f - feedback) * x[n] * fade_in + feedback * xd[tap_idx] * fade_out;
+        xd[q] = x[n];
+        q--;
+        if (q < 0)
+          q = D;
+      }
+    
+      return y;
     }
     
   };
