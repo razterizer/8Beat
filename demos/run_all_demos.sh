@@ -6,3 +6,4 @@
 ./bin_linux/demo_6
 ./bin_linux/demo_7
 ./bin_linux/demo_8
+./bin_linux/demo_9
