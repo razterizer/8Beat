@@ -34,6 +34,7 @@
 		0739D9E92BA8ED8100964E96 /* demo_8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_8.cpp; sourceTree = "<group>"; };
 		0739DB822BC35B6900964E96 /* lib8-Bit Audio Emulator Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "lib8-Bit Audio Emulator Lib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0739DB832BC35B9600964E96 /* demo_9.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_9.cpp; sourceTree = "<group>"; };
+		0739DB842BCEE98C00964E96 /* demo_10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_10.cpp; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
@@ -68,6 +69,7 @@
 				0739D9E62BA8C5B100964E96 /* demo_7.cpp */,
 				0739D9E92BA8ED8100964E96 /* demo_8.cpp */,
 				0739DB832BC35B9600964E96 /* demo_9.cpp */,
+				0739DB842BCEE98C00964E96 /* demo_10.cpp */,
 			);
 			path = demos;
 			sourceTree = "<group>";
