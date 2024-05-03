@@ -40,6 +40,31 @@ int main(int argc, char** argv)
     src->play(PlaybackMode::STATE_WAIT);
   }
   
+  // Laser/shoot
+  {
+    WaveformGenerationParams params;
+    params.freq_slide_vel = -20.49;
+    params.duty_cycle = 0.4762f;
+    params.duty_cycle_sweep = -1.821f/100;
+
+    auto wd = wave_gen.generate_waveform(WaveformType::SQUARE, 0.2f, 968.6,
+      FrequencyType::CONSTANT,
+      AmplitudeType::CONSTANT,
+      PhaseType::ZERO,
+      params, 44100, false);
+    auto wd_adsr = WaveformHelper::envelope_adsr(wd,
+      Attack { ADSRMode::LIN, 0, 0.f, 0.2f },
+      Decay { ADSRMode::LIN, 20, 1.f},
+      Sustain { 0.4f },
+      Release { ADSRMode::EXP, 13 });
+    float delay_time = 3e-3f;
+    float rate = 0.9f;
+    float feedback = 0.9f;
+    auto wd_flanger = WaveformHelper::flanger(wd_adsr, delay_time, rate, feedback);
+    auto src = src_handler.create_source_from_waveform(wd_flanger);
+    src->play(PlaybackMode::STATE_WAIT);
+  }
+  
   pressAnyKey();
   
   return 0;
