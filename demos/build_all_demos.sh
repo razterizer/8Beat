@@ -7,3 +7,4 @@
 ./build_demo_7.sh l
 ./build_demo_8.sh l
 ./build_demo_9.sh l
+./build_demo_10.sh l
