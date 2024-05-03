@@ -1063,7 +1063,7 @@ namespace audio
         xd[q] = x[n];
         q--;
         if (q < 0)
-          q = D;
+          q = static_cast<int>(D);
       }
     
       return y;
