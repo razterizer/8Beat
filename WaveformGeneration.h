@@ -37,7 +37,11 @@ namespace audio
   {
     std::optional<float> sample_range_min = std::nullopt; // default: -1
     std::optional<float> sample_range_max = std::nullopt; // default: +1
-    std::optional<float> duty_cycle = std::nullopt; // default: 0.5 for SQUARE and 1 for SAWTOOTH.
+    // duty_cycle applies to SQUARE, TRIANGLE and SAWTOOTH.
+    // In the case of TRIANGLE, duty_cycle = 1 is a SAWTOOTH and 0 is reverse SAWTOOTH.
+    // In the case of SAWTOOTH, when duty_cycle goes from 1 to 0, the SAWTOOTH teeth get thinner towards 0.
+    // default: 0.5 for SQUARE and TRIANGLE and 1 for SAWTOOTH.
+    std::optional<float> duty_cycle = std::nullopt;
     std::optional<float> duty_cycle_sweep = std::nullopt; // unit/s.
     std::optional<float> min_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
@@ -94,15 +98,16 @@ namespace audio
       double accumulated_frequency = 0.0;
       
       float duty_cycle_0 = 0.f;
-      bool is_sawtooth = (wave_enum == static_cast<int>(WaveformType::SAWTOOTH));
       bool is_square = (wave_enum == static_cast<int>(WaveformType::SQUARE));
-      if (is_sawtooth || is_square)
+      bool is_triangle = (wave_enum == static_cast<int>(WaveformType::TRIANGLE));
+      bool is_sawtooth = (wave_enum == static_cast<int>(WaveformType::SAWTOOTH));
+      if (is_square || is_triangle || is_sawtooth)
       {
         if (params.duty_cycle.has_value())
           duty_cycle_0 = params.duty_cycle.value();
         else if (is_sawtooth)
           duty_cycle_0 = 1.f;
-        else if (is_square)
+        else if (is_square || is_triangle)
           duty_cycle_0 = 0.5f;
       }
       float duty_cycle = duty_cycle_0;
@@ -140,7 +145,9 @@ namespace audio
         }
         
         if (params.duty_cycle_sweep.has_value())
-          duty_cycle = math::clamp(duty_cycle_0 + t * params.duty_cycle_sweep.value(), 0.f, 1.f);
+          duty_cycle = duty_cycle_0 + t * params.duty_cycle_sweep.value();
+        const auto dc_eps = 1e-10f;
+        duty_cycle = math::clamp(duty_cycle, dc_eps, 1.f - dc_eps);
         
         // Accumulate frequency for phase modulation
         accumulated_frequency += freq_mod;
@@ -337,8 +344,9 @@ namespace audio
         return -1.f;
     };
     
-    const WaveformFunc waveform_triangle = [](float phi, float /*param*/) -> float
+    const WaveformFunc waveform_triangle = [](float phi, float param) -> float
     {
+      auto duty_cycle = param;
 #if false
       float f = args.frequency;
       //return args.amplitude * sin(w * t);
@@ -346,10 +354,14 @@ namespace audio
 #else
       auto a = std::fmod(phi / math::c_2pi, 1.f);
 #endif
-      if (0 <= a && a < 0.5f)
-        return math::lerp(2*a, -1.f, +1.f);
-      else
-        return math::lerp(2*a-1, +1.f, -1.f);
+      //if (0 <= a && a < 0.5f)
+      //  return math::lerp(2*a, -1.f, +1.f);
+      //else
+      //  return math::lerp(2*a-1, +1.f, -1.f);
+      if (a < duty_cycle)
+        return -1.f + 2.f*a/duty_cycle;
+      else // if (a >= duty_cycle)
+        return 1.f - 2.f*(a - duty_cycle)/(1 - duty_cycle);
     };
     
     const WaveformFunc waveform_sawtooth = [](float phi, float param) -> float
