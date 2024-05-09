@@ -20,6 +20,35 @@ int main(int argc, char** argv)
   AudioSourceHandler src_handler;
   WaveformGeneration wave_gen;
   
+  // Arpeggio
+  {
+    std::cout << "Arpeggio" << std::endl;
+    pressAnyKey();
+    
+    WaveformGenerationParams params;
+    params.arpeggio.emplace_back(0.1f, 1.26f);
+    params.arpeggio.emplace_back(0.2f, 1.5f);
+    params.arpeggio.emplace_back(0.3f, 1.26f);
+    params.arpeggio.emplace_back(0.4f, 1.f);
+    params.arpeggio.emplace_back(0.5f, 1.26f);
+    params.arpeggio.emplace_back(0.6f, 1.5f);
+    params.arpeggio.emplace_back(0.7f, 1.26f);
+    params.arpeggio.emplace_back(0.8f, 1.f);
+    
+    auto wd = wave_gen.generate_waveform(WaveformType::SQUARE, 1.f, 130.81f,
+      FrequencyType::CONSTANT,
+      AmplitudeType::CONSTANT,
+      PhaseType::ZERO,
+      params, 44100, false);
+    wd = WaveformHelper::envelope_adsr(wd,
+      Attack { ADSRMode::LOG, 50 },
+      Decay { ADSRMode::EXP, 150 },
+      Sustain { 0.7f },
+      Release { ADSRMode::EXP, 70 });
+    auto src = src_handler.create_source_from_waveform(wd);
+    src->play(PlaybackMode::STATE_WAIT);
+  }
+  
   // Pickup/coin
   {
     std::cout << "Pickup / Coin" << std::endl;
