@@ -70,7 +70,7 @@ namespace audio
     
     // Function to generate a simple waveform buffer
     Waveform generate_waveform(const WaveformFuncArg& wave_func_arg = WaveformType::SINE,
-                               float duration = 10.f, float frequency = 440.f,
+                               float duration = 10.f, std::optional<float> frequency = 440.f,
                                const FrequencyFuncArg& freq_func_arg = FrequencyType::CONSTANT,
                                const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
                                const PhaseFuncArg& phase_func_arg = PhaseType::ZERO,
@@ -79,12 +79,13 @@ namespace audio
                                bool verbose = false) const
     {
       Waveform wd;
-      wd.frequency = frequency;
+      auto freq_val = frequency.value_or(440.f);
+      wd.frequency = freq_val;
       wd.sample_rate = sample_rate;
       wd.duration = duration;
       
       auto buffer_len = static_cast<int>(duration * sample_rate);
-      float freq_mod = frequency;
+      float freq_mod = freq_val;
       float ampl_mod = 1.f;
       
       wd.buffer.resize(buffer_len);
@@ -116,17 +117,25 @@ namespace audio
       float t = 0.f;
       stlutils::sort(params.arpeggio,
         [](const auto& ap1, const auto& ap2) { return ap1.time < ap2.time; });
+      if (!params.arpeggio.empty() && params.arpeggio[0].time > 0.f)
+        params.arpeggio.insert(params.arpeggio.begin(), { 0.f, 1.f });
+      int Narp = static_cast<int>(params.arpeggio.size());
       
       for (int i = 0; i < buffer_len; ++i)
       {
         t_prev = t;
         t = static_cast<float>(i) / sample_rate;
         
-        freq_mod = freq_func(t, duration, frequency);
+        freq_mod = freq_func(t, duration, freq_val);
         freq_mod *= std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t);
-        for (auto& ap : params.arpeggio)
-          if (ap.time <= t)
-            freq_mod *= ap.freq_mult;
+        if (!params.arpeggio.empty())
+        {
+          for (int a_idx = 0; a_idx < Narp - 1; ++a_idx)
+            if (math::in_range<float>(t, params.arpeggio[a_idx].time, params.arpeggio[a_idx + 1].time, Range::ClosedOpen))
+              freq_mod *= params.arpeggio[a_idx].freq_mult;
+          if (math::in_range<float>(t, params.arpeggio.back().time, {}, Range::ClosedFree))
+            freq_mod *= params.arpeggio.back().freq_mult;
+        }
         // Ensure frequency doesn't go below min_frequency_cutoff
         if (params.min_frequency_limit.has_value())
           math::maximize(freq_mod, params.min_frequency_limit.value());
