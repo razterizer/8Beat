@@ -22,6 +22,9 @@ int main(int argc, char** argv)
   
   // Pickup/coin
   {
+    std::cout << "Pickup / Coin" << std::endl;
+    pressAnyKey();
+  
     WaveformGenerationParams params;
     params.arpeggio.emplace_back(0.1f, 1.274f);
     params.duty_cycle = 0.5f;
@@ -42,12 +45,15 @@ int main(int argc, char** argv)
   
   // Laser/shoot
   {
+    std::cout << "Laser / Shoot" << std::endl;
+    pressAnyKey();
+    
     WaveformGenerationParams params;
-    params.freq_slide_vel = -20.49;
+    params.freq_slide_vel = -20.49f;
     params.duty_cycle = 0.4762f;
     params.duty_cycle_sweep = -1.821f/100;
 
-    auto wd = wave_gen.generate_waveform(WaveformType::SQUARE, 0.2f, 968.6,
+    auto wd = wave_gen.generate_waveform(WaveformType::SQUARE, 0.2f, 968.6f,
       FrequencyType::CONSTANT,
       AmplitudeType::CONSTANT,
       PhaseType::ZERO,
