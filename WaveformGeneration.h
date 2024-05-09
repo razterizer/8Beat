@@ -149,7 +149,7 @@ namespace audio
           float vib_acc_term = 0.5f*vib_acc*t;
           if (params.vibrato_acc_max_vel_limit.has_value())
             math::minimize(vib_acc_term, params.vibrato_acc_max_vel_limit.value());
-          float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi * vib_vel*t + vib_acc_term*t);
+          float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi * (vib_vel + vib_acc_term)*t);
           ampl_mod *= vibrato;
         }
         
