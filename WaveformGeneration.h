@@ -71,12 +71,12 @@ namespace audio
     // Function to generate a simple waveform buffer
     Waveform generate_waveform(const WaveformFuncArg& wave_func_arg = WaveformType::SINE,
                                float duration = 10.f, std::optional<float> frequency = 440.f,
-                               const FrequencyFuncArg& freq_func_arg = FrequencyType::CONSTANT,
-                               const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
-                               const PhaseFuncArg& phase_func_arg = PhaseType::ZERO,
                                WaveformGenerationParams params = {},
                                int sample_rate = 44100,
-                               bool verbose = false) const
+                               bool verbose = false,
+                               const FrequencyFuncArg& freq_func_arg = FrequencyType::CONSTANT,
+                               const AmplitudeFuncArg& ampl_func_arg = AmplitudeType::CONSTANT,
+                               const PhaseFuncArg& phase_func_arg = PhaseType::ZERO) const
     {
       Waveform wd;
       auto freq_val = frequency.value_or(440.f);

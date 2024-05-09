@@ -82,44 +82,52 @@ int main(int argc, char** argv)
     {
       case TestType::SIMPLE:
         wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
-                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
         break;
       case TestType::WAVE_LAMBDA:
 #if 1
         wd = wave_gen.generate_waveform(wave_func, duration_s, freq,
-                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO,
-                                        params, sample_rate);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
 #else
         wd = wave_gen.generate_waveform([](float phi, float dur) { return std::sin(phi); }, 1e-2f, freq,
-                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, 10'000);
+                                        params, 10'000, false,
+                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
 #endif
         break;
       case TestType::FREQ_LAMBDA:
         wd = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE, duration_s, freq,
-                                        freq_func, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params);
+                                        params, sample_rate, false,
+                                        freq_func, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
         break;
       case TestType::AMPL_LAMBDA:
         wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
-                                        audio::FrequencyType::CONSTANT, ampl_func, audio::PhaseType::ZERO, params);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::CONSTANT, ampl_func, audio::PhaseType::ZERO);
         break;
       case TestType::PHASE_LAMBDA:
         wd = wave_gen.generate_waveform(audio::WaveformType::SQUARE, duration_s, freq,
+                                        params, sample_rate, false,
                                         audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT,
-                                        phase_func, params);
+                                        phase_func);
         break;
       case TestType::ALL_LAMBDA:
         wd = wave_gen.generate_waveform(wave_func, duration_s, freq,
-                                        freq_func, ampl_func, phase_func, params);
+                                        params, sample_rate, false,
+                                        freq_func, ampl_func, phase_func);
         break;
       case TestType::ALL_ENUM:
         wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
-                                        audio::FrequencyType::JET_ENGINE_POWERUP, audio::AmplitudeType::JET_ENGINE_POWERUP, audio::PhaseType::ZERO, params);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::JET_ENGINE_POWERUP, audio::AmplitudeType::JET_ENGINE_POWERUP, audio::PhaseType::ZERO);
         break;
       case TestType::FREQ_SLIDE:
         params.freq_slide_vel = 0.1f;
         params.freq_slide_acc = -0.1f;
         wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
-                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
         break;
       case TestType::VIBRATO:
         params.vibrato_depth = 0.2f;
@@ -127,31 +135,36 @@ int main(int argc, char** argv)
         params.vibrato_acc = 10.f;
         params.vibrato_acc_max_vel_limit = 20.f;
         wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
-                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
         break;
       case TestType::ARPEGGIO:
         params.arpeggio.emplace_back(0.2f, 1.5f);
         params.arpeggio.emplace_back(0.8f, 1.9f);
         wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
-                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
         break;
       case TestType::DUTY_CYCLE_SQUARE:
         params.duty_cycle = 0.2f;
         params.duty_cycle_sweep = 0.05f;
         wd = wave_gen.generate_waveform(audio::WaveformType::SQUARE, duration_s, freq,
-                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
         break;
       case TestType::DUTY_CYCLE_TRIANGLE:
         params.duty_cycle = 0.5f;
         params.duty_cycle_sweep = -0.25f;
         wd = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE, duration_s, freq,
-                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
         break;
       case TestType::DUTY_CYCLE_SAWTOOTH:
         params.duty_cycle = 1.f;
         params.duty_cycle_sweep = -0.5f;
         wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
-                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO, params, sample_rate);
+                                        params, sample_rate, false,
+                                        audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);
         break;
       default:
         break;
