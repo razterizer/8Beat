@@ -36,9 +36,6 @@ int main(int argc, char** argv)
     params.arpeggio.emplace_back(0.8f, 1.f);
     
     auto wd = wave_gen.generate_waveform(WaveformType::SQUARE, 1.f, 130.81f,
-      FrequencyType::CONSTANT,
-      AmplitudeType::CONSTANT,
-      PhaseType::ZERO,
       params, 44100, false);
     wd = WaveformHelper::envelope_adsr(wd,
       Attack { ADSRMode::LOG, 50 },
@@ -59,9 +56,6 @@ int main(int argc, char** argv)
     params.duty_cycle = 0.5f;
 
     auto wd = wave_gen.generate_waveform(WaveformType::TRIANGLE, 0.5f, 1369.f,
-      FrequencyType::CONSTANT,
-      AmplitudeType::CONSTANT,
-      PhaseType::ZERO,
       params, 44100, false);
     auto wd_adsr = WaveformHelper::envelope_adsr(wd,
       Attack { ADSRMode::LIN, 50, 0.f, 0.2f },
@@ -83,9 +77,6 @@ int main(int argc, char** argv)
     params.duty_cycle_sweep = -1.821f/100;
 
     auto wd = wave_gen.generate_waveform(WaveformType::SQUARE, 0.2f, 968.6f,
-      FrequencyType::CONSTANT,
-      AmplitudeType::CONSTANT,
-      PhaseType::ZERO,
       params, 44100, false);
     auto wd_adsr = WaveformHelper::envelope_adsr(wd,
       Attack { ADSRMode::LIN, 0, 0.f, 0.2f },

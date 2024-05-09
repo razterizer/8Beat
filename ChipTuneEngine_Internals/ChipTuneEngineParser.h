@@ -978,7 +978,7 @@ namespace audio
       Waveform wave;
       WaveformGenerationParams params;
       params.duty_cycle = ib.duty_cycle;
-      wave = m_waveform_gen.generate_waveform(ib.waveform, note->duration_ms*1e-3f, note->frequency, ib.freq_effect, ib.ampl_effect, ib.phase_effect, params);
+      wave = m_waveform_gen.generate_waveform(ib.waveform, note->duration_ms*1e-3f, note->frequency, params, 44100, false, ib.freq_effect, ib.ampl_effect, ib.phase_effect);
       
       return wave;
     }
@@ -1028,7 +1028,7 @@ namespace audio
       Waveform wave;
       
       wave = Synthesizer::synthesize(il.lib_instrument, m_waveform_gen,
-        note->duration_ms * 1e-3f, note->frequency,
+        note->duration_ms * 1e-3f, note->frequency, 44100, false,
         il.freq_effect, il.ampl_effect, il.phase_effect);
       
       return wave;

@@ -63,6 +63,8 @@ namespace audio
     static Waveform synthesize(InstrumentType instr,
       const WaveformGeneration& wave_gen,
       float duration_s, float frequency_Hz,
+      int sample_rate = 44100,
+      bool verbosity = false,
       FrequencyType frequency_effect = FrequencyType::CONSTANT,
       AmplitudeType amplitude_effect = AmplitudeType::CONSTANT,
       PhaseType phase_effect = PhaseType::ZERO)
@@ -80,7 +82,9 @@ namespace audio
         case InstrumentType::PIANO:
           adsr = adsr_presets::PIANO_0;
           wave_comp.emplace_back(0.4f, wave_gen.generate_waveform(WaveformType::SINE,
-            duration_s, frequency_Hz));
+            duration_s, frequency_Hz,
+            params, sample_rate, verbosity,
+            frequency_effect, amplitude_effect, phase_effect));
           wave_comp.emplace_back(0.3f, wave_gen.generate_waveform(WaveformType::SQUARE,
             duration_s, frequency_Hz));
           wave_comp.emplace_back(0.15f, wave_gen.generate_waveform(WaveformType::TRIANGLE,
@@ -91,7 +95,8 @@ namespace audio
         case InstrumentType::VIOLIN:
           adsr = adsr_presets::VIOLIN_0;
           wave_comp.emplace_back(0.5f, wave_gen.generate_waveform(WaveformType::SAWTOOTH,
-            duration_s, frequency_Hz, frequency_effect, amplitude_effect, phase_effect));
+            duration_s, frequency_Hz, params, sample_rate, verbosity,
+            frequency_effect, amplitude_effect, phase_effect));
           wave_comp.emplace_back(0.3f, wave_gen.generate_waveform(WaveformType::SQUARE,
             duration_s, frequency_Hz));
           noise = wave_gen.generate_waveform(WaveformType::NOISE, duration_s);
@@ -105,15 +110,20 @@ namespace audio
           break;
         case InstrumentType::ORGAN:
           adsr = adsr_presets::ORGAN_0;
-          wave_comp.emplace_back(0.5f, wave_gen.generate_waveform(WaveformType::SINE, duration_s, frequency_Hz, frequency_effect, amplitude_effect, [](float t, float) { return 25.f*t; }));
-          wave_comp.emplace_back(0.3f, wave_gen.generate_waveform(WaveformType::SQUARE, duration_s, 2*frequency_Hz, FrequencyType::CONSTANT, AmplitudeType::CONSTANT, [](float t, float) { return 30.f*t; }));
+          wave_comp.emplace_back(0.5f, wave_gen.generate_waveform(WaveformType::SINE, duration_s, frequency_Hz, params, sample_rate, verbosity,
+              frequency_effect, amplitude_effect, [](float t, float) { return 25.f*t; }));
+          wave_comp.emplace_back(0.3f, wave_gen.generate_waveform(WaveformType::SQUARE, duration_s, 2*frequency_Hz,
+              params, sample_rate, verbosity,
+              FrequencyType::CONSTANT, AmplitudeType::CONSTANT, [](float t, float) { return 30.f*t; }));
           wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 3*frequency_Hz));
           wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::SAWTOOTH, duration_s, 4*frequency_Hz));
           break;
         case InstrumentType::TRUMPET:
           adsr = adsr_presets::TRUMPET_0;
           params.duty_cycle = 0.1f;
-          wave_comp.emplace_back(0.7f, wave_gen.generate_waveform(WaveformType::SQUARE, duration_s, frequency_Hz, frequency_effect, amplitude_effect, phase_effect, params));
+          wave_comp.emplace_back(0.7f, wave_gen.generate_waveform(WaveformType::SQUARE, duration_s, frequency_Hz,
+              params, sample_rate, verbosity,
+              frequency_effect, amplitude_effect, phase_effect));
           wave_comp.emplace_back(0.2f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, frequency_Hz));
           
           sine = wave_gen.generate_waveform(WaveformType::SINE, duration_s, 1.011f*frequency_Hz);
@@ -127,7 +137,9 @@ namespace audio
           adsr = adsr_presets::FLUTE_0;
           for (int h = 1; h <= num_harmonics; ++h) tot_harmonics_ampl += 1.f/h;
           for (int h = 1; h <= num_harmonics; ++h)
-            wave_comp.emplace_back(0.8f*(1.f/h)/tot_harmonics_ampl, wave_gen.generate_waveform(WaveformType::SINE, duration_s, h * frequency_Hz, frequency_effect, amplitude_effect, phase_effect));
+            wave_comp.emplace_back(0.8f*(1.f/h)/tot_harmonics_ampl, wave_gen.generate_waveform(WaveformType::SINE, duration_s, h * frequency_Hz,
+                params, sample_rate, verbosity,
+                frequency_effect, amplitude_effect, phase_effect));
 
 #if 0
           triangle = wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 6.f*frequency_Hz);
@@ -149,8 +161,6 @@ namespace audio
         case InstrumentType::GUITAR:
           adsr = adsr_presets::GUITAR;
           wave_comp.emplace_back(1.f, WaveformHelper::karplus_strong(duration_s, frequency_Hz));
-          //wave_comp.emplace_back(0.05f, wave_gen.generate_waveform(WaveformType::SINE,
-          //  duration_s, frequency_Hz, frequency_effect, amplitude_effect, [](auto t, auto dur) {return 0.5f; }));
           wave_comp.emplace_back(0.08f, wave_gen.generate_waveform(WaveformType::NOISE,
             duration_s, frequency_Hz));
           final_low_pass_filter_args.filter_type = LowPassFilterType::ChebyshevTypeII;
@@ -173,7 +183,10 @@ namespace audio
             duration_s, 0.f);
           wave_comp.emplace_back(0.7f, noise);
           sawtooth = wave_gen.generate_waveform(WaveformType::SAWTOOTH, duration_s, frequency_Hz);
-          square = wave_gen.generate_waveform(WaveformType::SQUARE, duration_s, frequency_Hz*1.1f, FrequencyType::CONSTANT, AmplitudeType::CONSTANT, [](float t, float /*dur*/) { return math::c_2pi*2.13f*t*(1 + 3.f*t); });
+          square = wave_gen.generate_waveform(WaveformType::SQUARE, duration_s, frequency_Hz*1.1f,
+            params, sample_rate, verbosity,
+            FrequencyType::CONSTANT, AmplitudeType::CONSTANT,
+            [](float t, float /*dur*/) { return math::c_2pi*2.13f*t*(1 + 3.f*t); });
           wave_comp.emplace_back(0.25f, WaveformHelper::ring_modulation(sawtooth, square));
           wave_comp.emplace_back(0.05f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 3.f*frequency_Hz));
           break;

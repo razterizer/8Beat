@@ -29,8 +29,7 @@ int main(int argc, char** argv)
 
 #if 0
   // Mysterious fade-in behaviour. #FIXME: Investigate!
-  auto wd_sine = wave_gen.generate_waveform(audio::WaveformType::SINE, 3.f, 460.f,
-                                      audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT);
+  auto wd_sine = wave_gen.generate_waveform(audio::WaveformType::SINE, 3.f, 460.f);
   auto src_sine = src_handler.create_source_from_waveform(wd_sine);
   src_sine->set_volume(0.8f);
   src_sine->play(true);
@@ -54,6 +53,7 @@ int main(int argc, char** argv)
     else if (i == 7)
       frequency = 1200.f;
     auto wd_synth = audio::Synthesizer::synthesize(instrument, wave_gen, duration, frequency,
+      44100, false,
       audio::FrequencyType::CONSTANT, audio::AmplitudeType::VIBRATO_0);
     if (wd_rev_kernel.has_value())
       wd_synth = audio::WaveformHelper::reverb_fast(wd_synth, wd_rev_kernel.value());
