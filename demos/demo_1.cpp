@@ -131,9 +131,10 @@ int main(int argc, char** argv)
         break;
       case TestType::VIBRATO:
         params.vibrato_depth = 0.2f;
-        params.vibrato_vel = 2.2f;
-        params.vibrato_acc = 10.f;
-        params.vibrato_acc_max_vel_limit = 20.f;
+        params.vibrato_freq = 2.2f;
+        params.vibrato_freq_vel = 1e-4f;
+        params.vibrato_freq_acc = -2e-4f;
+        params.vibrato_freq_acc_max_vel_limit = 2.f;
         wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
                                         params, sample_rate, false,
                                         audio::FrequencyType::CONSTANT, audio::AmplitudeType::CONSTANT, audio::PhaseType::ZERO);

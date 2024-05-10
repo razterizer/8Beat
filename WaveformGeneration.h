@@ -47,9 +47,10 @@ namespace audio
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
     std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
     std::optional<float> vibrato_depth = std::nullopt;
-    std::optional<float> vibrato_vel = std::nullopt;
-    std::optional<float> vibrato_acc = std::nullopt;
-    std::optional<float> vibrato_acc_max_vel_limit = std::nullopt;
+    std::optional<float> vibrato_freq = std::nullopt;
+    std::optional<float> vibrato_freq_vel = std::nullopt;
+    std::optional<float> vibrato_freq_acc = std::nullopt;
+    std::optional<float> vibrato_freq_acc_max_vel_limit = std::nullopt;
     //0.8f + 0.2f*std::sin(math::c_2pi * 2.2f*t*(1 + std::min(0.8f, 0.4f*t)));
     //0.8f + 0.2f*std::sin(math::c_2pi * 2.2f*t + std::min(2.2f*0.8f*t, 2.2f*0.4f*t^2))
     //(1 - vibrato_depth) + vibrato_depth*sin(2pi * vibrato_vel*t + std::min(vibrato_acc_vel_limit*t, 0.5f*vibrato_acc*t*t)
@@ -121,11 +122,14 @@ namespace audio
         params.arpeggio.insert(params.arpeggio.begin(), { 0.f, 1.f });
       int Narp = static_cast<int>(params.arpeggio.size());
       
+      float vib_freq = params.vibrato_freq.value_or(0.f);
+      
       for (int i = 0; i < buffer_len; ++i)
       {
         t_prev = t;
         t = static_cast<float>(i) / sample_rate;
         
+        // Frequency
         freq_mod = freq_func(t, duration, freq_val);
         freq_mod *= std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t);
         if (!params.arpeggio.empty())
@@ -140,19 +144,22 @@ namespace audio
         if (params.min_frequency_limit.has_value())
           math::maximize(freq_mod, params.min_frequency_limit.value());
         
+        // Amplitude
         ampl_mod = ampl_func(t, duration);
         if (params.vibrato_depth.has_value())
         {
           float vib_depth = params.vibrato_depth.value_or(0.f);
-          float vib_vel = params.vibrato_vel.value_or(0.f);
-          float vib_acc = params.vibrato_acc.value_or(0.f);
-          float vib_acc_term = 0.5f*vib_acc*t;
-          if (params.vibrato_acc_max_vel_limit.has_value())
-            math::minimize(vib_acc_term, params.vibrato_acc_max_vel_limit.value());
-          float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi * (vib_vel + vib_acc_term)*t);
+          float vib_freq_vel = params.vibrato_freq_vel.value_or(0.f);
+          float vib_freq_acc = params.vibrato_freq_acc.value_or(0.f);
+          float vib_freq_acc_term = 0.5f*vib_freq_acc*t;
+          if (params.vibrato_freq_acc_max_vel_limit.has_value())
+            math::minimize(vib_freq_acc_term, params.vibrato_freq_acc_max_vel_limit.value());
+          vib_freq = std::max(0.f, vib_freq + (vib_freq_vel + vib_freq_acc_term)*t);
+          float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi*vib_freq*t);
           ampl_mod *= vibrato;
         }
         
+        // Duty Cycle
         if (params.duty_cycle_sweep.has_value())
           duty_cycle = duty_cycle_0 + t * params.duty_cycle_sweep.value();
         const auto dc_eps = 1e-10f;
