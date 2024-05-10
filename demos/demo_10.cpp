@@ -46,6 +46,29 @@ int main(int argc, char** argv)
     src->play(PlaybackMode::STATE_WAIT);
   }
   
+  // Vibrato
+  {
+    std::cout << "Vibrato" << std::endl;
+    pressAnyKey();
+    
+    WaveformGenerationParams params;
+    params.vibrato_depth = 0.3f;
+    params.vibrato_freq = 2.f;
+    params.vibrato_freq_vel = 1e-4f;
+    params.vibrato_freq_acc = -1e-4f;
+    params.duty_cycle = 0.5f;
+    
+    auto wd = wave_gen.generate_waveform(WaveformType::SQUARE, 2.5f, 130.81f,
+      params, 44100, false);
+    wd = WaveformHelper::envelope_adsr(wd,
+      Attack { ADSRMode::LOG, 50 },
+      Decay { ADSRMode::EXP, 150 },
+      Sustain { 0.7f },
+      Release { ADSRMode::EXP, 70 });
+    auto src = src_handler.create_source_from_waveform(wd);
+    src->play(PlaybackMode::STATE_WAIT);
+  }
+  
   // Pickup/coin
   {
     std::cout << "Pickup / Coin" << std::endl;
