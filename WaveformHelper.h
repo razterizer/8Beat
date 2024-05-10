@@ -35,6 +35,11 @@ namespace audio
     float ripple = 0.1f;
   };
   
+  struct Filter
+  {
+    std::vector<float> a;
+    std::vector<float> b;
+  };
   
   class WaveformHelper
   {
