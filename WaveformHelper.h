@@ -675,7 +675,7 @@ namespace audio
           apply_ChebyshevII_low_pass_filter(filtered_wave.buffer, filter_order, cutoff_frequency, wave.sample_rate, ripple);
           break;
           
-          // Add more cases for other filter types if needed
+        // Add more cases for other filter types if needed
           
         default:
           // Handle unsupported filter types or provide a default behavior
