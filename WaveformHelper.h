@@ -687,6 +687,55 @@ namespace audio
       return filtered_wave;
     }
     
+    static std::vector<float> filter(const std::vector<float>& signal,
+                                     const Filter& filter)
+    {
+      size_t Ns = signal.size();
+      size_t Na = filter.a.size();
+      size_t Nb = filter.b.size();
+      
+      std::vector<double> x(Ns, 0);
+      for (size_t i = 0; i < Ns; ++i)
+        x[i] = static_cast<double>(signal[i]);
+      std::vector<double> a(Na, 0);
+      for (size_t i = 0; i < Na; ++i)
+        a[i] = static_cast<double>(filter.a[i]);
+      std::vector<double> b(Nb, 0);
+      for (size_t i = 0; i < Nb; ++i)
+        b[i] = static_cast<double>(filter.b[i]);
+      
+      std::vector<double> filtered(Ns, 0);
+      
+      // Apply the filter (Direct Form I)
+      for (size_t n = 0; n < Ns; ++n)
+      {
+        filtered[n] = 0;
+        
+        // Summing the b terms
+        for (size_t i = 0; i < Nb; i++)
+        {
+          if (n >= i)
+            filtered[n] += b[i] * x[n - i];
+        }
+        
+        // Subtracting the a terms
+        for (size_t i = 1; i < Na; i++)
+        {
+          if (n >= i)
+            filtered[n] -= a[i] * filtered[n - i];
+        }
+        
+        filtered[n] /= a[0];  // Normalize output
+      }
+      
+      std::vector<float> y(Ns, 0);
+      for (size_t i = 0; i < Ns; ++i)
+        y[i] = static_cast<float>(filtered[i]);
+      
+      return y;
+    }
+    
+    
     static void print_waveform_graph(const Waveform& wave, GraphType type,
                                      int width = 100, int height = 20,
                                      int a_idx_start = 0, std::optional<int> a_idx_end = std::nullopt)
