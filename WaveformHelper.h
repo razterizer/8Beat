@@ -49,6 +49,12 @@ namespace audio
     std::vector<float> b;
   };
   
+  struct FilterS
+  {
+    std::vector<std::complex<double>> zeroes, poles;
+    double gain = 1.f;
+  };
+  
   class WaveformHelper
   {
   public:
