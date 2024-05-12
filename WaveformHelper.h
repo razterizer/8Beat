@@ -1123,6 +1123,126 @@ namespace audio
       return y;
     }
     
+    static FilterS filter_edge_adjustment(const FilterS& s, FilterType type, double Wl, double Wh)
+    {
+      using namespace stlutils;
+      auto Nz = static_cast<int>(s.zeroes.size());
+      auto Np = static_cast<int>(s.poles.size());
+      
+      FilterS s_out;
+      
+      if (Np == 0)
+      {
+        std::cerr << "Must have at least one pole!" << std::endl;
+        return s_out;
+      }
+      if (Nz > Np)
+      {
+        std::cerr << "Cannot have fewer poles than zeroes!" << std::endl;
+        return s_out;
+      }
+      
+      if (type == FilterType::HighPass || type == FilterType::BandStop)
+      {
+        if (Nz == 0)
+          s_out.gain = s.gain * std::real(
+                                          1. / prod(unary_minus(s.poles)));
+        else if (Np == 0)
+          s_out.gain = s.gain * std::real(
+                                          prod(unary_minus(s.zeroes)));
+        else
+          s_out.gain = s.gain * std::real(
+                                          prod(unary_minus(s.zeroes)) /
+                                          prod(unary_minus(s.poles)));
+      }
+      
+      switch (type)
+      {
+        case FilterType::LowPass:
+          s_out.gain = s.gain * std::pow(1. / Wl, Nz - Np);
+          s_out.zeroes = mult_scalar(s.zeroes, Wl);
+          s_out.poles = mult_scalar(s.poles, Wl);
+          break;
+          
+        case FilterType::HighPass:
+          s_out.poles = scalar_div(Wl, s.poles);
+          if (Nz == 0)
+            s_out.zeroes.resize(Np, 0.);
+          else
+          {
+            s_out.zeroes = scalar_div(Wl, s.zeroes);
+            if (Np > Nz)
+              s_out.zeroes.insert(s_out.zeroes.end(), Np - Nz, 0.);
+          }
+          break;
+          
+        case FilterType::BandPass:
+        {
+          auto W_diff = Wh - Wl;
+          auto W_prod = Wl * Wh;
+          
+          s_out.gain = s.gain * std::pow(1. / W_diff, Nz - Np);
+          
+          auto q = mult_scalar(s.poles, W_diff / 2.);
+          auto r = comp_sqrt(subtract_scalar(comp_sq(q), W_prod));
+          append(s_out.poles, subtract(q, r));
+          append(s_out.poles, add(q, r));
+          
+          if (Nz == 0)
+            s_out.zeroes.resize(Np, 0.);
+          else
+          {
+            q = mult_scalar(s.zeroes, W_diff / 2.);
+            r = comp_sqrt(subtract_scalar(comp_sq(q), W_prod));
+            append(s_out.zeroes, subtract(q, r));
+            append(s_out.zeroes, add(q, r));
+            if (Np > Nz)
+              s_out.zeroes.insert(s_out.zeroes.end(), Np - Nz, 0.);
+          }
+          break;
+        }
+          
+        case FilterType::BandStop:
+        {
+          auto W_diff = Wh - Wl;
+          auto W_prod = Wl * Wh;
+          auto q = scalar_div(W_diff / 2., s.poles);
+          auto r = comp_sqrt(subtract_scalar(comp_sq(q), W_prod));
+          append(s_out.poles, subtract(q, r));
+          append(s_out.poles, add(q, r));
+          
+          if (Nz == 0)
+          {
+            auto a = std::sqrt(-W_prod);
+            for (int i = 0; i < Np; ++i)
+            {
+              s_out.zeroes.emplace_back(-a);
+              s_out.zeroes.emplace_back(+a);
+            }
+          }
+          else
+          {
+            q = scalar_div(W_diff / 2., s.zeroes);
+            r = comp_sqrt(subtract_scalar(comp_sq(q), W_prod));
+            append(s_out.zeroes, subtract(q, r));
+            append(s_out.zeroes, add(q, r));
+            if (Np > Nz)
+            {
+              auto a = std::sqrt(-W_prod);
+              for (int i = 0; i < Np - Nz; ++i)
+              {
+                s_out.zeroes.emplace_back(-a);
+                s_out.zeroes.emplace_back(+a);
+              }
+            }
+          }
+          break;
+        }
+      }
+      
+      return s_out;
+    }
+    
   };
   
 }
