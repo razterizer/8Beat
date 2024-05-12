@@ -69,6 +69,20 @@ int main(int argc, char** argv)
     src->play(PlaybackMode::STATE_WAIT);
   }
   
+  // Noise @ Frequency
+  {
+    std::cout << "Noise @ Frequency" << std::endl;
+    pressAnyKey();
+    
+    WaveformGenerationParams params;
+    params.freq_slide_vel = 0.4f;
+    
+    auto wd = wave_gen.generate_waveform(WaveformType::NOISE, 2.f, 440.f, params, 44100, false);
+    
+    auto src = src_handler.create_source_from_waveform(wd);
+    src->play(PlaybackMode::STATE_WAIT);
+  }
+  
   // Pickup/coin
   {
     std::cout << "Pickup / Coin" << std::endl;
@@ -111,6 +125,40 @@ int main(int argc, char** argv)
     float feedback = 0.9f;
     auto wd_flanger = WaveformHelper::flanger(wd_adsr, delay_time, rate, feedback);
     auto src = src_handler.create_source_from_waveform(wd_flanger);
+    src->play(PlaybackMode::STATE_WAIT);
+  }
+  
+  // Explosion
+  {
+    std::cout << "Explosion" << std::endl;
+    pressAnyKey();
+    
+    WaveformGenerationParams params;
+    params.freq_slide_vel = 2.f;
+    params.freq_slide_acc = 5.f;
+    params.vibrato_depth = 0.1421f;
+    params.vibrato_freq = 10.16f;
+    params.noise_filter_rel_bw = 0.1f;
+    params.noise_filter_order = 1;
+    params.noise_filter_slot_dur_s = 1e-3f;
+
+    auto wd = wave_gen.generate_waveform(WaveformType::NOISE, 0.8f, 15.f,
+      params, 44100, false);
+      
+    float delay_time = 1e-3f;
+    float rate = 0.7f;
+    float feedback = 0.4f;
+    wd = WaveformHelper::flanger(wd, delay_time, rate, feedback);
+    
+    wd = WaveformHelper::envelope_adsr(wd,
+      Attack { ADSRMode::LIN, 10, 0.f, 0.2f },
+      Decay { ADSRMode::LIN, 50, 1.f },
+      Sustain { 0.6f },
+      Release { ADSRMode::LIN, 340 });
+    
+    WaveformHelper::normalize(wd);
+    
+    auto src = src_handler.create_source_from_waveform(wd);
     src->play(PlaybackMode::STATE_WAIT);
   }
   
