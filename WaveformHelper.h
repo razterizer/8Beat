@@ -1119,7 +1119,7 @@ namespace audio
         if (q < 0)
           q = static_cast<int>(D);
       }
-    
+      
       return y;
     }
     
