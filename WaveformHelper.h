@@ -735,6 +735,68 @@ namespace audio
       return y;
     }
     
+    static Filter create_Butterworth_filter(int order,
+                                            FilterType type,
+                                            float freq_cutoff, std::optional<float> freq_bandwidth,
+                                            int sample_rate = 44100)
+    {
+      Filter flt;
+      
+      if (order <= 0)
+      {
+        std::cerr << "The order of the Butterworth filter must be at least 1!" << std::endl;
+        return flt;
+      }
+      
+      if ((type == FilterType::BandPass || type == FilterType::BandStop) && !freq_bandwidth.has_value())
+      {
+        std::cerr << "freq_bandwidth must be specified when creating a BandPass or BandStop filter!" << std::endl;
+        return flt;
+      }
+      
+      std::vector<double> W_cutoff;
+      if (freq_bandwidth.has_value())
+      {
+        // 2*(Fc - BW/2)/Fs
+        // 2*(Fc + BW/2)/Fs
+        W_cutoff.reserve(2);
+        W_cutoff.emplace_back((2 * freq_cutoff - freq_bandwidth.value()) / sample_rate);
+        W_cutoff.emplace_back((2 * freq_cutoff + freq_bandwidth.value()) / sample_rate);
+      }
+      else
+      {
+        W_cutoff.reserve(1);
+        W_cutoff.emplace_back(2 * freq_cutoff / sample_rate);
+      }
+      
+      double fs2 = 2.;
+      for (auto& wc : W_cutoff)
+        wc = 2. / fs2 * std::tan(math::c_pi * wc / fs2);
+      
+      FilterS s;
+      s.poles.reserve(order);
+      float v = static_cast<float>(order + 1);
+      for (int i = 1; i <= order; ++i)
+      {
+        s.poles.emplace_back(std::exp(1i * M_PI * (0.5 * v / order)));
+        v += 2.;
+      }
+      // It is supposed to be -1 here. Makes sure the value is clean.
+      if (order % 2 == 1)
+        s.poles[(order - 1)/2] = -1.;
+      
+      s.gain = 1.;
+      
+      s = filter_edge_adjustment(s, type, W_cutoff[0], W_cutoff.size() == 2 ? W_cutoff[1] : 0.f);
+      
+      bilinear(s, fs2);
+      
+      flt.b = stlutils::cast_vector<float>(stlutils::mult_scalar(poly(s.zeroes), s.gain));
+      flt.a = stlutils::cast_vector<float>(poly(s.poles));
+      
+      return flt;
+    }
+    
     
     static void print_waveform_graph(const Waveform& wave, GraphType type,
                                      int width = 100, int height = 20,
