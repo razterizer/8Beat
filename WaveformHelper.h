@@ -1277,6 +1277,24 @@ namespace audio
       }
     }
     
+    static std::vector<double> poly(const std::vector<std::complex<double>>& roots)
+    {
+      std::vector<std::complex<double>> y = { 1. };
+      for (const auto& root : roots)
+      {
+        y.insert(y.begin(), 0.);  // Multiply by (z - root)
+        for (int j = 0; j < y.size() - 1; ++j)
+          y[j] -= root * y[j + 1];
+      }
+      std::reverse(std::begin(y), std::end(y));
+      
+      std::vector<double> coeffs;
+      coeffs.reserve(y.size());
+      for (const auto& e : y)
+        coeffs.emplace_back(std::real(e));
+      return coeffs;
+    }
+    
   };
   
 }
