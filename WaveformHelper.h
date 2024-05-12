@@ -760,7 +760,7 @@ namespace audio
         // 2*(Fc - BW/2)/Fs
         // 2*(Fc + BW/2)/Fs
         W_cutoff.reserve(2);
-        W_cutoff.emplace_back((2 * freq_cutoff - freq_bandwidth.value()) / sample_rate);
+        W_cutoff.emplace_back(std::max(0.f, (2 * freq_cutoff - freq_bandwidth.value()) / sample_rate));
         W_cutoff.emplace_back((2 * freq_cutoff + freq_bandwidth.value()) / sample_rate);
       }
       else
