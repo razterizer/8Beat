@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Waveform.h"
+#include "WaveformHelper.h"
 #include <vector>
 
 // phi, param
@@ -103,6 +104,7 @@ namespace audio
       bool is_square = (wave_enum == static_cast<int>(WaveformType::SQUARE));
       bool is_triangle = (wave_enum == static_cast<int>(WaveformType::TRIANGLE));
       bool is_sawtooth = (wave_enum == static_cast<int>(WaveformType::SAWTOOTH));
+      bool is_noise = (wave_enum == static_cast<int>(WaveformType::NOISE));
       if (is_square || is_triangle || is_sawtooth)
       {
         if (params.duty_cycle.has_value())
@@ -123,6 +125,9 @@ namespace audio
       int Narp = static_cast<int>(params.arpeggio.size());
       
       float vib_freq = params.vibrato_freq.value_or(0.f);
+      
+      const int N = static_cast<int>(1e-2f * sample_rate); // 10ms noise segments.
+      std::vector<float> noise_buffer(N, 0.f);
       
       for (int i = 0; i < buffer_len; ++i)
       {
@@ -174,8 +179,25 @@ namespace audio
         float sample = ampl_mod * wave_func(phase_modulation, duty_cycle);
         if (params.sample_range_min.has_value() || params.sample_range_max.has_value())
           sample = math::linmap(sample, -1.f, +1.f, params.sample_range_min.value_or(-1.f), params.sample_range_max.value_or(+1.f));
-        wd.buffer[i] = sample;
+        if (is_noise && frequency.has_value())
+        {
+          int imN = i % N;
+          noise_buffer[imN] = sample;
+          if (imN == N - 1)
+          {
+            Filter bp_flt = WaveformHelper::create_Butterworth_filter(2, FilterType::BandPass, freq_mod, 0.2f*freq_mod, sample_rate);
+            
+            noise_buffer = WaveformHelper::filter(noise_buffer, bp_flt);
+            for (int j = 0; j < N; ++j)
+              wd.buffer[i + j] = noise_buffer[j];
+          }
+        }
+        else
+          wd.buffer[i] = sample; // Regular sample assign.
       }
+      
+      if (is_noise && frequency.has_value())
+        WaveformHelper::normalize(wd);
       
       return wd;
     }
