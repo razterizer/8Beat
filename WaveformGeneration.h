@@ -52,9 +52,9 @@ namespace audio
     std::optional<float> vibrato_freq_vel = std::nullopt;
     std::optional<float> vibrato_freq_acc = std::nullopt;
     std::optional<float> vibrato_freq_acc_max_vel_limit = std::nullopt;
-    //0.8f + 0.2f*std::sin(math::c_2pi * 2.2f*t*(1 + std::min(0.8f, 0.4f*t)));
-    //0.8f + 0.2f*std::sin(math::c_2pi * 2.2f*t + std::min(2.2f*0.8f*t, 2.2f*0.4f*t^2))
-    //(1 - vibrato_depth) + vibrato_depth*sin(2pi * vibrato_vel*t + std::min(vibrato_acc_vel_limit*t, 0.5f*vibrato_acc*t*t)
+    int noise_filter_order = 2;
+    float noise_filter_rel_bw = 0.2f;
+    float noise_filter_slot_dur_s = 1e-2f;
     std::vector<ArpeggioPair> arpeggio;
   };
   
@@ -126,7 +126,7 @@ namespace audio
       
       float vib_freq = params.vibrato_freq.value_or(0.f);
       
-      const int N = static_cast<int>(1e-2f * sample_rate); // 10ms noise segments.
+      const int N = static_cast<int>(params.noise_filter_slot_dur_s * sample_rate);
       std::vector<float> noise_buffer(N, 0.f);
       
       for (int i = 0; i < buffer_len; ++i)
@@ -185,7 +185,7 @@ namespace audio
           noise_buffer[imN] = sample;
           if (imN == N - 1)
           {
-            Filter bp_flt = WaveformHelper::create_Butterworth_filter(2, FilterType::BandPass, freq_mod, 0.2f*freq_mod, sample_rate);
+            Filter bp_flt = WaveformHelper::create_Butterworth_filter(params.noise_filter_order, FilterType::BandPass, freq_mod, params.noise_filter_rel_bw*freq_mod, sample_rate);
             
             noise_buffer = WaveformHelper::filter(noise_buffer, bp_flt);
             for (int j = 0; j < N; ++j)
