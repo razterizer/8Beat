@@ -1243,6 +1243,40 @@ namespace audio
       return s_out;
     }
     
+    static void bilinear(FilterS& s, double T)
+    {
+      using namespace stlutils;
+      auto Nz = static_cast<int>(s.zeroes.size());
+      auto Np = static_cast<int>(s.poles.size());
+      
+      std::complex<double> a = { 2. / T };
+      s.gain *= std::real(prod(scalar_subtract(a, s.zeroes)) / prod(scalar_subtract(a, s.poles)));
+      
+      if (Np == 0)
+      {
+        std::cerr << "Must have at least one pole!" << std::endl;
+        return;
+      }
+      if (Nz > Np)
+      {
+        std::cerr << "Cannot have fewer poles than zeroes!" << std::endl;
+        return;
+      }
+      
+      for (auto& pole : s.poles)
+        pole = (2. + pole * T) / (2. - pole * T);
+      
+      if (Nz == 0)
+        s.zeroes.resize(Nz, -1.);
+      else
+      {
+        for (auto& zero : s.zeroes)
+          zero = (2. + zero * T) / (2. - zero * T);
+        for (int i = 0; i < Np - Nz; ++i)
+          s.zeroes.emplace_back(-1.);
+      }
+    }
+    
   };
   
 }
