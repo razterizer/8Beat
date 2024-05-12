@@ -35,6 +35,14 @@ namespace audio
     float ripple = 0.1f;
   };
   
+  enum class FilterType
+  {
+    LowPass,
+    HighPass,
+    BandPass,
+    BandStop
+  };
+  
   struct Filter
   {
     std::vector<float> a;
