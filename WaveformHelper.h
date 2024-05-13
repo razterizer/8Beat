@@ -796,6 +796,73 @@ namespace audio
       return flt;
     }
     
+    static Filter create_Chebyshev1_filter(int order,
+                                           FilterType type,
+                                           float freq_cutoff, std::optional<float> freq_bandwidth,
+                                           float ripple,
+                                           int sample_rate = 44100)
+    {
+      Filter flt;
+      
+      if (order <= 0)
+      {
+        std::cerr << "The order of the Chebyshev type I filter must be at least 1!" << std::endl;
+        return flt;
+      }
+      
+      if ((type == FilterType::BandPass || type == FilterType::BandStop) && !freq_bandwidth.has_value())
+      {
+        std::cerr << "freq_bandwidth must be specified when creating a BandPass or BandStop filter!" << std::endl;
+        return flt;
+      }
+      
+      std::vector<double> W_cutoff;
+      if (freq_bandwidth.has_value())
+      {
+        // 2*(Fc - BW/2)/Fs
+        // 2*(Fc + BW/2)/Fs
+        W_cutoff.reserve(2);
+        W_cutoff.emplace_back(std::max(0.f, (2 * freq_cutoff - freq_bandwidth.value()) / sample_rate));
+        W_cutoff.emplace_back((2 * freq_cutoff + freq_bandwidth.value()) / sample_rate);
+      }
+      else
+      {
+        W_cutoff.reserve(1);
+        W_cutoff.emplace_back(2 * freq_cutoff / sample_rate);
+      }
+      
+      double fs2 = 2.;
+      for (auto& wc : W_cutoff)
+        wc = 2. / fs2 * std::tan(math::c_pi * wc / fs2);
+  
+      auto epsilon = std::sqrt(std::pow(10., ripple / 10.) - 1.);
+      auto v0 = std::asinh(1. / epsilon) / order;
+      
+      FilterS s;
+      s.poles.reserve(order);
+      float v = static_cast<double>(1 - order);
+      for (int i = 1; i <= order; ++i)
+      {
+        auto p = std::exp(1i * M_PI * (0.5 * v / order));
+        p = -std::sinh(v0) * std::real(p) + 1i * std::cosh(v0) * std::imag(p);
+        s.poles.emplace_back(p);
+        v += 2.;
+      }
+      
+      s.gain = std::real(stlutils::prod(stlutils::unary_minus(s.poles)));
+      if (order % 2 == 0)
+        s.gain *= std::pow(10., -ripple / 20.);
+      
+      s = filter_edge_adjustment(s, type, W_cutoff[0], W_cutoff.size() == 2 ? W_cutoff[1] : 0.f);
+      
+      bilinear(s, fs2);
+      
+      flt.b = stlutils::cast_vector<float>(stlutils::mult_scalar(poly(s.zeroes), s.gain));
+      flt.a = stlutils::cast_vector<float>(poly(s.poles));
+      
+      return flt;      
+    }
+    
     
     static void print_waveform_graph(const Waveform& wave, GraphType type,
                                      int width = 100, int height = 20,
