@@ -16,12 +16,11 @@
 
 #include <complex>
 
-using namespace std::complex_literals;
-
 
 namespace audio
 {
-  
+  using namespace std::complex_literals;
+
   enum class LowPassFilterType { NONE, Butterworth, ChebyshevTypeI, ChebyshevTypeII };
   enum class GraphType { PLOT_THIN, PLOT_THICK0, PLOT_THICK1, PLOT_THICK2, PLOT_THICK3, FILLED_BOTTOM_UP, FILLED_FROM_T_AXIS };
   enum class Complex2Real { ABS, REAL, IMAG };
