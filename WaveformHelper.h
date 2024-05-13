@@ -774,7 +774,7 @@ namespace audio
       
       FilterS s;
       s.poles.reserve(order);
-      float v = static_cast<float>(order + 1);
+      float v = static_cast<double>(order + 1);
       for (int i = 1; i <= order; ++i)
       {
         s.poles.emplace_back(std::exp(1i * M_PI * (0.5 * v / order)));
