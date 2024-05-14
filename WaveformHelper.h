@@ -796,7 +796,7 @@ namespace audio
       return flt;
     }
     
-    static Filter create_Chebyshev1_filter(int order,
+    static Filter create_ChebyshevI_filter(int order,
                                            FilterType type,
                                            float freq_cutoff, std::optional<float> freq_bandwidth,
                                            float ripple,
