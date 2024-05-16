@@ -800,8 +800,8 @@ namespace audio
       
       bilinear(s, fs2);
       
-      flt.b = stlutils::cast_vector<float>(stlutils::mult_scalar(poly(s.zeroes), s.gain));
-      flt.a = stlutils::cast_vector<float>(poly(s.poles));
+      flt.b = stlutils::static_cast_vector<float>(stlutils::mult_scalar(poly(s.zeroes), s.gain));
+      flt.a = stlutils::static_cast_vector<float>(poly(s.poles));
       
       return flt;
     }
@@ -870,8 +870,94 @@ namespace audio
       
       bilinear(s, fs2);
       
-      flt.b = stlutils::cast_vector<float>(stlutils::mult_scalar(poly(s.zeroes), s.gain));
-      flt.a = stlutils::cast_vector<float>(poly(s.poles));
+      flt.b = stlutils::static_cast_vector<float>(stlutils::mult_scalar(poly(s.zeroes), s.gain));
+      flt.a = stlutils::static_cast_vector<float>(poly(s.poles));
+      
+      return flt;      
+    }
+    
+    static Filter create_ChebyshevII_filter(int order,
+                                            FilterOpType type,
+                                            float freq_cutoff, std::optional<float> freq_bandwidth,
+                                            float ripple,
+                                            int sample_rate = 44100)
+    {
+      Filter flt;
+      
+      if (type == FilterOpType::NONE)
+        return flt;
+      
+      if (order <= 0)
+      {
+        std::cerr << "The order of the Chebyshev type I filter must be at least 1!" << std::endl;
+        return flt;
+      }
+      
+      if ((type == FilterOpType::BandPass || type == FilterOpType::BandStop) && !freq_bandwidth.has_value())
+      {
+        std::cerr << "freq_bandwidth must be specified when creating a BandPass or BandStop filter!" << std::endl;
+        return flt;
+      }
+      
+      std::vector<double> W_cutoff;
+      if (freq_bandwidth.has_value())
+      {
+        // 2*(Fc - BW/2)/Fs
+        // 2*(Fc + BW/2)/Fs
+        W_cutoff.reserve(2);
+        W_cutoff.emplace_back(std::max(0.f, (2 * freq_cutoff - freq_bandwidth.value()) / sample_rate));
+        W_cutoff.emplace_back((2 * freq_cutoff + freq_bandwidth.value()) / sample_rate);
+      }
+      else
+      {
+        W_cutoff.reserve(1);
+        W_cutoff.emplace_back(2 * freq_cutoff / sample_rate);
+      }
+      
+      double fs2 = 2.;
+      for (auto& wc : W_cutoff)
+        wc = 2. / fs2 * std::tan(math::c_pi * wc / fs2);
+
+      auto lambda = std::pow(10., ripple / 20.);
+      auto phi = std::log(lambda + std::sqrt(math::sq(lambda) - 1.)) / order;
+      auto v = math::linspace<double>(0.5, 1, order - 0.5);
+      auto theta = stlutils::mult_scalar(v, M_PI / order);
+      auto st = stlutils::static_cast_vector<std::complex<double>>(
+        stlutils::sin(theta));
+      auto ct = stlutils::static_cast_vector<std::complex<double>>(
+        stlutils::cos(theta));
+      auto alpha = stlutils::mult_scalar(st, -std::sinh(phi));
+      auto beta = stlutils::mult_scalar(ct, std::cosh(phi));
+      
+      FilterS s;
+      auto num = stlutils::subtract(alpha, stlutils::mult_scalar(beta, 1i));
+      auto den = stlutils::add(stlutils::comp_sq(alpha), stlutils::comp_sq(beta));
+      s.poles = stlutils::comp_div(num, den);
+      
+      if (order % 2 == 0)
+        s.zeroes = stlutils::scalar_div(1i, ct);
+      else
+      {
+        // By removing the middle element, we avoid theta = pi/2 which would result in division by zero.
+        auto ct2 = ct;
+        int mid_idx = (static_cast<int>(ct2.size()) - 1) / 2;
+        if (stlutils::erase_at(ct2, mid_idx))
+          s.zeroes = stlutils::scalar_div(1i, ct2);
+        else
+        {
+          std::cerr << "ERROR in create_ChebyshevII_filter() : Unable to calculate zeroes!" << std::endl;
+          return flt;
+        }
+      }
+      
+      s.gain = std::abs(std::real(stlutils::prod(s.poles) / stlutils::prod(s.zeroes)));
+      
+      s = filter_edge_adjustment(s, type, W_cutoff[0], W_cutoff.size() == 2 ? W_cutoff[1] : 0.f);
+      
+      bilinear(s, fs2);
+      
+      flt.b = stlutils::static_cast_vector<float>(stlutils::mult_scalar(poly(s.zeroes), s.gain));
+      flt.a = stlutils::static_cast_vector<float>(poly(s.poles));
       
       return flt;      
     }
@@ -1222,7 +1308,7 @@ namespace audio
           s_out.gain = s.gain * std::pow(1. / W_diff, Nz - Np);
           
           auto q = mult_scalar(s.poles, W_diff / 2.);
-          auto r = comp_sqrt(subtract_scalar(comp_sq(q), W_prod));
+          auto r = sqrt(subtract_scalar(comp_sq(q), W_prod));
           append(s_out.poles, subtract(q, r));
           append(s_out.poles, add(q, r));
           
@@ -1231,7 +1317,7 @@ namespace audio
           else
           {
             q = mult_scalar(s.zeroes, W_diff / 2.);
-            r = comp_sqrt(subtract_scalar(comp_sq(q), W_prod));
+            r = sqrt(subtract_scalar(comp_sq(q), W_prod));
             append(s_out.zeroes, subtract(q, r));
             append(s_out.zeroes, add(q, r));
             if (Np > Nz)
@@ -1245,7 +1331,7 @@ namespace audio
           auto W_diff = Wh - Wl;
           auto W_prod = Wl * Wh;
           auto q = scalar_div(W_diff / 2., s.poles);
-          auto r = comp_sqrt(subtract_scalar(comp_sq(q), W_prod));
+          auto r = sqrt(subtract_scalar(comp_sq(q), W_prod));
           append(s_out.poles, subtract(q, r));
           append(s_out.poles, add(q, r));
           
@@ -1261,7 +1347,7 @@ namespace audio
           else
           {
             q = scalar_div(W_diff / 2., s.zeroes);
-            r = comp_sqrt(subtract_scalar(comp_sq(q), W_prod));
+            r = sqrt(subtract_scalar(comp_sq(q), W_prod));
             append(s_out.zeroes, subtract(q, r));
             append(s_out.zeroes, add(q, r));
             if (Np > Nz)
