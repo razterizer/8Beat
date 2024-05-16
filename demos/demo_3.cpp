@@ -94,7 +94,7 @@ int main(int argc, char** argv)
                                       audio::FrequencyType::JET_ENGINE_POWERUP, audio::AmplitudeType::JET_ENGINE_POWERUP);
       break;
   }
-  auto wd2 = audio::WaveformHelper::resample(wd, 44'100, audio::LowPassFilterType::Butterworth, 2, 1.2f, 1.f);
+  auto wd2 = audio::WaveformHelper::resample(wd, 44'100, audio::FilterType::Butterworth, 2, 1.2f, 1.f);
   auto src = src_handler.create_source_from_waveform(wd2);
   src->play(audio::PlaybackMode::STATE_WAIT);
   
