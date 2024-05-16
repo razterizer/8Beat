@@ -794,8 +794,8 @@ namespace audio
           return FilterType::Butterworth;
         if (str == "ChebyshevTypeI")
           return FilterType::ChebyshevTypeI;
-        //if (str == "ChebyshevTypeII")
-        //  return FilterType::ChebyshevTypeII; // #FIXME: Add back ChebyshevTypeII again!
+        if (str == "ChebyshevTypeII")
+          return FilterType::ChebyshevTypeII;
         return FilterType::NONE;
       };
       

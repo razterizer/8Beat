@@ -21,7 +21,7 @@ namespace audio
 {
   using namespace std::complex_literals;
 
-  enum class FilterType { NONE, Butterworth, ChebyshevTypeI };
+  enum class FilterType { NONE, Butterworth, ChebyshevTypeI, ChebyshevTypeII };
   enum class FilterOpType { NONE, LowPass, HighPass, BandPass, BandStop };
   enum class GraphType { PLOT_THIN, PLOT_THICK0, PLOT_THICK1, PLOT_THICK2, PLOT_THICK3, FILLED_BOTTOM_UP, FILLED_FROM_T_AXIS };
   enum class Complex2Real { ABS, REAL, IMAG };
@@ -683,6 +683,10 @@ namespace audio
           
         case FilterType::ChebyshevTypeI:
           flt = create_ChebyshevI_filter(filter_order, op_type, freq_cutoff_hz, freq_bandwidth_hz, ripple, wave.sample_rate);
+          break;
+          
+        case FilterType::ChebyshevTypeII:
+          flt = create_ChebyshevII_filter(filter_order, op_type, freq_cutoff_hz, freq_bandwidth_hz, ripple, wave.sample_rate);
           break;
           
         default:
