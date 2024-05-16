@@ -4,24 +4,24 @@
 ; Syntax:
 ; instrument <instrument_name> <waveform> ["duty_cycle:"<duty_cycle>]
 ;   ["ffx:"<freq_preset_effect>] ["afx:"<ampl_preset_effect>] ["pfx:"<phase_preset_effect>]
-;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<volume>]
 ; instrument <instrument_name> "ring_mod_A:"<ring_mod_instr_A> "ring_mod_B:"<ring_mod_instr_B>
-;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<volume>]
 ; instrument <instrument_name> "conv_A:"<conv_instr_A> "conv_B:"<conv_instr_B>
-;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<volume>]
 ; instrument <instrument_name> "(("<w0>, <instrument_name0>"), ("<w1>, <instrument_name1>")," ...")"
-;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<volume>]
 ; instrument <instrument_name> "&"<lib_instrument_name>
 ;   ["ffx:"<freq_preset_effect>] ["afx:"<ampl_preset_effect>] ["pfx:"<phase_preset_effect>]
-;   ["adsr:"<adsr_id>] ["flp:"<low_pass_filter_id>] ["vol:"<volume>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<volume>]
 ; <instrument_name> := [A-Za-z][A-Za-z0-9]*
 ; <waveform> := "sine"|"square"|"triangle"|"sawtooth"|"noise"
 ; <volume> := 0..1
 ; Example:
 instrument PIANO ring_mod_A:I0 ring_mod_B:I1 adsr:0
-instrument I0 square adsr:1 flp:0 afx:VIBRATO
+instrument I0 square adsr:1 flt:0 afx:VIBRATO
 instrument I1 square duty_cycle:0.3
-instrument ORGAN ((0.5, PIANO), (0.2, I0)) flp:0
+instrument ORGAN ((0.5, PIANO), (0.2, I0)) flt:0
 instrument FLUTE_VIB &FLUTE ffx:CONSTANT afx:VIBRATO_0 pfx:ZERO vol:0.5
 instrument TRUMPET &TRUMPET ffx:CONSTANT afx:CONSTANT pfx:ZERO vol:0.6
 instrument TRUMPET_VIB &TRUMPET ffx:CHIRP_2 afx:VIBRATO_0 pfx:ZERO vol:0.6
@@ -55,10 +55,10 @@ adsr 1 [EXP 16] [EXP 20] 80 [LIN 70]
 adsr 2 &ORGAN_2
 adsr 3 [LOG 60] [LOG 30] 50 [LOG 10]
 
-; Low Pass Filters
+; Filters
 ; Syntax:
-; filter_lp <filter_lp_nr> [type] [order] [cutoff_frq_mult] [ripple]
-filter_lp 0 Butterworth 2 1.5 0.1
+; filter <filter_nr> [type] [op_type] [order] [cutoff_frq_mult] [bandwidth_frq_mult] [ripple] [normalize]
+filter 0 Butterworth LowPass 2 1.5 0 0.1 false
 
 ; Note format:
 ; <pitch> <duration_ms> <instrument>
