@@ -699,6 +699,14 @@ namespace audio
       return filtered_wave;
     }
     
+    static Waveform filter(const Waveform& wave,
+                           const Filter& filter)
+    {
+      Waveform ret = wave;
+      ret.buffer = WaveformHelper::filter(wave.buffer, filter);
+      return ret;
+    }
+    
     static std::vector<float> filter(const std::vector<float>& x,
                                      const Filter& filter)
     {
