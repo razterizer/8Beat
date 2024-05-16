@@ -174,11 +174,11 @@ int main(int argc, char** argv)
 #if 0
     auto wd2 = audio.generate_waveform(audio::WaveformType::SINE, duration_s, freq*12);
     auto wd3 = audio.ring_modulation(wd, wd2);
-    auto wd4 = audio::WaveformHelper::resample(wd3, 44'100, audio::LowPassFilterType::Butterworth, 2, 1.2f, 1.f);
+    auto wd4 = audio::WaveformHelper::resample(wd3, 44'100, audio::FilterType::Butterworth, 2, 1.2f, 1.f);
     auto src = src_handler.create_source_from_waveform(wd4);
     src->play(audio::PlaybackMode::STATE_WAIT);
 #else
-    auto wd2 = audio::WaveformHelper::resample(wd, 44'100, audio::LowPassFilterType::Butterworth, 2, 1.2f, 1.f);
+    auto wd2 = audio::WaveformHelper::resample(wd, 44'100, audio::FilterType::Butterworth, 2, 1.2f, 1.f);
     auto src = src_handler.create_source_from_waveform(wd2);
     src->play(audio::PlaybackMode::STATE_WAIT);
 #endif
