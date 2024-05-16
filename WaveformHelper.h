@@ -690,8 +690,7 @@ namespace audio
           break;
           
         default:
-          std::cerr << "ERROR in filter(const Waveform&, ...) : Unknown filter type!";
-          break;
+          return wave;
       }
       
       filtered_wave.buffer = filter(wave.buffer, flt);
