@@ -50,11 +50,11 @@ namespace audio
       }
     }
     
-    static Waveform synthesize(const std::vector<std::pair<float, Waveform>>& wave_comp, const ADSR& adsr, const LowPassFilterArgs& final_low_pass_filter_args, bool final_normalize)
+    static Waveform synthesize(const std::vector<std::pair<float, Waveform>>& wave_comp, const ADSR& adsr, const FilterArgs& final_filter_args, bool final_normalize)
     {
       auto wave = WaveformHelper::mix(wave_comp);
       wave = WaveformHelper::envelope_adsr(wave, adsr);
-      wave = WaveformHelper::filter_low_pass(wave, final_low_pass_filter_args);
+      wave = WaveformHelper::filter(wave, final_filter_args);
       if (final_normalize)
         WaveformHelper::normalize(wave);
       return wave;
@@ -75,7 +75,7 @@ namespace audio
       std::vector<std::pair<float, Waveform>> wave_comp; // {{ Weight, Waveform }}
       int num_harmonics = 6;
       float tot_harmonics_ampl = 0.f;
-      LowPassFilterArgs final_low_pass_filter_args;
+      FilterArgs final_filter_args;
       bool final_normalize = false;
       switch (instr)
       {
@@ -100,12 +100,13 @@ namespace audio
           wave_comp.emplace_back(0.3f, wave_gen.generate_waveform(WaveformType::SQUARE,
             duration_s, frequency_Hz));
           noise = wave_gen.generate_waveform(WaveformType::NOISE, duration_s);
-          noise = WaveformHelper::filter_low_pass(noise, LowPassFilterType::ChebyshevTypeI, 2, 0.9f, 0.1f);
+          noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 2, 0.9f, 0.1f);
           wave_comp.emplace_back(0.2f, noise);
-          final_low_pass_filter_args.filter_type = LowPassFilterType::Butterworth;
-          final_low_pass_filter_args.filter_order = 2;
-          final_low_pass_filter_args.cutoff_freq_multiplier = 0.5f;
-          final_low_pass_filter_args.ripple = 0.2f;
+          final_filter_args.filter_type = FilterType::Butterworth;
+          final_filter_args.filter_op_type = FilterOpType::LowPass;
+          final_filter_args.filter_order = 2;
+          final_filter_args.cutoff_freq_multiplier = 0.5f;
+          final_filter_args.ripple = 0.2f;
           final_normalize = true;
           break;
         case InstrumentType::ORGAN:
@@ -149,13 +150,14 @@ namespace audio
           
           noise = wave_gen.generate_waveform(WaveformType::NOISE,
             duration_s, 0.f);
-          noise = WaveformHelper::filter_low_pass(noise, LowPassFilterType::ChebyshevTypeI, 2, 0.9f, 0.1f);
+          noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 2, 0.9f, 0.1f);
           wave_comp.emplace_back(0.1f, noise);
           
-          final_low_pass_filter_args.filter_type = LowPassFilterType::Butterworth;
-          final_low_pass_filter_args.filter_order = 1;
-          final_low_pass_filter_args.cutoff_freq_multiplier = 7.5f;
-          final_low_pass_filter_args.ripple = 0.2f;
+          final_filter_args.filter_type = FilterType::Butterworth;
+          final_filter_args.filter_op_type = FilterOpType::LowPass;
+          final_filter_args.filter_order = 1;
+          final_filter_args.cutoff_freq_multiplier = 7.5f;
+          final_filter_args.ripple = 0.2f;
           final_normalize = true;
           break;
         case InstrumentType::GUITAR:
@@ -163,10 +165,11 @@ namespace audio
           wave_comp.emplace_back(1.f, WaveformHelper::karplus_strong(duration_s, frequency_Hz));
           wave_comp.emplace_back(0.08f, wave_gen.generate_waveform(WaveformType::NOISE,
             duration_s, frequency_Hz));
-          final_low_pass_filter_args.filter_type = LowPassFilterType::ChebyshevTypeII;
-          final_low_pass_filter_args.filter_order = 1;
-          final_low_pass_filter_args.cutoff_freq_multiplier = 1.5f;
-          final_low_pass_filter_args.ripple = 0.5f;
+          final_filter_args.filter_type = FilterType::ChebyshevTypeI; // #FIXME: Should be type II.
+          final_filter_args.filter_op_type = FilterOpType::LowPass;
+          final_filter_args.filter_order = 1;
+          final_filter_args.cutoff_freq_multiplier = 1.5f;
+          final_filter_args.ripple = 0.5f;
           break;
         case InstrumentType::KICKDRUM:
           adsr = adsr_presets::KICKDRUM;
@@ -174,7 +177,7 @@ namespace audio
           wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 2*frequency_Hz));
           noise = wave_gen.generate_waveform(WaveformType::NOISE,
             duration_s, 0.f);
-          noise = WaveformHelper::filter_low_pass(noise, LowPassFilterType::ChebyshevTypeI, 2, 0.9f, 0.1f);
+          noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 2, 0.9f, 0.1f);
           wave_comp.emplace_back(0.4f, noise);
           break;
         case InstrumentType::SNAREDRUM:
@@ -206,7 +209,7 @@ namespace audio
         case InstrumentType::NUM_ITEMS:
           break;
       }
-      auto wave = synthesize(wave_comp, adsr, final_low_pass_filter_args, final_normalize);
+      auto wave = synthesize(wave_comp, adsr, final_filter_args, final_normalize);
       return wave;
     }
     

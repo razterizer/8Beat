@@ -21,25 +21,21 @@ namespace audio
 {
   using namespace std::complex_literals;
 
-  enum class LowPassFilterType { NONE, Butterworth, ChebyshevTypeI, ChebyshevTypeII };
+  enum class FilterType { NONE, Butterworth, ChebyshevTypeI };
+  enum class FilterOpType { NONE, LowPass, HighPass, BandPass, BandStop };
   enum class GraphType { PLOT_THIN, PLOT_THICK0, PLOT_THICK1, PLOT_THICK2, PLOT_THICK3, FILLED_BOTTOM_UP, FILLED_FROM_T_AXIS };
   enum class Complex2Real { ABS, REAL, IMAG };
   enum class WindowType { HAMMING, HANNING };
   
-  struct LowPassFilterArgs
+  struct FilterArgs
   {
-    LowPassFilterType filter_type = LowPassFilterType::NONE;
+    FilterType filter_type = FilterType::NONE;
+    FilterOpType filter_op_type = FilterOpType::NONE;
     int filter_order = 1;
     float cutoff_freq_multiplier = 2.5f;
+    std::optional<float> bandwidth_freq_multiplier = std::nullopt;
     float ripple = 0.1f;
-  };
-  
-  enum class FilterType
-  {
-    LowPass,
-    HighPass,
-    BandPass,
-    BandStop
+    bool normalize_filtered_wave = false;
   };
   
   struct Filter
@@ -106,7 +102,7 @@ namespace audio
         const auto& wave_i = ww_i.second;
         auto& ww_o = res_weighted_waves[w_idx];
         ww_o.first = ww_i.first;
-        ww_o.second = resample(wave_i, common_sample_rate, LowPassFilterType::Butterworth);
+        ww_o.second = resample(wave_i, common_sample_rate, FilterType::Butterworth);
       }
     
       Waveform weighted_sum(Nmin, 0.f);
@@ -129,8 +125,8 @@ namespace audio
     {
       // Resample both signals to a common sample rate
       int common_sample_rate = std::max(wave_A.sample_rate, wave_B.sample_rate);
-      Waveform res_A = resample(wave_A, common_sample_rate, LowPassFilterType::Butterworth);
-      Waveform res_B = resample(wave_B, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_A = resample(wave_A, common_sample_rate, FilterType::Butterworth);
+      Waveform res_B = resample(wave_B, common_sample_rate, FilterType::Butterworth);
       
       const auto Nmin = std::min(res_A.buffer.size(), res_A.buffer.size());
       Waveform sum(Nmin, 0.f);
@@ -147,8 +143,8 @@ namespace audio
     {
       // Resample both signals to a common sample rate
       int common_sample_rate = std::max(wave_A.sample_rate, wave_B.sample_rate);
-      Waveform res_A = resample(wave_A, common_sample_rate, LowPassFilterType::Butterworth);
-      Waveform res_B = resample(wave_B, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_A = resample(wave_A, common_sample_rate, FilterType::Butterworth);
+      Waveform res_B = resample(wave_B, common_sample_rate, FilterType::Butterworth);
       
       
       Waveform prod;
@@ -176,8 +172,8 @@ namespace audio
     {
       // Resample both signals to a common sample rate.
       int common_sample_rate = std::max(wave.sample_rate, kernel.sample_rate);
-      Waveform res_wave = resample(wave, common_sample_rate, LowPassFilterType::Butterworth);
-      Waveform res_kernel = resample(kernel, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_wave = resample(wave, common_sample_rate, FilterType::Butterworth);
+      Waveform res_kernel = resample(kernel, common_sample_rate, FilterType::Butterworth);
       
       Waveform conv;
       conv.sample_rate = common_sample_rate;
@@ -200,8 +196,8 @@ namespace audio
     {
       // Resample both signals to a common sample rate.
       int common_sample_rate = std::max(wave.sample_rate, kernel.sample_rate);
-      Waveform res_wave = resample(wave, common_sample_rate, LowPassFilterType::Butterworth);
-      Waveform res_kernel = resample(kernel, common_sample_rate, LowPassFilterType::Butterworth);
+      Waveform res_wave = resample(wave, common_sample_rate, FilterType::Butterworth);
+      Waveform res_kernel = resample(kernel, common_sample_rate, FilterType::Butterworth);
       
       // Apply windowing.
       //apply_window(res_wave, WindowType::HAMMING);
@@ -612,8 +608,8 @@ namespace audio
     }
     
     static Waveform resample(const Waveform& wave, int new_sample_rate = 44100,
-                                 LowPassFilterType filter_type = LowPassFilterType::Butterworth,
-                                 int filter_order = 1, float cutoff_freq_multiplier = 2.5f, float ripple = 0.1f)
+                             FilterType filter_type = FilterType::Butterworth,
+                             int filter_order = 1, float cutoff_freq_multiplier = 2.5f, float ripple = 0.1f)
     {
       if (wave.sample_rate == new_sample_rate)
         return wave;
@@ -645,57 +641,60 @@ namespace audio
         + fraction * wave.buffer[index + 1];
       }
       
-      auto filtered_wave = filter_low_pass(resampled_wave, filter_type,
-        filter_order, cutoff_freq_multiplier, ripple);
+      auto filtered_wave = filter(resampled_wave, filter_type, FilterOpType::LowPass,
+        filter_order, cutoff_freq_multiplier * wave.frequency, ripple, true);
       
       filtered_wave.update_duration();
       return filtered_wave;
     }
     
-    static Waveform filter_low_pass(const Waveform& wave, const LowPassFilterArgs& args)
+    static Waveform filter(const Waveform& wave, const FilterArgs& args)
     {
-      return filter_low_pass(wave,
+      std::optional<float> bandwidth;
+      if (args.bandwidth_freq_multiplier.has_value())
+        bandwidth = args.bandwidth_freq_multiplier.value() * wave.frequency;
+      return filter(wave,
         args.filter_type,
+        args.filter_op_type,
         args.filter_order,
-        args.cutoff_freq_multiplier,
-        args.ripple);
+        args.cutoff_freq_multiplier * wave.frequency,
+        bandwidth,
+        args.ripple,
+        args.normalize_filtered_wave);
     }
     
-    static Waveform filter_low_pass(const Waveform& wave,
-                                    LowPassFilterType filter_type = LowPassFilterType::Butterworth,
-                                    int filter_order = 1,
-                                    float cutoff_freq_multiplier = 2.5f,
-                                    float ripple = 0.1f)
+    static Waveform filter(const Waveform& wave,
+                           FilterType type,
+                           FilterOpType op_type,
+                           int filter_order,
+                           float freq_cutoff_hz, std::optional<float> freq_bandwidth_hz,
+                           float ripple = 0.1f, // ripple: For Chebychev filters.
+                           bool normalize_filtered_wave = false)
     {
       auto filtered_wave = wave;
       
-      float cutoff_frequency = cutoff_freq_multiplier * wave.frequency;
+      Filter flt;
       
-      // Apply the specified low-pass filter
-      switch (filter_type)
+      switch (type)
       {
-        case LowPassFilterType::NONE:
-          break;
-        case LowPassFilterType::Butterworth:
-          apply_Butterworth_low_pass_filter(filtered_wave.buffer, filter_order, cutoff_frequency, wave.sample_rate);
+        case FilterType::Butterworth:
+          flt = create_Butterworth_filter(filter_order, op_type, freq_cutoff_hz, freq_bandwidth_hz, wave.sample_rate);
           break;
           
-        case LowPassFilterType::ChebyshevTypeI:
-          apply_ChebyshevI_low_pass_filter(filtered_wave.buffer, filter_order, cutoff_frequency, wave.sample_rate, ripple);
+        case FilterType::ChebyshevTypeI:
+          flt = create_ChebyshevI_filter(filter_order, op_type, freq_cutoff_hz, freq_bandwidth_hz, ripple, wave.sample_rate);
           break;
-          
-        case LowPassFilterType::ChebyshevTypeII:
-          apply_ChebyshevII_low_pass_filter(filtered_wave.buffer, filter_order, cutoff_frequency, wave.sample_rate, ripple);
-          break;
-          
-        // Add more cases for other filter types if needed
           
         default:
-          // Handle unsupported filter types or provide a default behavior
+          std::cerr << "ERROR in filter(const Waveform&, ...) : Unknown filter type!";
           break;
       }
       
+      filtered_wave.buffer = filter(wave.buffer, flt);
+      
       clamp(filtered_wave);
+      if (normalize_filtered_wave)
+        normalize(filtered_wave);
       
       return filtered_wave;
     }
@@ -735,11 +734,14 @@ namespace audio
     }
     
     static Filter create_Butterworth_filter(int order,
-                                            FilterType type,
+                                            FilterOpType type,
                                             float freq_cutoff, std::optional<float> freq_bandwidth,
                                             int sample_rate = 44100)
     {
       Filter flt;
+      
+      if (type == FilterOpType::NONE)
+        return flt;
       
       if (order <= 0)
       {
@@ -747,7 +749,7 @@ namespace audio
         return flt;
       }
       
-      if ((type == FilterType::BandPass || type == FilterType::BandStop) && !freq_bandwidth.has_value())
+      if ((type == FilterOpType::BandPass || type == FilterOpType::BandStop) && !freq_bandwidth.has_value())
       {
         std::cerr << "freq_bandwidth must be specified when creating a BandPass or BandStop filter!" << std::endl;
         return flt;
@@ -797,12 +799,15 @@ namespace audio
     }
     
     static Filter create_ChebyshevI_filter(int order,
-                                           FilterType type,
+                                           FilterOpType type,
                                            float freq_cutoff, std::optional<float> freq_bandwidth,
                                            float ripple,
                                            int sample_rate = 44100)
     {
       Filter flt;
+      
+      if (type == FilterOpType::NONE)
+        return flt;
       
       if (order <= 0)
       {
@@ -810,7 +815,7 @@ namespace audio
         return flt;
       }
       
-      if ((type == FilterType::BandPass || type == FilterType::BandStop) && !freq_bandwidth.has_value())
+      if ((type == FilterOpType::BandPass || type == FilterOpType::BandStop) && !freq_bandwidth.has_value())
       {
         std::cerr << "freq_bandwidth must be specified when creating a BandPass or BandStop filter!" << std::endl;
         return flt;
@@ -1020,111 +1025,6 @@ namespace audio
       return gcd_result;
     }
     
-    // Example of applying a Butterworth low-pass filter
-    static void apply_Butterworth_low_pass_filter(std::vector<float>& signal, int filter_order,
-                                                  float cutoff_frequency, int sample_rate)
-    {
-      if (filter_order <= 0)
-      {
-        // Invalid filter order
-        return;
-      }
-      
-      // Calculate the analog cutoff frequency in radians
-      double omega_c = 2.0 * M_PI * cutoff_frequency / sample_rate;
-      
-      // Calculate poles of the Butterworth filter in the left half of the complex plane
-      std::vector<std::complex<double>> poles;
-      for (int k = 0; k < filter_order; ++k)
-      {
-        double real_part = -std::sin(M_PI * (2.0 * k + 1) / (2.0 * filter_order));
-        double imag_part = std::cos(M_PI * (2.0 * k + 1) / (2.0 * filter_order));
-        poles.emplace_back(real_part, imag_part);
-      }
-      
-      // Apply the Butterworth filter to the signal
-      for (size_t n = filter_order; n < signal.size(); ++n)
-      {
-        double filtered_sample = 0.0;
-        for (int k = 0; k < filter_order; ++k)
-        {
-          // Calculate the z-transform of the filter transfer function
-          std::complex<double> z = std::exp(std::complex<double>(0, omega_c)) * poles[k];
-          filtered_sample += real(z) * signal[n - k];
-        }
-        
-        signal[n] = static_cast<float>(filtered_sample);
-      }
-    }
-    
-    // Example of applying a first-order Chebyshev low-pass filter (Type I)
-    static void apply_ChebyshevI_low_pass_filter(std::vector<float>& signal, int filter_order,
-                                                 float cutoff_frequency, int sample_rate, float ripple)
-    {
-      if (ripple <= 0.0)
-      {
-        // Invalid ripple value
-        return;
-      }
-      
-      // Calculate the epsilon value for Chebyshev Type I filter
-      double temp = pow(10, 0.1 * ripple) - 1.0;
-      double epsilon = (temp >= 0.0) ? sqrt(temp) : 0.0;
-      
-      // Calculate the poles of the Chebyshev Type I filter in the left half of the complex plane
-      std::vector<std::complex<double>> poles;
-      for (int k = 0; k < filter_order; ++k)
-      {
-        double angle = M_PI * (2 * k + 1) / (2.0 * filter_order);
-        poles.emplace_back(-epsilon * sin(angle), epsilon * cos(angle));
-      }
-      
-      // Apply the Chebyshev Type I filter to the signal
-      for (size_t n = filter_order; n < signal.size(); ++n)
-      {
-        double filtered_sample = 0.0;
-        for (int k = 0; k < filter_order; ++k)
-        {
-          filtered_sample += poles[k].real() * signal[n - k];
-        }
-        signal[n] = static_cast<float>(filtered_sample);
-      }
-    }
-    
-    // Example of applying a first-order Chebyshev low-pass filter (Type II)
-    static void apply_ChebyshevII_low_pass_filter(std::vector<float>& signal, int filter_order,
-                                                  float cutoff_frequency, int sample_rate, float ripple)
-    {
-      if (ripple <= 0.0)
-      {
-        // Invalid ripple value
-        return;
-      }
-      
-      // Calculate the epsilon value for Chebyshev Type II filter
-      double temp = pow(10, 0.1 * ripple) - 1.0;
-      double epsilon = (temp >= 0.0) ? sqrt(temp) : 0.0;
-      
-      // Calculate the poles of the Chebyshev Type II filter in the left half of the complex plane
-      std::vector<std::complex<double>> poles;
-      for (int k = 0; k < filter_order; ++k)
-      {
-        double angle = M_PI * (2 * k + 1) / (2.0 * filter_order);
-        poles.emplace_back(-epsilon * sin(angle), epsilon * cos(angle));
-      }
-      
-      // Apply the Chebyshev Type II filter to the signal
-      for (size_t n = filter_order; n < signal.size(); ++n)
-      {
-        double filtered_sample = 0.0;
-        for (int k = 0; k < filter_order; ++k)
-        {
-          filtered_sample += poles[k].real() * signal[n - k];
-        }
-        signal[n] = static_cast<float>(filtered_sample);
-      }
-    }
-    
     static std::vector<std::complex<float>> fft_rec(const std::vector<std::complex<float>>& x)
     {
       auto N = x.size();
@@ -1251,7 +1151,7 @@ namespace audio
       return y;
     }
     
-    static FilterS filter_edge_adjustment(const FilterS& s, FilterType type, double Wl, double Wh)
+    static FilterS filter_edge_adjustment(const FilterS& s, FilterOpType type, double Wl, double Wh)
     {
       using namespace stlutils;
       auto Nz = static_cast<int>(s.zeroes.size());
@@ -1270,7 +1170,7 @@ namespace audio
         return s_out;
       }
       
-      if (type == FilterType::HighPass || type == FilterType::BandStop)
+      if (type == FilterOpType::HighPass || type == FilterOpType::BandStop)
       {
         if (Nz == 0)
           s_out.gain = s.gain * std::real(
@@ -1286,13 +1186,15 @@ namespace audio
       
       switch (type)
       {
-        case FilterType::LowPass:
+        case FilterOpType::NONE:
+          break;
+        case FilterOpType::LowPass:
           s_out.gain = s.gain * std::pow(1. / Wl, Nz - Np);
           s_out.zeroes = mult_scalar(s.zeroes, Wl);
           s_out.poles = mult_scalar(s.poles, Wl);
           break;
           
-        case FilterType::HighPass:
+        case FilterOpType::HighPass:
           s_out.poles = scalar_div(Wl, s.poles);
           if (Nz == 0)
             s_out.zeroes.resize(Np, 0.);
@@ -1304,7 +1206,7 @@ namespace audio
           }
           break;
           
-        case FilterType::BandPass:
+        case FilterOpType::BandPass:
         {
           auto W_diff = Wh - Wl;
           auto W_prod = Wl * Wh;
@@ -1330,7 +1232,7 @@ namespace audio
           break;
         }
           
-        case FilterType::BandStop:
+        case FilterOpType::BandStop:
         {
           auto W_diff = Wh - Wl;
           auto W_prod = Wl * Wh;

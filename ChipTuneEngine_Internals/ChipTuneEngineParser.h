@@ -84,7 +84,7 @@ namespace audio
       int instrument_weight_avg_idx = -1;
       int instrument_lib_idx = -1;
       int adsr_idx = -1;
-      int flp_idx = -1;
+      int flt_idx = -1;
       float volume = 1.f;
       static Note create_pause()
       {
@@ -108,7 +108,7 @@ namespace audio
     {
       std::string name;
       int adsr_idx = -1;
-      int flp_idx = -1;
+      int flt_idx = -1;
       float volume = 1.f;
     };
     struct InstrumentBasic : InstrumentBase
@@ -189,7 +189,7 @@ namespace audio
     std::vector<InstrumentWeightAvg> m_instruments_weight_avg;
     std::vector<InstrumentLib> m_instruments_lib;
     std::vector<ADSR> m_envelopes;
-    std::vector<LowPassFilterArgs> m_filter_lp_args;
+    std::vector<FilterArgs> m_filter_args;
     
     std::map<int, float> m_time_step_ms;
     float m_curr_time_step_ms = 100;
@@ -238,8 +238,8 @@ namespace audio
             parse_instrument(line, iss);
           else if (command == "adsr")
             parse_envelopes(line, iss);
-          else if (command == "filter_lp")
-            parse_lp_filters(line, iss);
+          else if (command == "filter")
+            parse_filters(line, iss);
           else if (command == "NUM_VOICES")
           {
             iss >> num_voices;
@@ -385,7 +385,7 @@ namespace audio
     
     bool parse_post_effects(const std::string& line,
                             const std::string& modifier_name, const std::string& modifier_val,
-                            int& adsr_nr, int& flp_nr, float& vol)
+                            int& adsr_nr, int& flt_nr, float& vol)
     {
       if (modifier_name == "adsr")
       {
@@ -393,10 +393,10 @@ namespace audio
           std::cerr << "Error parsing adsr in instrument line: \"" << line << "\"." << std::endl;
         return true;
       }
-      if (modifier_name == "flp")
+      if (modifier_name == "flt")
       {
-        if (!(std::istringstream(modifier_val) >> flp_nr))
-          std::cerr << "Error parsing flp in instrument line: \"" << line << "\"." << std::endl;
+        if (!(std::istringstream(modifier_val) >> flt_nr))
+          std::cerr << "Error parsing flt in instrument line: \"" << line << "\"." << std::endl;
         return true;
       }
       if (modifier_name == "vol")
@@ -458,7 +458,7 @@ namespace audio
       std::string instrument_name, waveform_name, modifier;
       std::string op;
       float duty_cycle = 0.5f, vol = 1.f;
-      int adsr_nr = -1, flp_nr = -1;
+      int adsr_nr = -1, flt_nr = -1;
       
       iss >> instrument_name;
 
@@ -470,7 +470,7 @@ namespace audio
         // Weighted average.
         auto idx = op.find("adsr");
         idx = idx != std::string::npos ? idx - 1 : op.length();
-        math::minimize(idx, op.find("flp"));
+        math::minimize(idx, op.find("flt"));
         idx = idx != std::string::npos ? idx - 1 : op.length();
         std::string weighted_sum = op.substr(0, idx);
         str::remove_spaces(weighted_sum);
@@ -511,11 +511,11 @@ namespace audio
             auto modifier_val = modifier.substr(col_idx + 1);
             
             parse_post_effects(line, modifier_name, modifier_val,
-              adsr_nr, flp_nr, vol);
+              adsr_nr, flt_nr, vol);
           }
         }
         instrument.adsr_idx = adsr_nr;
-        instrument.flp_idx = flp_nr;
+        instrument.flt_idx = flt_nr;
         instrument.volume = vol;
       }
       else if (op.find("&") == 0)
@@ -559,12 +559,12 @@ namespace audio
               instr.freq_effect, instr.ampl_effect, instr.phase_effect))
             {}
             else if (parse_post_effects(line, modifier_name, modifier_val,
-              adsr_nr, flp_nr, vol))
+              adsr_nr, flt_nr, vol))
             {}
           }
         }
         instr.adsr_idx = adsr_nr;
-        instr.flp_idx = flp_nr;
+        instr.flt_idx = flt_nr;
         instr.volume = vol;
       }
       else if (op.find("ring_mod_A:") == 0 || op.find("ring_mod_B:") == 0)
@@ -591,13 +591,13 @@ namespace audio
             }
             else
               parse_post_effects(line, modifier_name, modifier_val,
-                adsr_nr, flp_nr, vol);
+                adsr_nr, flt_nr, vol);
           }
         }
         if (ring_mod_A.empty() || ring_mod_B.empty())
           std::cerr << "Must specify both attributes ring_mod_A and ring_mod_B in instrument line: \"" << line << "\"." << std::endl;
         else
-          m_instruments_ring_mod.push_back({ instrument_name, adsr_nr, flp_nr, vol, ring_mod_A, ring_mod_B });
+          m_instruments_ring_mod.push_back({ instrument_name, adsr_nr, flt_nr, vol, ring_mod_A, ring_mod_B });
       }
       else if (op.find("conv_A:") == 0 || op.find("conv_B:") == 0)
       {
@@ -623,13 +623,13 @@ namespace audio
             }
             else
               parse_post_effects(line, modifier_name, modifier_val,
-                adsr_nr, flp_nr, vol);
+                adsr_nr, flt_nr, vol);
           }
         }
         if (conv_A.empty() || conv_B.empty())
           std::cerr << "Must specify both attributes ring_mod_A and ring_mod_B in instrument line: \"" << line << "\"." << std::endl;
         else
-          m_instruments_conv.push_back({ instrument_name, adsr_nr, flp_nr, vol, conv_A, conv_B });
+          m_instruments_conv.push_back({ instrument_name, adsr_nr, flt_nr, vol, conv_A, conv_B });
       }
       else
       {
@@ -656,7 +656,7 @@ namespace audio
               freq_effect, ampl_effect, phase_effect))
             {}
             else if (parse_post_effects(line, modifier_name, modifier_val,
-              adsr_nr, flp_nr, vol))
+              adsr_nr, flt_nr, vol))
             {}
           }
         }
@@ -673,7 +673,7 @@ namespace audio
         else if (waveform_name == "noise")
           wf_type = WaveformType::NOISE;
         
-        m_instruments_basic.push_back({ instrument_name, adsr_nr, flp_nr, vol, wf_type, duty_cycle,
+        m_instruments_basic.push_back({ instrument_name, adsr_nr, flt_nr, vol, wf_type, duty_cycle,
           freq_effect, ampl_effect, phase_effect });
       }
     }
@@ -770,42 +770,61 @@ namespace audio
       }
     }
     
-    void parse_lp_filters(const std::string& line, std::istringstream& iss)
+    void parse_filters(const std::string& line, std::istringstream& iss)
     {
-      // filter_lp <filter_lp_nr> [type] [order] [cutoff_frq_mult] [ripple]
-      
-      //struct LowPassFilterArgs
-      //{
-      //  LowPassFilterType filter_type = LowPassFilterType::NONE;
-      //  int filter_order = 1;
-      //  float cutoff_freq_multiplier = 2.5f;
-      //  float ripple = 0.1f;
-      //};
+      // filter <filter_nr> [type] [op_type] [order] [cutoff_frq_mult] [bandwidth_frq_mult] [ripple] [normalize]
       
       // Butterworth, ChebyshevTypeI, ChebyshevTypeII
       
-      int filter_lp_nr = -1;
-      std::string type;
+      int filter_nr = -1;
+      std::string type, op_type;
       int order = -1;
       float cutoff = 0.f;
+      float bandwidth = 0.f;
       float ripple = 0.f;
+      bool normalize = false;
       
-      iss >> filter_lp_nr >> type >> order >> cutoff >> ripple;
-      if (m_filter_lp_args.size() < filter_lp_nr + 1)
-        m_filter_lp_args.resize(filter_lp_nr + 1);
+      iss >> filter_nr >> type >> op_type >> order >> cutoff >> bandwidth >> ripple >> normalize;
+      if (m_filter_args.size() < filter_nr + 1)
+        m_filter_args.resize(filter_nr + 1);
       
       auto str2type = [](const std::string& str)
       {
         if (str == "Butterworth")
-          return LowPassFilterType::Butterworth;
+          return FilterType::Butterworth;
         if (str == "ChebyshevTypeI")
-          return LowPassFilterType::ChebyshevTypeI;
-        if (str == "ChebyshevTypeII")
-          return LowPassFilterType::ChebyshevTypeII;
-        return LowPassFilterType::NONE;
+          return FilterType::ChebyshevTypeI;
+        //if (str == "ChebyshevTypeII")
+        //  return FilterType::ChebyshevTypeII; // #FIXME: Add back ChebyshevTypeII again!
+        return FilterType::NONE;
       };
       
-      m_filter_lp_args[filter_lp_nr] = { str2type(type), order, cutoff, ripple };
+      auto str2optype = [](const std::string& str)
+      {
+        if (str == "LowPass")
+          return FilterOpType::LowPass;
+        if (str == "HighPass")
+          return FilterOpType::HighPass;
+        if (str == "BandPass")
+          return FilterOpType::BandPass;
+        if (str == "BandStop")
+          return FilterOpType::BandStop;
+        return FilterOpType::NONE;
+      };
+      
+      std::optional<float> bandwidth_val;
+      if (bandwidth > 0.f)
+        bandwidth_val = bandwidth;
+      m_filter_args[filter_nr] =
+      {
+        str2type(type),
+        str2optype(op_type),
+        order,
+        cutoff,
+        bandwidth_val,
+        ripple,
+        normalize
+      };
     }
     
     void parse_tab(const std::string& line, std::istringstream& iss)
@@ -913,9 +932,9 @@ namespace audio
             unread = iss.eof()  ?  "" : iss.str().substr(iss.tellg());
             op = str::ltrim_ret(unread);
             
-            if (op.find("adsr:") == 0 || op.find("flp:") == 0 || op.find("vol:") == 0)
+            if (op.find("adsr:") == 0 || op.find("flt:") == 0 || op.find("vol:") == 0)
             {
-              int adsr_nr = -1, flp_nr = -1;
+              int adsr_nr = -1, flt_nr = -1;
               float vol = 1.f;
               while (iss >> modifier)
               {
@@ -926,10 +945,10 @@ namespace audio
                   auto modifier_val = modifier.substr(col_idx + 1);
                   
                   if (parse_post_effects(line, modifier_name, modifier_val,
-                                         adsr_nr, flp_nr, vol))
+                                         adsr_nr, flt_nr, vol))
                   {
                     note->adsr_idx = adsr_nr;
-                    note->flp_idx = flp_nr;
+                    note->flt_idx = flt_nr;
                     note->volume = vol;
                   }
                 }
@@ -1034,12 +1053,12 @@ namespace audio
       return wave;
     }
     
-    void apply_post_effects(Waveform& wave, int flp_idx, int adsr_idx)
+    void apply_post_effects(Waveform& wave, int flt_idx, int adsr_idx)
     {
-      if (flp_idx >= 0)
+      if (flt_idx >= 0)
       {
-        const auto& flp = m_filter_lp_args[flp_idx];
-        wave = WaveformHelper::filter_low_pass(wave, flp);
+        const auto& fa = m_filter_args[flt_idx];
+        wave = WaveformHelper::filter(wave, fa);
       }
       if (adsr_idx >= 0)
       {
@@ -1061,38 +1080,38 @@ namespace audio
               const auto& ib = m_instruments_basic[note->instrument_basic_idx];
               note->wave = create_instrument_basic(note.get(), ib);
               note->volume *= ib.volume;
-              apply_post_effects(note->wave, ib.flp_idx, ib.adsr_idx);
+              apply_post_effects(note->wave, ib.flt_idx, ib.adsr_idx);
             }
             else if (note->instrument_ring_mod_idx >= 0)
             {
               const auto& irm = m_instruments_ring_mod[note->instrument_ring_mod_idx];
               note->wave = create_instrument_ring_mod(note.get(), irm);
               note->volume *= irm.volume;
-              apply_post_effects(note->wave, irm.flp_idx, irm.adsr_idx);
+              apply_post_effects(note->wave, irm.flt_idx, irm.adsr_idx);
             }
             else if (note->instrument_conv_idx >= 0)
             {
               const auto& ic = m_instruments_conv[note->instrument_conv_idx];
               note->wave = create_instrument_conv(note.get(), ic);
               note->volume *= ic.volume;
-              apply_post_effects(note->wave, ic.flp_idx, ic.adsr_idx);
+              apply_post_effects(note->wave, ic.flt_idx, ic.adsr_idx);
             }
             else if (note->instrument_weight_avg_idx >= 0)
             {
               const auto& iwa = m_instruments_weight_avg[note->instrument_weight_avg_idx];
               note->wave = create_instrument_weight_avg(note.get(), iwa);
               note->volume *= iwa.volume;
-              apply_post_effects(note->wave, iwa.flp_idx, iwa.adsr_idx);
+              apply_post_effects(note->wave, iwa.flt_idx, iwa.adsr_idx);
             }
             else if (note->instrument_lib_idx >= 0)
             {
               const auto& it = m_instruments_lib[note->instrument_lib_idx];
               note->wave = create_instrument_lib(note.get(), it);
               note->volume *= it.volume;
-              apply_post_effects(note->wave, it.flp_idx, it.adsr_idx);
+              apply_post_effects(note->wave, it.flt_idx, it.adsr_idx);
             }
             
-            apply_post_effects(note->wave, note->flp_idx, note->adsr_idx);
+            apply_post_effects(note->wave, note->flt_idx, note->adsr_idx);
           }
         }
       }
