@@ -75,7 +75,10 @@ int main(int argc, char** argv)
     pressAnyKey();
     
     WaveformGenerationParams params;
-    params.freq_slide_vel = 0.4f;
+    params.freq_slide_vel = 1.f;
+    params.freq_slide_acc = -1.f;
+    //params.noise_filter_order = 1;
+    params.noise_filter_slot_dur_s = 16e-3f;
     
     auto wd = wave_gen.generate_waveform(WaveformType::NOISE, 2.f, 440.f, params, 44100, false);
     
