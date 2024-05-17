@@ -1044,6 +1044,26 @@ namespace audio
       return wave;
     }
     
+    void print_lib_instrument_type(InstrumentType lib_instrument)
+    {
+      std::string instrument;
+      switch (lib_instrument)
+      {
+        case InstrumentType::PIANO: instrument = "PIANO"; break;
+        case InstrumentType::VIOLIN: instrument = "VIOLIN"; break;
+        case InstrumentType::ORGAN: instrument = "ORGAN"; break;
+        case InstrumentType::TRUMPET: instrument = "TRUMPET"; break;
+        case InstrumentType::FLUTE: instrument = "FLUTE"; break;
+        case InstrumentType::GUITAR: instrument = "GUITAR"; break;
+        case InstrumentType::KICKDRUM: instrument = "KICKDRUM"; break;
+        case InstrumentType::SNAREDRUM: instrument = "SNAREDRUM"; break;
+        case InstrumentType::HIHAT: instrument = "HIHAT"; break;
+        case InstrumentType::ANVIL: instrument = "ANVIL"; break;
+        default: break;
+      }
+      std::cout << "Instrument: " << instrument << std::endl;
+    }
+    
     Waveform create_instrument_lib(Note* note, const InstrumentLib& il)
     {
       Waveform wave;
