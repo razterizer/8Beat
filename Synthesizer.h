@@ -205,7 +205,7 @@ namespace audio
           break;
         case InstrumentType::ANVIL:
           adsr = adsr_presets::SNAREDRUM;
-          noise = wave_gen.generate_waveform(WaveformType::NOISE, duration_s);
+          noise = wave_gen.generate_waveform(WaveformType::NOISE, duration_s, std::nullopt);
           wave_comp.emplace_back(0.6f, noise);
           wave_comp.emplace_back(0.15f, wave_gen.generate_waveform(WaveformType::SINE, duration_s, 3.11f*frequency_Hz));
           wave_comp.emplace_back(0.25f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 5.43f*frequency_Hz));
