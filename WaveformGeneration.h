@@ -188,7 +188,7 @@ namespace audio
             Filter bp_flt = WaveformHelper::create_Butterworth_filter(params.noise_filter_order, FilterOpType::BandPass, freq_mod, params.noise_filter_rel_bw*freq_mod, sample_rate);
             
             noise_buffer = WaveformHelper::filter(noise_buffer, bp_flt);
-            for (int j = 0; j < N; ++j)
+            for (int j = 0; j < N && i + j < buffer_len; ++j)
               wd.buffer[i + j] = noise_buffer[j];
           }
         }
