@@ -199,7 +199,7 @@ namespace audio
           break;
         case InstrumentType::HIHAT:
           adsr = adsr_presets::HIHAT;
-          wave_comp.emplace_back(0.8f, wave_gen.generate_waveform(WaveformType::NOISE, duration_s));
+          wave_comp.emplace_back(0.8f, wave_gen.generate_waveform(WaveformType::NOISE, duration_s, std::nullopt));
           wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::SINE, duration_s, frequency_Hz));
           wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 17.f/3.f*frequency_Hz));
           break;
