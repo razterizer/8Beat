@@ -26,9 +26,9 @@ int main(int argc, char** argv)
 #endif
 
   audio::ChipTuneEngine chiptune_engine(src_handler, wave_gen);
-  chiptune_engine.load_tune(wk_dir + "chiptune3.ct");
+  chiptune_engine.load_tune(wk_dir + "chiptune3.ct", true);
   chiptune_engine.set_volume(0.8f);
-  chiptune_engine.play_tune(false);
+  chiptune_engine.play_tune(false, true);
   
   pressAnyKey();
   
