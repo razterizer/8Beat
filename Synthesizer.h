@@ -152,7 +152,7 @@ namespace audio
 #endif
           
           noise = wave_gen.generate_waveform(WaveformType::NOISE,
-            duration_s, 0.f);
+            duration_s, std::nullopt);
           noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 2, 0.9f, 0.1f);
           wave_comp.emplace_back(0.1f, noise);
           
@@ -186,7 +186,7 @@ namespace audio
         case InstrumentType::SNAREDRUM:
           adsr = adsr_presets::SNAREDRUM;
           noise = wave_gen.generate_waveform(WaveformType::NOISE,
-            duration_s, 0.f);
+            duration_s, std::nullopt);
           wave_comp.emplace_back(0.7f, noise);
           sawtooth = wave_gen.generate_waveform(WaveformType::SAWTOOTH, duration_s, frequency_Hz);
           square = wave_gen.generate_waveform(WaveformType::SQUARE, duration_s, frequency_Hz*1.1f,
