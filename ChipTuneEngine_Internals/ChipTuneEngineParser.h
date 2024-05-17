@@ -538,6 +538,8 @@ namespace audio
           instr.lib_instrument = InstrumentType::TRUMPET;
         else if (lib_instrument == "FLUTE")
           instr.lib_instrument = InstrumentType::FLUTE;
+        else if (lib_instrument == "GUITAR")
+          instr.lib_instrument = InstrumentType::GUITAR;
         else if (lib_instrument == "KICKDRUM")
           instr.lib_instrument = InstrumentType::KICKDRUM;
         else if (lib_instrument == "SNAREDRUM")
