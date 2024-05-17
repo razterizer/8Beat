@@ -168,11 +168,12 @@ namespace audio
           wave_comp.emplace_back(1.f, WaveformHelper::karplus_strong(duration_s, frequency_Hz));
           wave_comp.emplace_back(0.08f, wave_gen.generate_waveform(WaveformType::NOISE,
             duration_s, frequency_Hz));
-          final_filter_args.filter_type = FilterType::ChebyshevTypeII;
-          final_filter_args.filter_op_type = FilterOpType::LowPass;
-          final_filter_args.filter_order = 1;
-          final_filter_args.cutoff_freq_multiplier = 1.5f;
-          final_filter_args.ripple = 0.5f;
+          final_filter_args.filter_type = FilterType::NONE;
+          //final_filter_args.filter_op_type = FilterOpType::LowPass;
+          //final_filter_args.filter_order = 1;
+          //final_filter_args.cutoff_freq_multiplier = 1.5f;
+          //final_filter_args.ripple = 0.5f;
+          final_normalize = true;
           break;
         case InstrumentType::KICKDRUM:
           adsr = adsr_presets::KICKDRUM;
