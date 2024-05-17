@@ -147,7 +147,7 @@ namespace audio
 
 #if 0
           triangle = wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 6.f*frequency_Hz);
-          triangle = WaveformHelper::filter_low_pass(triangle, LowPassFilterType::ChebyshevTypeII, 1, 2.5f, 0.1f);
+          triangle = WaveformHelper::filter(triangle, FilterType::ChebyshevTypeII, FilterOpType::LowPass, 1, 2.5f, std::nullopt, 0.1f);
           wave_comp.emplace_back(0.05f, triangle);
 #endif
           
