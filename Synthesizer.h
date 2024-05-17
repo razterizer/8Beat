@@ -138,9 +138,12 @@ namespace audio
           adsr = adsr_presets::FLUTE_0;
           for (int h = 1; h <= num_harmonics; ++h) tot_harmonics_ampl += 1.f/h;
           for (int h = 1; h <= num_harmonics; ++h)
-            wave_comp.emplace_back(0.8f*(1.f/h)/tot_harmonics_ampl, wave_gen.generate_waveform(WaveformType::SINE, duration_s, h * frequency_Hz,
+          {
+            auto wdh = wave_gen.generate_waveform(WaveformType::SINE, duration_s, h * frequency_Hz,
                 params, sample_rate, verbosity,
-                frequency_effect, amplitude_effect, phase_effect));
+                frequency_effect, amplitude_effect, phase_effect);
+            wave_comp.emplace_back(0.8f*(1.f/h)/tot_harmonics_ampl, wdh);
+          }
 
 #if 0
           triangle = wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 6.f*frequency_Hz);
