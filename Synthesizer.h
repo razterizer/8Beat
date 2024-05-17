@@ -180,8 +180,8 @@ namespace audio
           wave_comp.emplace_back(0.2f, wave_gen.generate_waveform(WaveformType::SINE, duration_s, frequency_Hz));
           wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 2*frequency_Hz));
           noise = wave_gen.generate_waveform(WaveformType::NOISE,
-            duration_s, 0.f);
-          noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 2, 0.9f, 0.1f);
+            duration_s, frequency_Hz);
+          //noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 2, 0.9f*frequency_Hz, std::nullopt, 0.1f);
           wave_comp.emplace_back(0.4f, noise);
           break;
         case InstrumentType::SNAREDRUM:
