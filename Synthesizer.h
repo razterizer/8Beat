@@ -102,11 +102,11 @@ namespace audio
           noise = wave_gen.generate_waveform(WaveformType::NOISE, duration_s);
           noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 2, 0.9f, 0.1f);
           wave_comp.emplace_back(0.2f, noise);
-          final_filter_args.filter_type = FilterType::Butterworth;
-          final_filter_args.filter_op_type = FilterOpType::LowPass;
-          final_filter_args.filter_order = 2;
-          final_filter_args.cutoff_freq_multiplier = 0.5f;
-          final_filter_args.ripple = 0.2f;
+          final_filter_args.filter_type = FilterType::NONE;
+          //final_filter_args.filter_op_type = FilterOpType::LowPass;
+          //final_filter_args.filter_order = 2;
+          //final_filter_args.cutoff_freq_multiplier = 0.5f;
+          //final_filter_args.ripple = 0.2f;
           final_normalize = true;
           break;
         case InstrumentType::ORGAN:
