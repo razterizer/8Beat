@@ -57,7 +57,13 @@ adsr 3 [LOG 60] [LOG 30] 50 [LOG 10]
 
 ; Filters
 ; Syntax:
-; filter <filter_nr> [type] [op_type] [order] [cutoff_frq_mult] [bandwidth_frq_mult] [ripple] [normalize]
+; filter <filter_nr> <type> <op_type> <order> <cutoff_frq_mult> <bandwidth_frq_mult> <ripple> <normalize>
+; Where:
+; <filter_nr> := [0-9]+
+; <type> := "Butterworth"|"ChebyshevTypeI"|"ChebyshevTypeII"
+; <op_type> := "LowPass"|"HighPass"|"BandPass"|"BandStop"
+; <order> := 1..
+; <normalize> := "false"|"true"
 filter 0 Butterworth LowPass 2 1.5 0 0.1 false
 
 ; Note format:
