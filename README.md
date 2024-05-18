@@ -64,7 +64,16 @@ We'll often use the term `waveform` as meaning an audio signal here.
   * `karplus_strong()` generates guitar-like string sounds.
   * `envelope_adsr()` applies an adsr envelope to a specified waveform.
   * `resample()` resamples a waveform to a specified sample-rate.
-  * `filter(const Waveform&, const FilterArgs&)` filters a waveform according to the `FilterArgs` argument.
+  * `filter(const Waveform&, const FilterArgs&)` filters a waveform according to the `FilterArgs` argument. Calls the function signature below:
+  * `filter(const Waveform& wave,
+            FilterType type,
+            FilterOpType op_type,
+            int filter_order,
+            float freq_cutoff_hz, std::optional<float> freq_bandwidth_hz,
+            float ripple = 0.1f, // ripple: For Chebychev filters.
+            bool normalize_filtered_wave = false)` where:
+    * `type` is `NONE`, Butterworth`, `ChebyshevTypeI` or `ChebyshevTypeII`.
+    * `op_type` is `NONE`, `LowPass`, `HighPass`, `BandPass` or `BandStop`.
   * `filter_low_pass()` filters a waveform using either a Butterworth, Chebyshev Type I or Chebyshev Type II filter.
   * `print_waveform_graph()` prints the waveform shape in the terminal.
   * `calc_time_from_num_cycles()` utility function for waveform objects.
