@@ -42,7 +42,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 * `WaveformIO.h` <br/> contains class `WaveformIO` that has two static public functions: `load()` and `save()`. These functions rely on the [`sndfile`](https://github.com/libsndfile/libsndfile) library which allows you to import and export a `Waveform` object to many different types and formats.
 * `WaveformGeneration.h` <br/> contains class `WaveformGeneration` with a single public function `generate_waveform()`.
-  * You can control the waveform via these optional parameters in struct `WaveformGenerationParams`:
+  * You can control the created waveform via these optional parameters in struct `WaveformGenerationParams`:
     ```C++
     std::optional<float> sample_range_min = std::nullopt; // default: -1
     std::optional<float> sample_range_max = std::nullopt; // default: +1
