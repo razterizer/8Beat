@@ -44,6 +44,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
 * `WaveformGeneration.h` <br/> contains class `WaveformGeneration` with a single public function `generate_waveform()`.
 * `Spectrum.h` <br/> contains struct `Spectrum` which is used in conjunction with functions such as public functions `fft()` and `ifft()` in class `WaveformHelper`.
 * `WaveformHelper.h` <br/> contains class `WaveformHelper` which has the following public static functions:
+  * `subset()` allows you to retrieve a portion of a waveform.
   * `mix()` mixes two waveforms by lerping them or multiple waveforms by weighted average.
   * `ring_modulation()` multiplies two waveforms.
   * `reverb()` does reverb between a waveform and an impulse response waveform of an environment (response sound from a dirac pulse-like "trigger" sound) to create a reverb effect.
