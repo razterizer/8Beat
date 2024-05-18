@@ -35,6 +35,7 @@
 		0739DB822BC35B6900964E96 /* lib8-Bit Audio Emulator Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "lib8-Bit Audio Emulator Lib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0739DB832BC35B9600964E96 /* demo_9.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_9.cpp; sourceTree = "<group>"; };
 		0739DB842BCEE98C00964E96 /* demo_10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_10.cpp; sourceTree = "<group>"; };
+		075A33DA2BF8BB85004547CC /* SFX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFX.h; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
@@ -108,6 +109,7 @@
 				0739D9C12BA2434200964E96 /* LICENSE */,
 				0760B6F12B9E3C610032CACD /* README.md */,
 				07880A542B87CB9A00711230 /* Synthesizer.h */,
+				075A33DA2BF8BB85004547CC /* SFX.h */,
 				07880A532B87AAFA00711230 /* ADSR.h */,
 				0716712D2B7FF4DB0043E9F2 /* Spectrum.h */,
 				071671282B7867B90043E9F2 /* Waveform.h */,
