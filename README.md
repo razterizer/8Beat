@@ -42,6 +42,29 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 * `WaveformIO.h` <br/> contains class `WaveformIO` that has two static public functions: `load()` and `save()`. These functions rely on the [`sndfile`](https://github.com/libsndfile/libsndfile) library which allows you to import and export a `Waveform` object to many different types and formats.
 * `WaveformGeneration.h` <br/> contains class `WaveformGeneration` with a single public function `generate_waveform()`.
+  * You can control the waveform via these optional parameters in struct `WaveformGenerationParams`:
+    ```C++
+    std::optional<float> sample_range_min = std::nullopt; // default: -1
+    std::optional<float> sample_range_max = std::nullopt; // default: +1
+    // duty_cycle applies to SQUARE, TRIANGLE and SAWTOOTH.
+    // In the case of TRIANGLE, duty_cycle = 1 is a SAWTOOTH and 0 is reverse SAWTOOTH.
+    // In the case of SAWTOOTH, when duty_cycle goes from 1 to 0, the SAWTOOTH teeth get thinner towards 0.
+    // default: 0.5 for SQUARE and TRIANGLE and 1 for SAWTOOTH.
+    std::optional<float> duty_cycle = std::nullopt;
+    std::optional<float> duty_cycle_sweep = std::nullopt; // unit/s.
+    std::optional<float> min_frequency_limit = std::nullopt;
+    std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
+    std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
+    std::optional<float> vibrato_depth = std::nullopt;
+    std::optional<float> vibrato_freq = std::nullopt;
+    std::optional<float> vibrato_freq_vel = std::nullopt;
+    std::optional<float> vibrato_freq_acc = std::nullopt;
+    std::optional<float> vibrato_freq_acc_max_vel_limit = std::nullopt;
+    int noise_filter_order = 2;
+    float noise_filter_rel_bw = 0.2f;
+    float noise_filter_slot_dur_s = 1e-2f;
+    std::vector<ArpeggioPair> arpeggio;
+    ```
 * `Spectrum.h` <br/> contains struct `Spectrum` which is used in conjunction with functions such as public functions `fft()` and `ifft()` in class `WaveformHelper`.
 * `WaveformHelper.h` <br/> contains class `WaveformHelper` which has the following public static functions:
   * `subset()` allows you to retrieve a portion of a waveform.
