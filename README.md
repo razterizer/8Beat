@@ -60,6 +60,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
   * `clamp()` clamps the samples of a waveform within a specified range.
   * `fir_moving_average()` a moving average filter of sorts.
   * `fir_sinc_window_low_pass()` a kind of a low-pass filter.
+  * `flanger()` applies a flanger filter to the input waveform.
   * `karplus_strong()` generates guitar-like string sounds.
   * `envelope_adsr()` applies an adsr envelope to a specified waveform.
   * `resample()` resamples a waveform to a specified sample-rate.
