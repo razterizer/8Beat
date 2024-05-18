@@ -72,7 +72,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
             float freq_cutoff_hz, std::optional<float> freq_bandwidth_hz,
             float ripple = 0.1f, // ripple: For Chebychev filters.
             bool normalize_filtered_wave = false)` where:
-    * `type` is `NONE`, Butterworth`, `ChebyshevTypeI` or `ChebyshevTypeII`.
+    * `type` is `NONE`, `Butterworth`, `ChebyshevTypeI` or `ChebyshevTypeII`.
     * `op_type` is `NONE`, `LowPass`, `HighPass`, `BandPass` or `BandStop`.
   * `filter_low_pass()` filters a waveform using either a Butterworth, Chebyshev Type I or Chebyshev Type II filter.
   * `print_waveform_graph()` prints the waveform shape in the terminal.
