@@ -74,7 +74,8 @@ We'll often use the term `waveform` as meaning an audio signal here.
             bool normalize_filtered_wave = false)` where:
     * `type` is `NONE`, `Butterworth`, `ChebyshevTypeI` or `ChebyshevTypeII`.
     * `op_type` is `NONE`, `LowPass`, `HighPass`, `BandPass` or `BandStop`.
-  * `filter_low_pass()` filters a waveform using either a Butterworth, Chebyshev Type I or Chebyshev Type II filter.
+  * `filter(const Waveform&, const Filter&)` filters a general FIR or IIR filter with coeffs `a` and `b`. Used internally by above filter functions.
+  * `filter(const std::vector<float>&, const Filter&)` used by the function in the previous point.
   * `print_waveform_graph()` prints the waveform shape in the terminal.
   * `calc_time_from_num_cycles()` utility function for waveform objects.
   * `calc_dt()` utility function for waveform objects.
