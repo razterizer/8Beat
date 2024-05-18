@@ -54,6 +54,8 @@ We'll often use the term `waveform` as meaning an audio signal here.
   * `ifft()` this is the fast inverse Fourier transform using a variant of the Cooley-Tukey algorithm.
   * `find_min_max()` finds the min and max values of a given audio signal.
   * `normalize_over()` only normalize if the amplitude is larger than a certain limit. If so then normalized to that limit. This is a kind of a normalized amplitude limiter.
+  * `normalize()` normalizes the waveform so that the max amplitude is always (nearly) 1.
+  * `normalize_scale()` same as `normalize()` but is followed by a scaling operation so that the max amlitude = scaling_factor.
   * `scale()` simply just scale the waveform with a scale factor.
   * `clamp()` clamps the samples of a waveform within a specified range.
   * `fir_moving_average()` a moving average filter of sorts.
