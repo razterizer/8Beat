@@ -114,7 +114,7 @@ namespace audio
     struct InstrumentBasic : InstrumentBase
     {
       WaveformType waveform = WaveformType::SINE;
-      float duty_cycle = 0.5f;
+      int params_idx = -1;
       FrequencyType freq_effect = FrequencyType::CONSTANT;
       AmplitudeType ampl_effect = AmplitudeType::CONSTANT;
       PhaseType phase_effect = PhaseType::ZERO;
@@ -190,6 +190,7 @@ namespace audio
     std::vector<InstrumentLib> m_instruments_lib;
     std::vector<ADSR> m_envelopes;
     std::vector<FilterArgs> m_filter_args;
+    std::vector<WaveformGenerationParams> m_waveform_params;
     
     std::map<int, float> m_time_step_ms;
     float m_curr_time_step_ms = 100;
@@ -240,6 +241,8 @@ namespace audio
             parse_envelopes(line, iss);
           else if (command == "filter")
             parse_filters(line, iss);
+          else if (command == "params")
+            parse_waveform_params(line, iss);
           else if (command == "NUM_VOICES")
           {
             iss >> num_voices;
@@ -408,6 +411,19 @@ namespace audio
       return false;
     }
     
+    bool parse_waveform_effects(const std::string& line,
+                                const std::string& modifier_name, const std::string& modifier_val,
+                                int& params_nr)
+    {
+      if (modifier_name == "params")
+      {
+        if (!(std::istringstream(modifier_val) >> params_nr))
+          std::cerr << "Error parsing params in instrument line: \"" << line << "\"." << std::endl;
+        return true;
+      }
+      return false;
+    }
+    
     bool parse_modulation_effects(const std::string& line,
       const std::string& modifier_name, const std::string& modifier_val,
       FrequencyType& frequency_effect, AmplitudeType& amplitude_effect, PhaseType& phase_effect)
@@ -457,8 +473,8 @@ namespace audio
     {
       std::string instrument_name, waveform_name, modifier;
       std::string op;
-      float duty_cycle = 0.5f, vol = 1.f;
-      int adsr_nr = -1, flt_nr = -1;
+      float vol = 1.f;
+      int params_nr = -1, adsr_nr = -1, flt_nr = -1;
       
       iss >> instrument_name;
 
@@ -471,6 +487,8 @@ namespace audio
         auto idx = op.find("adsr");
         idx = idx != std::string::npos ? idx - 1 : op.length();
         math::minimize(idx, op.find("flt"));
+        idx = idx != std::string::npos ? idx - 1 : op.length();
+        math::minimize(idx, op.find("vol"));
         idx = idx != std::string::npos ? idx - 1 : op.length();
         std::string weighted_sum = op.substr(0, idx);
         str::remove_spaces(weighted_sum);
@@ -649,11 +667,9 @@ namespace audio
             auto modifier_name = modifier.substr(0, col_idx);
             auto modifier_val = modifier.substr(col_idx + 1);
             
-            if (modifier_name == "duty_cycle")
-            {
-              if (!(std::istringstream(modifier_val) >> duty_cycle))
-                std::cerr << "Error parsing duty_cycle in instrument line: \"" << line << "\"." << std::endl;
-            }
+            if (parse_waveform_effects(line, modifier_name, modifier_val,
+              params_nr))
+            {}
             else if (parse_modulation_effects(line, modifier_name, modifier_val,
               freq_effect, ampl_effect, phase_effect))
             {}
@@ -675,7 +691,7 @@ namespace audio
         else if (waveform_name == "noise")
           wf_type = WaveformType::NOISE;
         
-        m_instruments_basic.push_back({ instrument_name, adsr_nr, flt_nr, vol, wf_type, duty_cycle,
+        m_instruments_basic.push_back({ instrument_name, adsr_nr, flt_nr, vol, wf_type, params_nr,
           freq_effect, ampl_effect, phase_effect });
       }
     }
@@ -827,6 +843,119 @@ namespace audio
         ripple,
         normalize
       };
+    }
+    
+    void parse_waveform_params(const std::string& line, std::istringstream& iss)
+    {
+      std::cout << line << std::endl;
+      int params_nr = -1;
+      
+      iss >> params_nr;
+      if (m_waveform_params.size() < params_nr + 1)
+        m_waveform_params.resize(params_nr + 1);
+      
+      std::string modifier, modifier_name, modifier_val;
+      WaveformGenerationParams params;
+      while (iss >> modifier)
+      {
+        auto col_idx = modifier.find(':');
+        if (col_idx != std::string::npos)
+        {
+          auto modifier_name = modifier.substr(0, col_idx);
+          auto modifier_val = modifier.substr(col_idx + 1);
+          
+          auto f_parse_ofloat_val = [&modifier_name, &modifier_val, &line]
+                                    (const std::string& name, std::optional<float>& set_val)
+          {
+            if (modifier_name == name)
+            {
+              float fval = 0.f;
+              if (!(std::istringstream(modifier_val) >> fval))
+                std::cerr << "Error parsing " << name << " in params line: \"" << line << "\"." << std::endl;
+              else
+                set_val = fval;
+              return true;
+            }
+            return false;
+          };
+          auto f_parse_val = [&modifier_name, &modifier_val, &line]
+                             (const std::string& name, auto& set_val)
+          {
+            if (modifier_name == name)
+            {
+              if (!(std::istringstream(modifier_val) >> set_val))
+                std::cerr << "Error parsing " << name << " in params line: \"" << line << "\"." << std::endl;
+              return true;
+            }
+            return false;
+          };
+          
+          if (f_parse_ofloat_val("sample_min", params.sample_range_min)) {}
+          else if (f_parse_ofloat_val("sample_max", params.sample_range_max)) {}
+          else if (f_parse_ofloat_val("duty_cycle", params.duty_cycle)) {}
+          else if (f_parse_ofloat_val("duty_cycle_sweep", params.duty_cycle_sweep)) {}
+          else if (f_parse_ofloat_val("min_freq_limit", params.min_frequency_limit)) {}
+          else if (f_parse_ofloat_val("freq_slide_vel", params.freq_slide_vel)) {}
+          else if (f_parse_ofloat_val("freq_slide_acc", params.freq_slide_acc)) {}
+          else if (f_parse_ofloat_val("vib_depth", params.vibrato_depth)) {}
+          else if (f_parse_ofloat_val("vib_freq", params.vibrato_freq)) {}
+          else if (f_parse_ofloat_val("vib_freq_vel", params.vibrato_freq_vel)) {}
+          else if (f_parse_ofloat_val("vib_freq_acc", params.vibrato_freq_acc)) {}
+          else if (f_parse_ofloat_val("vib_freq_acc_max_vel_lim", params.vibrato_freq_acc_max_vel_limit)) {}
+          else if (f_parse_val("noise_flt_order", params.noise_filter_order)) {}
+          else if (f_parse_val("noise_flt_rel_bw", params.noise_filter_rel_bw)) {}
+          else if (f_parse_val("noise_flt_slot_dur_s", params.noise_filter_slot_dur_s)) {}
+          else if (modifier_name == "arpeggio")
+          {
+            const std::string op = "arpeggio:";
+            int idx = line.find(op);
+            if (idx == std::string::npos)
+              std::cerr << "Error parsing arpeggio operand." << std::endl;
+            else
+            {
+              idx += op.size();
+              int num_right_parentheses_in_succession = 0;
+              int idx0 = idx;
+              ArpeggioPair ap { 0.f, 0.f };
+              int ap_idx = 0;
+              do
+              {
+                char ch = line[idx];
+                
+                if (ch == '(' || ch == ' ')
+                  idx0 = idx + 1;
+                else if (ch == ',' || ch == ')')
+                {
+                  std::string item = str::trim_ret(line.substr(idx0, idx - idx0));
+                  if (item.empty())
+                    params.arpeggio.emplace_back(ap);
+                  else if (ap_idx == 0)
+                  {
+                    sscanf(item.c_str(), "%f", &ap.time);
+                    ap_idx = 1;
+                  }
+                  else if (ap_idx == 1)
+                  {
+                    sscanf(item.c_str(), "%f", &ap.freq_mult);
+                    ap_idx = 0;
+                  }
+                  idx0 = idx + 1;
+                }
+                  
+                if (ch == ')')
+                  num_right_parentheses_in_succession++;
+                else
+                  num_right_parentheses_in_succession = 0;
+                  
+                idx++;
+              } while (num_right_parentheses_in_succession < 2 && idx < line.size());
+              
+            }
+          }
+        }
+      }
+      
+      m_waveform_params[params_nr] = params;
     }
     
     void parse_tab(const std::string& line, std::istringstream& iss)
@@ -998,7 +1127,8 @@ namespace audio
     {
       Waveform wave;
       WaveformGenerationParams params;
-      params.duty_cycle = ib.duty_cycle;
+      if (ib.params_idx >= 0)
+        params = m_waveform_params[ib.params_idx];
       wave = m_waveform_gen.generate_waveform(ib.waveform, note->duration_ms*1e-3f, note->frequency, params, 44100, false, ib.freq_effect, ib.ampl_effect, ib.phase_effect);
       
       return wave;
