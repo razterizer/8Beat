@@ -15,12 +15,12 @@
 ;   ["ffx:"<freq_preset_effect>] ["afx:"<ampl_preset_effect>] ["pfx:"<phase_preset_effect>]
 ;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<volume>]
 ; <instrument_name> := [A-Za-z][A-Za-z0-9]*
-; <waveform> := "sine"|"square"|"triangle"|"sawtooth"|"noise"
+; <waveform> := "SINE"|"SQUARE"|"TRIANGLE"|"SAWTOOTH"|"NOISE"
 ; <volume> := 0..1
 ; Example:
 instrument PIANO ring_mod_A:I0 ring_mod_B:I1 adsr:0
-instrument I0 square adsr:1 flt:0 afx:VIBRATO_0
-instrument I1 square params:0
+instrument I0 SQUARE adsr:1 flt:0 afx:VIBRATO_0
+instrument I1 SQUARE params:0
 instrument ORGAN ((0.5, PIANO), (0.2, I0)) flt:0
 instrument FLUTE_VIB &FLUTE ffx:CONSTANT afx:VIBRATO_0 pfx:ZERO vol:0.5
 instrument TRUMPET &TRUMPET ffx:CONSTANT afx:CONSTANT pfx:ZERO vol:0.6
