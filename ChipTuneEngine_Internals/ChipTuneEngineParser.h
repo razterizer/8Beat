@@ -848,7 +848,6 @@ namespace audio
     
     void parse_waveform_params(const std::string& line, std::istringstream& iss)
     {
-      std::cout << line << std::endl;
       int params_nr = -1;
       
       iss >> params_nr;
