@@ -680,15 +680,16 @@ namespace audio
         }
         
         WaveformType wf_type = WaveformType::SINE;
-        if (waveform_name == "sine")
+        auto waveform_name_upper = str::to_upper(waveform_name);
+        if (waveform_name_upper == "SINE")
           wf_type = WaveformType::SINE;
-        else if (waveform_name == "square")
+        else if (waveform_name_upper == "SQUARE")
           wf_type = WaveformType::SQUARE;
-        else if (waveform_name == "triangle")
+        else if (waveform_name_upper == "TRIANGLE")
           wf_type = WaveformType::TRIANGLE;
-        else if (waveform_name == "sawtooth")
+        else if (waveform_name_upper == "SAWTOOTH")
           wf_type = WaveformType::SAWTOOTH;
-        else if (waveform_name == "noise")
+        else if (waveform_name_upper == "NOISE")
           wf_type = WaveformType::NOISE;
         
         m_instruments_basic.push_back({ instrument_name, adsr_nr, flt_nr, vol, wf_type, params_nr,
