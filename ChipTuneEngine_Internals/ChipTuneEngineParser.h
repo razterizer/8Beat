@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../Synthesizer.h"
+#include "../../Core/Utils.h"
 
 #include <iostream>
 #include <fstream>
@@ -908,14 +909,14 @@ namespace audio
           else if (modifier_name == "arpeggio")
           {
             const std::string op = "arpeggio:";
-            int idx = line.find(op);
+            auto idx = line.find(op);
             if (idx == std::string::npos)
               std::cerr << "Error parsing arpeggio operand." << std::endl;
             else
             {
               idx += op.size();
               int num_right_parentheses_in_succession = 0;
-              int idx0 = idx;
+              auto idx0 = idx;
               ArpeggioPair ap { 0.f, 0.f };
               int ap_idx = 0;
               do
@@ -931,12 +932,12 @@ namespace audio
                     params.arpeggio.emplace_back(ap);
                   else if (ap_idx == 0)
                   {
-                    sscanf(item.c_str(), "%f", &ap.time);
+                    utils::sscanf(item.c_str(), "%f", &ap.time);
                     ap_idx = 1;
                   }
                   else if (ap_idx == 1)
                   {
-                    sscanf(item.c_str(), "%f", &ap.freq_mult);
+                    utils::sscanf(item.c_str(), "%f", &ap.freq_mult);
                     ap_idx = 0;
                   }
                   idx0 = idx + 1;

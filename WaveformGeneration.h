@@ -136,7 +136,7 @@ namespace audio
         
         // Frequency
         freq_mod = freq_func(t, duration, freq_val);
-        freq_mod *= std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t);
+        freq_mod *= static_cast<float>(std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t));
         if (!params.arpeggio.empty())
         {
           for (int a_idx = 0; a_idx < Narp - 1; ++a_idx)

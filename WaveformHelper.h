@@ -787,7 +787,7 @@ namespace audio
       
       FilterS s;
       s.poles.reserve(order);
-      float v = static_cast<double>(order + 1);
+      auto v = static_cast<double>(order + 1);
       for (int i = 1; i <= order; ++i)
       {
         s.poles.emplace_back(std::exp(1i * M_PI * (0.5 * v / order)));
@@ -856,7 +856,7 @@ namespace audio
       
       FilterS s;
       s.poles.reserve(order);
-      float v = static_cast<double>(1 - order);
+      auto v = static_cast<double>(1 - order);
       for (int i = 1; i <= order; ++i)
       {
         auto p = std::exp(1i * M_PI * (0.5 * v / order));
@@ -1207,12 +1207,12 @@ namespace audio
     }
     
     // Inspired by flanger from https://github.com/abaga129/lib_dsp .
-    static std::vector<float> flanger(const std::vector<float>& x, float delay_time, float lfo_freq, float feedback, float Fs)
+    static std::vector<float> flanger(const std::vector<float>& x, float delay_time, float lfo_freq, float feedback, int Fs)
     {
       size_t N = x.size();
       std::vector<float> y(N, 0);
       
-      size_t D = std::round(delay_time*Fs);
+      auto D = static_cast<int>(std::round(delay_time*Fs));
       std::vector<float> xd(D + 1, 0);
       
       int q = 0;
@@ -1222,7 +1222,7 @@ namespace audio
       
       for (size_t n = 0; n < N; ++n)
       {
-        float t = n/Fs;
+        float t = static_cast<float>(n)/Fs;
         int d = static_cast<int>(std::round(0.5f*D*std::sin(math::c_2pi * lfo_freq * t)));
         int tap_idx = q + d;
         if (tap_idx < 0)
@@ -1242,7 +1242,7 @@ namespace audio
         xd[q] = x[n];
         q--;
         if (q < 0)
-          q = static_cast<int>(D);
+          q = D;
       }
       
       return y;
