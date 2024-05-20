@@ -486,11 +486,9 @@ namespace audio
       {
         // Weighted average.
         auto idx = op.find("adsr");
-        idx = idx != std::string::npos ? idx - 1 : op.length();
         math::minimize(idx, op.find("flt"));
-        idx = idx != std::string::npos ? idx - 1 : op.length();
         math::minimize(idx, op.find("vol"));
-        idx = idx != std::string::npos ? idx - 1 : op.length();
+        idx = idx != std::string::npos ? idx - 1 : std::string::npos;
         std::string weighted_sum = op.substr(0, idx);
         str::remove_spaces(weighted_sum);
         auto& instrument = m_instruments_weight_avg.emplace_back();
