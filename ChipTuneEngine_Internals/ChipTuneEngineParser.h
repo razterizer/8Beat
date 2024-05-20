@@ -894,6 +894,7 @@ namespace audio
           else if (f_parse_ofloat_val("duty_cycle", params.duty_cycle)) {}
           else if (f_parse_ofloat_val("duty_cycle_sweep", params.duty_cycle_sweep)) {}
           else if (f_parse_ofloat_val("min_freq_limit", params.min_frequency_limit)) {}
+          else if (f_parse_ofloat_val("max_freq_limit", params.max_frequency_limit)) {}
           else if (f_parse_ofloat_val("freq_slide_vel", params.freq_slide_vel)) {}
           else if (f_parse_ofloat_val("freq_slide_acc", params.freq_slide_acc)) {}
           else if (f_parse_ofloat_val("vib_depth", params.vibrato_depth)) {}
