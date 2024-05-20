@@ -15,10 +15,10 @@
 int main(int argc, char** argv)
 {
   enableRawMode();
-
+  
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
-
+  
   //auto wd = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE, 3.f, 385.4f);
   auto wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, 3.f, 440.f);
   float delay_time = 3e-3f;

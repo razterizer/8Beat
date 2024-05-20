@@ -10,7 +10,6 @@
 #include "../WaveformHelper.h"
 #include "../Synthesizer.h"
 #include "../../Termin8or/Keyboard.h"
-#include <stdio.h>
 
 
 int main(int argc, char** argv)
