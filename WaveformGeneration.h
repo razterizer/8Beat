@@ -45,6 +45,7 @@ namespace audio
     std::optional<float> duty_cycle = std::nullopt;
     std::optional<float> duty_cycle_sweep = std::nullopt; // unit/s.
     std::optional<float> min_frequency_limit = std::nullopt;
+    std::optional<float> max_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
     std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
     std::optional<float> vibrato_depth = std::nullopt;
@@ -145,9 +146,12 @@ namespace audio
           if (math::in_range<float>(t, params.arpeggio.back().time, {}, Range::ClosedFree))
             freq_mod *= params.arpeggio.back().freq_mult;
         }
-        // Ensure frequency doesn't go below min_frequency_cutoff
+        // Ensure frequency doesn't go below min_frequency_cutoff or above max_frequency_cutoff.
+        // min_frequency_limit <= freq_mod <= max_frequency_limit.
         if (params.min_frequency_limit.has_value())
           math::maximize(freq_mod, params.min_frequency_limit.value());
+        if (params.max_frequency_limit.has_value())
+          math::minimize(freq_mod, params.max_frequency_limit.value());
         
         // Amplitude
         ampl_mod = ampl_func(t, duration);
