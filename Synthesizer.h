@@ -179,10 +179,12 @@ namespace audio
           adsr = adsr_presets::KICKDRUM;
           wave_comp.emplace_back(0.2f, wave_gen.generate_waveform(WaveformType::SINE, duration_s, frequency_Hz));
           wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 2*frequency_Hz));
+          params.noise_filter_order = 2;
+          params.noise_filter_rel_bw = 0.7f;
           noise = wave_gen.generate_waveform(WaveformType::NOISE,
-            duration_s, frequency_Hz);
-          //noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 2, 0.9f*frequency_Hz, std::nullopt, 0.1f);
-          wave_comp.emplace_back(0.4f, noise);
+            duration_s, 60*frequency_Hz);
+          noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 1, 58*frequency_Hz, std::nullopt, 0.1f);
+          wave_comp.emplace_back(0.25f, noise);
           break;
         case InstrumentType::SNAREDRUM:
           adsr = adsr_presets::SNAREDRUM;
