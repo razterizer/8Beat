@@ -111,6 +111,8 @@ int main(int argc, char** argv)
         rnd::rand_float(-1.f, 4.f),
         rnd::rand_float(-0.8, 1.5f)
       };
+      if (i == 0) // First show the default sound.
+       vp.clear();
       auto wd = SFX::generate(SFXType::COIN, vp, false);
       auto src = src_handler.create_source_from_waveform(wd);
       src->play(PlaybackMode::STATE_WAIT);
@@ -141,6 +143,8 @@ int main(int argc, char** argv)
         rnd::rand_float(-0.9f, 1.f/9.f),
         rnd::rand_float(-0.9f, 1.f/9.f)
       };
+      if (i == 0) // First show the default sound.
+       vp.clear();
       auto wd = SFX::generate(SFXType::LASER, vp, false);
       auto src = src_handler.create_source_from_waveform(wd);
       src->play(PlaybackMode::STATE_WAIT);
@@ -176,6 +180,8 @@ int main(int argc, char** argv)
         rnd::rand_float(-1.f, 4.f),
         rnd::rand_float(-0.5f, 2.f/3.f),
       };
+      if (i == 0) // First show the default sound.
+       vp.clear();
       auto wd = SFX::generate(SFXType::EXPLOSION, vp, false);
       auto src = src_handler.create_source_from_waveform(wd);
       src->play(PlaybackMode::STATE_WAIT);
