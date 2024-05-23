@@ -50,13 +50,20 @@ namespace audio
       }
     }
     
-    static Waveform synthesize(const std::vector<std::pair<float, Waveform>>& wave_comp, const ADSR& adsr, const FilterArgs& final_filter_args, bool final_normalize)
+    static Waveform synthesize(const std::vector<std::pair<float, Waveform>>& wave_comp, const ADSR& adsr, const FilterArgs& final_filter_args, bool final_boost, bool final_normalize)
     {
       auto wave = WaveformHelper::mix(wave_comp);
       wave = WaveformHelper::envelope_adsr(wave, adsr);
       wave = WaveformHelper::filter(wave, final_filter_args);
+      if (final_boost)
+      {
+        float upper_threshold = 0.4f;//0.6f;
+        float upper_scale = 0.2f;
+        float boost_gain = 1.7f;
+        WaveformHelper::compress(wave, upper_threshold, upper_scale, boost_gain);
+      }
       if (final_normalize)
-        WaveformHelper::normalize(wave);
+        WaveformHelper::normalize(wave, true);
       return wave;
     }
   
@@ -76,6 +83,7 @@ namespace audio
       int num_harmonics = 6;
       float tot_harmonics_ampl = 0.f;
       FilterArgs final_filter_args;
+      bool final_boost = false;
       bool final_normalize = false;
       switch (instr)
       {
@@ -176,16 +184,71 @@ namespace audio
           final_normalize = true;
           break;
         case InstrumentType::KICKDRUM:
-          adsr = adsr_presets::KICKDRUM;
-          wave_comp.emplace_back(0.2f, wave_gen.generate_waveform(WaveformType::SINE, duration_s, frequency_Hz));
-          wave_comp.emplace_back(0.1f, wave_gen.generate_waveform(WaveformType::TRIANGLE, duration_s, 2*frequency_Hz));
+        {
+          // Define the overall ADSR envelope for the final sound
+          adsr =
+          {
+            Attack { ADSRMode::EXP, 5 },    // Attack: 5ms, exponential curve
+            Decay { ADSRMode::EXP, 50 },    // Decay: 50ms, exponential curve
+            Sustain { 0.3f },               // Sustain level: 0.3 (30% of peak)
+            Release { ADSRMode::EXP, 100 }  // Release: 100ms, exponential curve
+          };
+          
+          // Sub-ADSR for the fundamental sine wave to create a punchy start
+          auto sub_adsr_1 = ADSR
+          {
+            Attack { ADSRMode::EXP, 1 },   // Very fast attack
+            Decay { ADSRMode::EXP, 30 },   // Short decay
+            Sustain { 0.5f },              // Higher sustain level for more body
+            Release { ADSRMode::EXP, 50 }  // Short release
+          };
+          
+          // Sub-ADSR for the harmonics
+          auto sub_adsr_2 = ADSR
+          {
+            Attack { ADSRMode::EXP, 5 },
+            Decay { ADSRMode::EXP, 40 },
+            Sustain { 0.2f },
+            Release { ADSRMode::EXP, 50 }
+          };
+          
+          // Sub-ADSR for the noise component
+          auto sub_adsr_3 = ADSR
+          {
+            Attack { ADSRMode::LIN, 1 },   // Instant attack
+            Decay { ADSRMode::EXP, 20 },   // Very short decay
+            Sustain { 0.0f },              // No sustain
+            Release { ADSRMode::EXP, 10 }  // Very short release
+          };
+            
+          // Generate the fundamental low-frequency sine wave
+          auto fundamental_wave = wave_gen.generate_waveform(WaveformType::SINE, duration_s, frequency_Hz);
+          fundamental_wave = WaveformHelper::envelope_adsr(fundamental_wave, sub_adsr_1);
+          wave_comp.emplace_back(0.1f, fundamental_wave);
+          
+          // Add some higher harmonics to enrich the sound
+          auto harmonic1_wave = wave_gen.generate_waveform(WaveformType::SINE, duration_s, 2 * frequency_Hz);
+          harmonic1_wave = WaveformHelper::envelope_adsr(harmonic1_wave, sub_adsr_2);
+          wave_comp.emplace_back(0.05f, harmonic1_wave);
+          
+          auto harmonic2_wave = wave_gen.generate_waveform(WaveformType::SINE, duration_s, 3 * frequency_Hz);
+          harmonic2_wave = WaveformHelper::envelope_adsr(harmonic2_wave, sub_adsr_2);
+          wave_comp.emplace_back(0.02f, harmonic2_wave);
+          
+          // Generate a short burst of noise to simulate the initial "attack" of the kick drum
+          float freq_mult_0 = 50.f; // 60;
+          float freq_mult_1 = 2.f; // 58;
           params.noise_filter_order = 2;
           params.noise_filter_rel_bw = 0.7f;
-          noise = wave_gen.generate_waveform(WaveformType::NOISE,
-            duration_s, 60*frequency_Hz);
-          noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 1, 58*frequency_Hz, std::nullopt, 0.1f);
-          wave_comp.emplace_back(0.25f, noise);
+          auto noise = wave_gen.generate_waveform(WaveformType::NOISE, duration_s, freq_mult_0 * frequency_Hz);
+          noise = WaveformHelper::filter(noise, FilterType::ChebyshevTypeI, FilterOpType::LowPass, 1, freq_mult_1 * frequency_Hz, std::nullopt, 0.1f);
+          noise = WaveformHelper::envelope_adsr(noise, sub_adsr_3);
+          wave_comp.emplace_back(0.9f, noise);
+          
+          final_boost = true;
+          final_normalize = true;
           break;
+        }
         case InstrumentType::SNAREDRUM:
           adsr = adsr_presets::SNAREDRUM;
           noise = wave_gen.generate_waveform(WaveformType::NOISE,
@@ -215,7 +278,7 @@ namespace audio
         case InstrumentType::NUM_ITEMS:
           break;
       }
-      auto wave = synthesize(wave_comp, adsr, final_filter_args, final_normalize);
+      auto wave = synthesize(wave_comp, adsr, final_filter_args, final_boost, final_normalize);
       return wave;
     }
     
