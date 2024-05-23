@@ -364,11 +364,22 @@ namespace audio
     }
     
     // Normalize so that max amplitude = 1
-    static void normalize(Waveform& wd)
+    static void normalize(Waveform& wd, bool two_sided = false)
     {
-      auto [_, max_val] = find_min_max(wd, true);
-      for (auto& s : wd.buffer)
-        s /= max_val;
+      auto [min_val, max_val] = find_min_max(wd, !two_sided);
+      if (two_sided)
+      {
+        auto neg_max_val = std::abs(min_val);
+        auto pos_max_val = std::abs(max_val);
+        for (auto& s : wd.buffer)
+          if (math::sgn(s) == +1)
+            s /= pos_max_val;
+          else
+            s /= neg_max_val;
+      }
+      else
+        for (auto& s : wd.buffer)
+          s /= max_val;
     }
     
     // Scale so that max_amplitude = scale.
