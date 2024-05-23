@@ -428,6 +428,19 @@ namespace audio
           s = min;
     }
     
+    // Upwards compression function
+    static void compress(Waveform& wd, float upper_threshold, float upper_scale, float boost_gain)
+    {
+      // normalize_scale(wd, 1.2f); // Boost signal by 20%.
+      // compress_over(wd, 0.6f, 0.5f); // Compresses abs(sample) values over 0.6f by half => 0.6 + 0.4*0.5 = = 0.8.
+      // // 1.2 * 0.8 = 0.96. Amplitude effectlively lowered by factor 0.96.
+      // normalize(wd); // Normalizing the waveform back to an amplitude of 1.
+      
+      normalize_scale(wd, boost_gain);
+      compress_over(wd, upper_threshold, upper_scale);
+      normalize(wd, true);
+    }
+    
     static Waveform fir_moving_average(const Waveform& wave, int window_size, bool preserve_amplitude)
     {
       auto N = static_cast<int>(wave.buffer.size());
