@@ -744,7 +744,7 @@ namespace audio
       
       clamp(filtered_wave);
       if (normalize_filtered_wave)
-        normalize(filtered_wave);
+        normalize(filtered_wave, true);
       
       return filtered_wave;
     }
