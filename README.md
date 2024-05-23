@@ -53,6 +53,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
     std::optional<float> duty_cycle = std::nullopt;
     std::optional<float> duty_cycle_sweep = std::nullopt; // unit/s.
     std::optional<float> min_frequency_limit = std::nullopt;
+    std::optional<float> max_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
     std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
     std::optional<float> vibrato_depth = std::nullopt;
