@@ -363,6 +363,29 @@ namespace audio
       }
     }
     
+    // Compresses all samples above a certain threshold.
+    //   /\          /\  |*
+    //  /..\......../..\.v..     /^^\      /^^\
+    // /____\______/____\    => /____\____/____\
+    //       \    /                   \  /
+    //  ......\../..........           vv
+    //         --
+    // * : squeezed interval by factor upper_scale * (abs(sample) - upper_limit)
+    //     for sample > upper_limit. Analogously for negative samples values.
+    // upper_limit <= 1 and upper_scale <= (normally).
+    static void compress_over(Waveform& wd, float upper_limit, float upper_scale)
+    {
+      for (auto& s : wd.buffer)
+      {
+        auto s_abs = std::abs(s);
+        if (s_abs >= upper_limit)
+        {
+          auto sgn = math::sgn(s);
+          s = sgn * (upper_limit + (s - upper_limit * upper_scale));
+        }
+      }
+    }
+    
     // Normalize so that max amplitude = 1
     static void normalize(Waveform& wd, bool two_sided = false)
     {
