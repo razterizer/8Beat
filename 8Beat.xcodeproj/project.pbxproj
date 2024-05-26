@@ -39,6 +39,18 @@
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
+		078F2B872C03E29D00FF60F8 /* build_demo_6.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_6.sh; sourceTree = "<group>"; };
+		078F2B882C03E29D00FF60F8 /* build_demo_5.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_5.sh; sourceTree = "<group>"; };
+		078F2B892C03E29D00FF60F8 /* build_demo_2.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_2.sh; sourceTree = "<group>"; };
+		078F2B8A2C03E29D00FF60F8 /* build_demo_8.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_8.sh; sourceTree = "<group>"; };
+		078F2B8B2C03E29D00FF60F8 /* build_demo_3.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_3.sh; sourceTree = "<group>"; };
+		078F2B8C2C03E29D00FF60F8 /* build_demo_7.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_7.sh; sourceTree = "<group>"; };
+		078F2B8D2C03E29D00FF60F8 /* build_demo_4.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_4.sh; sourceTree = "<group>"; };
+		078F2B8E2C03E2A900FF60F8 /* build_demo_10.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_10.sh; sourceTree = "<group>"; };
+		078F2B8F2C03E2B800FF60F8 /* build_all_demos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_all_demos.sh; sourceTree = "<group>"; };
+		078F2B902C03E2B800FF60F8 /* run_all_demos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_all_demos.sh; sourceTree = "<group>"; };
+		078F2B912C03E2D100FF60F8 /* build_demo_1.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_1.sh; sourceTree = "<group>"; };
+		078F2B922C03E2D100FF60F8 /* build_demo_9.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_9.sh; sourceTree = "<group>"; };
 		07A763282B5BC85300705D31 /* AudioSourceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
 		07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngine.h; sourceTree = "<group>"; };
 		07BB7BDB2B7794FD002899C9 /* WaveformHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformHelper.h; sourceTree = "<group>"; };
@@ -60,6 +72,7 @@
 		0739D9C22BA59C8300964E96 /* demos */ = {
 			isa = PBXGroup;
 			children = (
+				078F2B862C03E27B00FF60F8 /* scripts */,
 				0739D9C62BA6148E00964E96 /* sounds */,
 				0739D9C32BA59D0200964E96 /* demo_1.cpp */,
 				0739D9C42BA6111D00964E96 /* demo_2.cpp */,
@@ -100,6 +113,25 @@
 				0739D9E02BA6521800964E96 /* ChipTuneEngineParser.h */,
 			);
 			path = ChipTuneEngine_Internals;
+			sourceTree = "<group>";
+		};
+		078F2B862C03E27B00FF60F8 /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				078F2B912C03E2D100FF60F8 /* build_demo_1.sh */,
+				078F2B892C03E29D00FF60F8 /* build_demo_2.sh */,
+				078F2B8B2C03E29D00FF60F8 /* build_demo_3.sh */,
+				078F2B8D2C03E29D00FF60F8 /* build_demo_4.sh */,
+				078F2B882C03E29D00FF60F8 /* build_demo_5.sh */,
+				078F2B872C03E29D00FF60F8 /* build_demo_6.sh */,
+				078F2B8C2C03E29D00FF60F8 /* build_demo_7.sh */,
+				078F2B8A2C03E29D00FF60F8 /* build_demo_8.sh */,
+				078F2B922C03E2D100FF60F8 /* build_demo_9.sh */,
+				078F2B8E2C03E2A900FF60F8 /* build_demo_10.sh */,
+				078F2B8F2C03E2B800FF60F8 /* build_all_demos.sh */,
+				078F2B902C03E2B800FF60F8 /* run_all_demos.sh */,
+			);
+			name = scripts;
 			sourceTree = "<group>";
 		};
 		07A763122B5B225500705D31 = {
