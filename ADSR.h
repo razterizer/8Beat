@@ -117,6 +117,7 @@ namespace audio
     
     float get_time_A_ms() const { return attack.attack_time_ms; }
     float get_time_D_ms() const { return decay.decay_time_ms; }
+    std::optional<float> get_max_time_S_ms() const { return sustain.max_sustain_time_ms; }
     float get_time_R_ms() const { return release.release_time_ms; }
     
     ADSRMode get_shape_A() const { return attack.mode; }
