@@ -217,7 +217,7 @@ namespace audio
           {
             Attack { ADSRMode::LIN, 1 },   // Instant attack
             Decay { ADSRMode::EXP, 20 },   // Very short decay
-            Sustain { 0.0f },              // No sustain
+            Sustain { 0.3f, 0 },           // No sustain
             Release { ADSRMode::EXP, 10 }  // Very short release
           };
             
