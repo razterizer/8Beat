@@ -185,40 +185,41 @@ namespace audio
           break;
         case InstrumentType::KICKDRUM:
         {
+          float t_scale = duration_s >= 0.155f ? 1.f : duration_s / 0.155f; // Longest T_adr = 155 ms.
           // Define the overall ADSR envelope for the final sound
           adsr =
           {
-            Attack { ADSRMode::EXP, 5 },    // Attack: 5ms, exponential curve
-            Decay { ADSRMode::EXP, 50 },    // Decay: 50ms, exponential curve
-            Sustain { 0.3f },               // Sustain level: 0.3 (30% of peak)
-            Release { ADSRMode::EXP, 100 }  // Release: 100ms, exponential curve
+            Attack { ADSRMode::EXP, 5 },            // Attack: 5ms, exponential curve
+            Decay { ADSRMode::EXP, 50*t_scale },    // Decay: 50ms, exponential curve
+            Sustain { 0.3f },                       // Sustain level: 0.3 (30% of peak)
+            Release { ADSRMode::EXP, 100*t_scale }  // Release: 100ms, exponential curve
           };
           
           // Sub-ADSR for the fundamental sine wave to create a punchy start
           auto sub_adsr_1 = ADSR
           {
             Attack { ADSRMode::EXP, 1 },   // Very fast attack
-            Decay { ADSRMode::EXP, 30 },   // Short decay
+            Decay { ADSRMode::EXP, 30*t_scale },   // Short decay
             Sustain { 0.5f },              // Higher sustain level for more body
-            Release { ADSRMode::EXP, 50 }  // Short release
+            Release { ADSRMode::EXP, 50*t_scale }  // Short release
           };
           
           // Sub-ADSR for the harmonics
           auto sub_adsr_2 = ADSR
           {
             Attack { ADSRMode::EXP, 5 },
-            Decay { ADSRMode::EXP, 40 },
+            Decay { ADSRMode::EXP, 40*t_scale },
             Sustain { 0.2f },
-            Release { ADSRMode::EXP, 50 }
+            Release { ADSRMode::EXP, 50*t_scale }
           };
           
           // Sub-ADSR for the noise component
           auto sub_adsr_3 = ADSR
           {
-            Attack { ADSRMode::LIN, 1 },   // Instant attack
-            Decay { ADSRMode::EXP, 20 },   // Very short decay
-            Sustain { 0.3f, 0 },           // No sustain
-            Release { ADSRMode::EXP, 10 }  // Very short release
+            Attack { ADSRMode::LIN, 1 },           // Instant attack
+            Decay { ADSRMode::EXP, 20*t_scale },   // Very short decay
+            Sustain { 0.3f, 0 },                   // No sustain
+            Release { ADSRMode::EXP, 10*t_scale }  // Very short release
           };
             
           // Generate the fundamental low-frequency sine wave
