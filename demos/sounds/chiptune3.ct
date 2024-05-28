@@ -25,7 +25,7 @@ instrument ORGAN ((0.5, PIANO), (0.2, I0)) flt:0
 instrument FLUTE_VIB &FLUTE ffx:CONSTANT afx:VIBRATO_0 pfx:ZERO vol:0.5
 instrument TRUMPET &TRUMPET ffx:CONSTANT afx:CONSTANT pfx:ZERO vol:0.6
 instrument TRUMPET_VIB &TRUMPET ffx:CHIRP_2 afx:VIBRATO_0 pfx:ZERO vol:0.6
-instrument KDRUM &KICKDRUM vol:2
+instrument KDRUM &KICKDRUM vol:1
 instrument SDRUM &SNAREDRUM
 instrument HIHAT &HIHAT
 instrument STEEL_PAN conv_A:FLUTE_VIB conv_B:SDRUM adsr:1
@@ -34,7 +34,7 @@ instrument STEEL_PAN conv_A:FLUTE_VIB conv_B:SDRUM adsr:1
 ; Syntax:
 ; adsr <adsr_nr> "["<attack_mode> <attack_ms> [<level_begin>] [<level_end>]"]"
                  "["<decay_mode> <decay_ms> [<level_begin>] [<level_end>]"]"
-                 <sustain_level>
+                 "["<sustain_level> [<sustain_max_ms>]"]"
                  "["<release_mode> <release_ms> [<level_begin>] [<level_end>]"]"
 ; adsr <adsr_nr> "&"<lib_adsr_name>
 ; Where:
@@ -50,10 +50,10 @@ instrument STEEL_PAN conv_A:FLUTE_VIB conv_B:SDRUM adsr:1
 ; <level_begin> := 0..100
 ; <level_end> := 0..100
 ; Example:
-adsr 0 [LIN 15 0 50] [EXP 10 100] 50 [LOG 100]
-adsr 1 [EXP 16] [EXP 20] 80 [LIN 70]
+adsr 0 [LIN 15 0 50] [EXP 10 100] [50] [LOG 100]
+adsr 1 [EXP 16] [EXP 20] [80] [LIN 70]
 adsr 2 &ORGAN_2
-adsr 3 [LOG 60] [LOG 30] 50 [LOG 10]
+adsr 3 [LOG 60] [LOG 30] [50] [LOG 10]
 
 ; Filters
 ; Syntax:
