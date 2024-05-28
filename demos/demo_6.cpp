@@ -75,6 +75,7 @@ int main(int argc, char** argv)
     {
       src_synth->play(audio::PlaybackMode::STATE_WAIT);
       src_synth->stop();
+      Delay::sleep(100000);
     }
   }
   for (auto* src_synth : synth_sources)
