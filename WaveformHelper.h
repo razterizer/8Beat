@@ -13,6 +13,7 @@
 
 #include "../Core/MachineLearning/ann_cnn.h"
 #include "../Core/Math.h"
+#include "../Core/StlOperators.h"
 
 #include <complex>
 
@@ -541,23 +542,153 @@ namespace audio
       auto N = wave.buffer.size();
       Waveform output = wave;
       
-      //const auto& attack = adsr.attack;
-      //const auto& decay = adsr.decay;
-      //const auto& sustain = adsr.sustain;
-      //const auto& release = adsr.release;
+      // Ex0:
+      // t_a               t_ad               t_ds                   t_sr               t_r
+      // |----- T_a_s ----->|----- T_d_s ----->|----- T_s_max_s ----->|----- T_r_s ----->|
+      // |-------------------------------- T_dur_s ----------------------------------------------------->|
+      //
+      // T_a_s = .10, T_d_s = .10, (T_s_s = *), T_r_s = .10
+      // t_a = 0, t_ad = .10, t_ds = .20, t_sr = .35, t_r = .45
+      // T_dur_s = .60
+      // t_ad = T_a_s = .10
+      // t_ds = T_a_s + T_d_s = 0.10 + 0.10 = 0.20
+      // t_sr = T_a_s + T_d_s + T_s_max_s = 0.10 + 0.10 + 0.15 = 0.35
+      // t_r = T_a_s + T_d_s + T_s_max_s + T_r_s = .10 + .10 + .15 + .10 = .45
       
-      const float gate_s = output.duration;
-      const float attack_s = adsr.get_time_A_ms() * 1e-3f;
-      const float decay_s = adsr.get_time_D_ms() * 1e-3f;
-      //const float sustain_lvl = sustain.sustain_level;
-      const float release_s = adsr.get_time_R_ms() * 1e-3f;
+      // Ex1:
+      // t_a               t_ad               t_ds               t_sr               t_r
+      // |----- T_a_s ----->|----- T_d_s ----->|----- T_s_s ----->|----- T_r_s ----->|
+      // |-------------------------------- T_dur_s --------------------------------->|
+      //
+      // T_a_s = .10, T_d_s = .10, (T_s_s = *), T_r_s = .10
+      // t_a = 0, t_ad = .10, t_ds = .20, t_sr = .30, t_r = .40
+      // T_dur_s = .40
+      // T_ads_s = max(T_dur_s - T_r_s, 0) = max(.40 - .10, 0) = 0.30
+      // t_ad = min(T_ads_s, T_a_s) = min(0.30, 0.10) = 0.10 = T_a_s (original)
+      // t_ds = min(T_ads_s, T_a_s + T_d_s) = min(0.30, 0.10 + 0.10) = 0.20 = T_a_s + T_d_s (original)
+      // t_sr = max(t_ds, T_ads_s) = max(0.20, 0.30) = 0.30
+      // t_r = T_dur_s = 0.40
+      
+      // Ex2:
+      // |----- T_a_s ----->|----- T_d_s ----->|- T_s_s ->|----- T_r_s ----->|
+      // |---------------------------- T_dur_s ----------------------------->|
+      
+      // Ex3:
+      // |----- T_a_s ----->|----- T_d_s ----->|----- T_r_s ----->|
+      // |------------------------ T_dur_s ---------------------->|
+      //
+      // T_a_s = .10, T_d_s = .10, (T_s_s = *), T_r_s = .10
+      
+      // Ex4:
+      // t_a              t_ad      t_ds/t_sr            t_r
+      // |----- T_a_s ----->|- T_d_s ->|----- T_r_s ----->|
+      // |-------------------- T_dur_s ------------------>|
+      //
+      // T_a_s = .10, T_d_s = .10, (T_s_s = *), T_r_s = .10
+      // t_a = 0, t_ad = .10, t_ds = .15, t_sr = .15, t_r = .25
+      // T_dur_s = .25
+      // T_ads_s = max(T_dur_s - T_r_s, 0) = max(.25 - .10, 0) = 0.15
+      // t_ad = min(T_ads_s, T_a_s) = min(0.15, 0.10) = 0.10 = T_a_s (original)
+      // t_ds = min(T_ads_s, T_a_s + T_d_s) = min(0.15, 0.10 + 0.10) = 0.15 < 0.20 = T_a_s + T_d_s
+      // t_sr = max(t_ds, T_ads_s) = max(0.15, 0.15) = 0.15
+      // t_r = T_dur_s = 0.25
+      
+      // Ex5:
+      // t_a          t_ad/t_ds/t_sr          t_r
+      // |----- T_a_s ----->|----- T_r_s ----->|
+      // |-------------- T_dur_s ------------->|
+      //
+      // T_a_s = .10, T_d_s = .10, (T_s_s = *), T_r_s = .10
+      // t_a = 0, t_ad = .10, t_ds = .10, t_sr = .10, t_r = .20
+      // T_dur_s = .20
+      // T_ads_s = max(T_dur_s - T_r_s, 0) = max(.20 - .10, 0) = 0.10
+      // t_ad = min(T_ads_s, T_a_s) = min(0.10, 0.10) = 0.10 = T_a_s (original)
+      // t_ds = min(T_ads_s, T_a_s + T_d_s) = min(0.10, 0.10 + 0.10) = 0.10 < 0.20 = T_a_s + T_d_s
+      // t_sr = max(t_ds, T_ads_s) = max(0.10, 0.10) = 0.10
+      // t_r = T_dur_s = 0.20
+      
+      // Ex6:
+      // t_a  t_ad/t_ds/t_sr          t_r
+      // |- T_a_s ->|----- T_r_s ----->|
+      // |---------- T_dur_s --------->|
+      //
+      // T_a_s = .10, T_d_s = .10, (T_s_s = *), T_r_s = .10
+      // t_a = 0, t_ad = .05, t_ds = .05, t_sr = .05, t_r = .15
+      // T_dur_s = .15
+      // T_ads_s = max(T_dur_s - T_r_s, 0) = max(.15 - .10, 0) = 0.05
+      // t_ad = min(T_ads_s, T_a_s) = min(0.05, 0.10) = 0.05 < 0.10 = T_a_s
+      // t_ds = min(T_ads_s, T_a_s + T_d_s) = min(0.05, 0.10 + 0.10) = 0.05 < 0.20 = T_a_s + T_d_s
+      // t_sr = max(t_ds, T_ads_s) = max(0.05, 0.05) = 0.05
+      // t_r = T_dur_s = 0.15
+      
+      // Ex7:
+      // t_a/t_ad/t_ds/t_sr        t_r
+      //         |----- T_r_s ----->|
+      //         |----- T_dur_s --->|
+      //
+      // T_a_s = .10, T_d_s = .10, (T_s_s = *), T_r_s = .10
+      // t_a = 0, t_ad = 0, t_ds = 0, t_sr = 0, t_r = .10
+      // T_dur_s = .10
+      // T_ads_s = max(T_dur_s - T_r_s, 0) = max(.10 - .10, 0) = 0
+      // t_ad = min(T_ads_s, T_a_s) = min(0, 0.10) = 0 < 0.10 = T_a_s
+      // t_ds = min(T_ads_s, T_a_s + T_d_s) = min(0, 0.10 + 0.10) = 0 < 0.20 = T_a_s + T_d_s
+      // t_sr = max(t_ds, T_ads_s) = max(0, 0) = 0
+      // t_r = T_dur_s = 0.10
+      
+      // Ex8:
+      // t_a/t_ad/t_ds/t_sr           t_r
+      //                |- T_r_s ->|
+      //                |--------->| T_dur_s
+      //
+      // T_a_s = .10, T_d_s = .10, (T_s_s = *), T_r_s = .10
+      // t_a = 0, t_ad = 0, t_ds = 0, t_sr = 0, t_r = .05
+      // T_dur_s = .05
+      // T_ads_s = max(T_dur_s - T_r_s, 0) = max(.05 - .10, 0) = 0
+      // t_ad = min(T_ads_s, T_a_s) = min(0, 0.10) = 0 < 0.10 = T_a_s
+      // t_ds = min(T_ads_s, T_a_s + T_d_s) = min(0, 0.10 + 0.10) = 0 < 0.20 = T_a_s + T_d_s
+      // t_sr = max(t_ds, T_ads_s) = max(0, 0) = 0
+      // t_r = T_dur_s = 0.05
+      
+      // Ex9:
+      // t_a/t_ad/t_ds/t_sr/t_r
+      //                   |
+      //                   | T_dur_s
+      //
+      // T_a_s = .10, T_d_s = .10, (T_s_s = *), T_r_s = .10
+      // t_a = 0, t_ad = 0, t_ds = 0, t_sr = 0, t_r = 0
+      // T_dur_s = 0
+      // T_ads_s = max(T_dur_s - T_r_s, 0) = max(0 - .10, 0) = 0
+      // t_ad = min(T_ads_s, T_a_s) = min(0, 0.10) = 0 < 0.10 = T_a_s
+      // t_ds = min(T_ads_s, T_a_s + T_d_s) = min(0, 0.10 + 0.10) = 0 < 0.20 = T_a_s + T_d_s
+      // t_sr = max(t_ds, T_ads_s) = max(0, 0) = 0
+      // t_r = T_dur_s = 0
+      
+      using namespace stloperators;
+      
+      //   T_dur_s = T_a_s + T_d_s + T_s + T_r_s.
+      const float T_dur_s = output.duration;
+      const float T_a_s = adsr.get_time_A_ms() * 1e-3f;
+      const float T_d_s = adsr.get_time_D_ms() * 1e-3f;
+      const std::optional<float> T_s_max_s = adsr.get_max_time_S_ms() * 1e-3f;
+      const float T_r_s = adsr.get_time_R_ms() * 1e-3f;
       
       const float t_a = 0.f;
-      const float t_adr = std::max(gate_s - release_s, 0.f);
-      const float t_ad = std::min(t_adr, attack_s);
-      const float t_ds = std::min(t_adr, attack_s + decay_s);
-      const float t_sr = std::max(t_ds, t_adr); //gate_ms - attack_ms - decay_ms - release_ms;
-      const float t_r = gate_s;
+      const float T_ads_s = std::max(T_dur_s - T_r_s, 0.f);
+      float t_ad = std::min(T_ads_s, T_a_s);
+      float t_ds = std::min(T_ads_s, T_a_s + T_d_s);
+      float t_sr = std::max(t_ds, T_ads_s); // T_dur_s - T_a_s - T_d_s - T_r_s;
+      float t_r = T_dur_s;
+      if (T_s_max_s.has_value())
+      {
+        auto T_adsr_s = T_a_s + T_d_s + T_s_max_s.value() + T_r_s;
+        if (T_adsr_s < T_dur_s)
+        {
+          t_ad = T_a_s;
+          t_ds = t_ad + T_d_s;
+          t_sr = t_ds + T_s_max_s.value();
+          t_r = t_sr + T_r_s;
+        }
+      }
       
       float dt = calc_dt(wave);
       float t = 0.f;
