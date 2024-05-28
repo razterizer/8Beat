@@ -698,7 +698,10 @@ namespace audio
     
     void parse_envelopes(const std::string& line, std::istringstream& iss)
     {
-      // adsr <adsr_nr> <attack_mode> <attack_ms> <decay_mode> <decay_ms> <sustain_level> <release_mode> <release_ms>
+      // adsr <adsr_nr> "["<attack_mode> <attack_ms> [<level_begin>] [<level_end>]"]"
+      //                "["<decay_mode> <decay_ms> [<level_begin>] [<level_end>]"]"
+      //                "["<sustain_level> [<sustain_max_ms>]"]"
+      //                "["<release_mode> <release_ms> [<level_begin>] [<level_end>]"]"
       int adsr_nr = -1;
       float sustain_level = 0.f;
       
@@ -734,6 +737,7 @@ namespace audio
         
         ADSRMode mode = ADSRMode::LIN;
         float duration_ms = 0.f;
+        std::optional<float> max_duration_ms = 0.f;
         std::optional<float> level_0 = std::nullopt;
         std::optional<float> level_1 = std::nullopt;
         
@@ -771,15 +775,37 @@ namespace audio
             
           iss >> bracket; // Consume end bracket.
         };
-        //[LIN 100 0 50] [EXP 300] 50 [LOG 500]
+        auto parse_s = [&iss](float& sus_lvl, std::optional<float>& max_dur_ms)
+        {
+          char bracket;
+          float t_max = 0.f;
+          
+          iss >> bracket; // Consume begin bracket.
+          iss >> sus_lvl;
+          
+          std::string unread = iss.eof()  ?  "" : iss.str().substr(iss.tellg());
+          std::string op = str::ltrim_ret(unread);
+          
+          if (op[0] != ']')
+          {
+            iss >> t_max;
+            max_dur_ms = t_max;
+          }
+          else
+            max_dur_ms = std::nullopt;
+            
+          iss >> bracket; // Consume end bracket.
+        };
+        //[LIN 100 0 50] [EXP 300] [50] [LOG 500]
+        //[EXP 80 0] [LOG 300 80] [50 20] [EXP 500 55] // max sustain time = 20 ms.
         parse_adr(mode, duration_ms, level_0, level_1);
         Attack attack { mode, duration_ms, level_0, level_1 };
         
         parse_adr(mode, duration_ms, level_0, level_1);
         Decay decay { mode, duration_ms, level_0, level_1 };
         
-        iss >> sustain_level;
-        Sustain sustain { sustain_level / 100 };
+        parse_s(sustain_level, max_duration_ms);
+        Sustain sustain { sustain_level / 100, max_duration_ms };
         
         parse_adr(mode, duration_ms, level_0, level_1);
         Release release { mode, duration_ms, };
