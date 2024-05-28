@@ -51,10 +51,12 @@ namespace audio
   struct Sustain
   {
     Sustain() = default;
-    Sustain(float level)
+    Sustain(float level, std::optional<float> max_time_ms = std::nullopt)
       : sustain_level(level)
+      , max_sustain_time_ms(max_time_ms)
     {}
     float sustain_level = 0.5f;
+    std::optional<float> max_sustain_time_ms;
   };
   struct Release
   {
