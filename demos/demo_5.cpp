@@ -9,7 +9,7 @@
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
 #include "../ADSR.h"
-#include "../../Termin8or/Keyboard.h"
+#include <Termin8or/Keyboard.h>
 
 
 
