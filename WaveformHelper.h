@@ -11,9 +11,9 @@
 #include "Spectrum.h"
 #include "ADSR.h"
 
-#include "../Core/MachineLearning/ann_cnn.h"
-#include "../Core/Math.h"
-#include "../Core/StlOperators.h"
+#include <Core/MachineLearning/ann_cnn.h>
+#include <Core/Math.h>
+#include <Core/StlOperators.h>
 
 #include <complex>
 

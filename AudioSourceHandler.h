@@ -9,10 +9,10 @@
 
 #include "Waveform.h"
 
-#include "../Core/Math.h"
-#include "../Core/Rand.h"
-#include "../Core/Delay.h"
-#include "../AudioLibSwitcher_OpenAL/AudioLibSwitcher_OpenAL.h"
+#include <Core/Math.h>
+#include <Core/Rand.h>
+#include <Core/Delay.h>
+#include <AudioLibSwitcher_OpenAL/AudioLibSwitcher_OpenAL.h>
 
 #include <vector>
 #include <string>
