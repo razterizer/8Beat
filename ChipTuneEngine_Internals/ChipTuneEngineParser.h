@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../Synthesizer.h"
-#include "../../Core/Utils.h"
+#include <Core/Utils.h>
 
 #include <iostream>
 #include <fstream>
