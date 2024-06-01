@@ -8,7 +8,7 @@ if [[ $os_name == *"Darwin"* ]]; then
   -L/opt/homebrew/opt/openal-soft/lib -L/opt/homebrew/opt/libsndfile/lib \
   -lopenal -lsndfile"
 else
-  additional_flags=""
+  additional_flags="-I../.."
   # #FIXME: Add libsndfile here as well.
   export BUILD_PKG_CONFIG_MODULES='openal'
 fi
