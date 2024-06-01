@@ -117,7 +117,6 @@ namespace audio
       }
       float duty_cycle = duty_cycle_0;
       
-      float t_prev = 0.f;
       float t = 0.f;
       stlutils::sort(params.arpeggio,
         [](const auto& ap1, const auto& ap2) { return ap1.time < ap2.time; });
@@ -132,7 +131,6 @@ namespace audio
       
       for (int i = 0; i < buffer_len; ++i)
       {
-        t_prev = t;
         t = static_cast<float>(i) / sample_rate;
         
         // Frequency

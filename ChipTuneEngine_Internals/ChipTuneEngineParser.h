@@ -153,10 +153,10 @@ namespace audio
     public:
       Goto() = default;
       Goto(const std::string& src_lbl, const std::string& dst_lbl, int cnt, int curr_idx)
-        : from_label(src_lbl)
+        : orig_count(cnt)
+        , from_label(src_lbl)
         , to_label(dst_lbl)
         , count(cnt)
-        , orig_count(cnt)
         , note_idx(curr_idx)
       {}
       
@@ -616,7 +616,7 @@ namespace audio
         if (ring_mod_A.empty() || ring_mod_B.empty())
           std::cerr << "Must specify both attributes ring_mod_A and ring_mod_B in instrument line: \"" << line << "\"." << std::endl;
         else
-          m_instruments_ring_mod.push_back({ instrument_name, adsr_nr, flt_nr, vol, ring_mod_A, ring_mod_B });
+          m_instruments_ring_mod.push_back({ { instrument_name, adsr_nr, flt_nr, vol }, ring_mod_A, ring_mod_B });
       }
       else if (op.find("conv_A:") == 0 || op.find("conv_B:") == 0)
       {
@@ -648,7 +648,7 @@ namespace audio
         if (conv_A.empty() || conv_B.empty())
           std::cerr << "Must specify both attributes ring_mod_A and ring_mod_B in instrument line: \"" << line << "\"." << std::endl;
         else
-          m_instruments_conv.push_back({ instrument_name, adsr_nr, flt_nr, vol, conv_A, conv_B });
+          m_instruments_conv.push_back({ { instrument_name, adsr_nr, flt_nr, vol }, conv_A, conv_B });
       }
       else
       {
@@ -691,7 +691,7 @@ namespace audio
         else if (waveform_name_upper == "NOISE")
           wf_type = WaveformType::NOISE;
         
-        m_instruments_basic.push_back({ instrument_name, adsr_nr, flt_nr, vol, wf_type, params_nr,
+        m_instruments_basic.push_back({ { instrument_name, adsr_nr, flt_nr, vol }, wf_type, params_nr,
           freq_effect, ampl_effect, phase_effect });
       }
     }

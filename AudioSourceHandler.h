@@ -190,11 +190,8 @@ namespace audio
       auto Ns = static_cast<int>(wave.buffer.size());
       m_buffer_i.resize(Ns);
       
-      float dt = 1.f/wave.sample_rate;
-      float t = 0.f;
       for (int i = 0; i < Ns; ++i)
       {
-        t = i * dt;
         m_buffer_i[i] = static_cast<short>(c_amplitude_0 * wave.buffer[i]);
         m_buffer_i[i] = std::max<short>(-c_amplitude_0, m_buffer_i[i]);
         m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
@@ -209,8 +206,8 @@ namespace audio
     }
     
   private:
-    int m_sample_rate = 44100;
     AudioStreamListener* m_listener = nullptr;
+    int m_sample_rate = 44100;
     std::vector<short> m_buffer_i;
   };
   
