@@ -13,7 +13,7 @@
 
 int main(int argc, char** argv)
 {
-  enableRawMode();
+  keyboard::enableRawMode();
 
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
@@ -74,7 +74,7 @@ int main(int argc, char** argv)
     auto label = test_labels[test_idx];
     std::cout << label << ":" << std::endl;
     
-    pressAnyKey();
+    keyboard::pressAnyKey();
     
     audio::WaveformGenerationParams params;
     

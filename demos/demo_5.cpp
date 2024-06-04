@@ -15,7 +15,7 @@
 
 int main(int argc, char** argv)
 {
-  enableRawMode();
+  keyboard::enableRawMode();
   
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
@@ -33,7 +33,7 @@ int main(int argc, char** argv)
   src_wd_adsr->set_volume(0.5);
   src_wd_adsr->play(audio::PlaybackMode::STATE_WAIT);
   
-  pressAnyKey();
+  keyboard::pressAnyKey();
   
   wd_adsr = audio::WaveformHelper::envelope_adsr(wd,
       { audio::ADSRMode::LIN, 300, 0.2f, 0.5f }, { audio::ADSRMode::EXP, 500, 1.f }, 0.4f, { audio::ADSRMode::EXP, 360, 0.3f, 0.8f });
@@ -42,7 +42,7 @@ int main(int argc, char** argv)
   src_wd_adsr->set_volume(0.5);
   src_wd_adsr->play(audio::PlaybackMode::STATE_WAIT);
 
-  pressAnyKey();
+  keyboard::pressAnyKey();
   
   return 0;
 }

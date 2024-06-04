@@ -21,7 +21,7 @@ class Test : public audio::AudioStreamListener
 
 int main(int argc, char** argv)
 {
-  enableRawMode();
+  keyboard::enableRawMode();
 
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
   src_handler.remove_source(stream_src_2);
 #endif
   
-  pressAnyKey();
+  keyboard::pressAnyKey();
   
   return 0;
 }
