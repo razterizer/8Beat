@@ -14,7 +14,7 @@
 
 int main(int argc, char** argv)
 {
-  enableRawMode();
+  keyboard::enableRawMode();
   
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
@@ -30,7 +30,7 @@ int main(int argc, char** argv)
   chiptune_engine.set_volume(0.8f);
   chiptune_engine.play_tune(false, true);
   
-  pressAnyKey();
+  keyboard::pressAnyKey();
   
   return 0;
 }

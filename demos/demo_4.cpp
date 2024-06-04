@@ -14,7 +14,7 @@
 
 int main(int argc, char** argv)
 {
-  enableRawMode();
+  keyboard::enableRawMode();
 
   std::cout << "Signal:\n";
   audio::Waveform wd_fft;
@@ -40,7 +40,7 @@ int main(int argc, char** argv)
   std::cout << "Sample Rate (IFFT): " << wd_ifft.sample_rate << std::endl;
   std::cout << str::rep_char('-', 20) << std::endl;
   
-  pressAnyKey();
+  keyboard::pressAnyKey();
   
   return 0;
 }

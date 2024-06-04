@@ -15,7 +15,7 @@
 
 int main(int argc, char** argv)
 {
-  enableRawMode();
+  keyboard::enableRawMode();
 
   using namespace audio;
   AudioSourceHandler src_handler;
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
   // Arpeggio
   {
     std::cout << "Arpeggio" << std::endl;
-    pressAnyKey();
+    keyboard::pressAnyKey();
     
     WaveformGenerationParams params;
     params.arpeggio.emplace_back(0.1f, 1.26f);
@@ -52,7 +52,7 @@ int main(int argc, char** argv)
   // Vibrato
   {
     std::cout << "Vibrato" << std::endl;
-    pressAnyKey();
+    keyboard::pressAnyKey();
     
     WaveformGenerationParams params;
     params.vibrato_depth = 0.3f;
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
   // Noise @ Frequency
   {
     std::cout << "Noise @ Frequency" << std::endl;
-    pressAnyKey();
+    keyboard::pressAnyKey();
     
     WaveformGenerationParams params;
     params.freq_slide_vel = 1.f;
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
   // Pickup/coin
   {
     std::cout << "Pickup / Coin" << std::endl;
-    pressAnyKey();
+    keyboard::pressAnyKey();
 
     for (int i = 0; i < 10; ++i)
     {
@@ -124,7 +124,7 @@ int main(int argc, char** argv)
   // Laser/shoot
   {
     std::cout << "Laser / Shoot" << std::endl;
-    pressAnyKey();
+    keyboard::pressAnyKey();
     
     for (int i = 0; i < 10; ++i)
     {
@@ -156,7 +156,7 @@ int main(int argc, char** argv)
   // Explosion
   {
     std::cout << "Explosion" << std::endl;
-    pressAnyKey();
+    keyboard::pressAnyKey();
     
     for (int i = 0; i < 10; ++i)
     {
@@ -189,7 +189,7 @@ int main(int argc, char** argv)
   }
   #endif
   
-  pressAnyKey();
+  keyboard::pressAnyKey();
   
   return 0;
 }
