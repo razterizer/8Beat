@@ -19,15 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\demo_4.cpp" />
+    <ClCompile Include="..\demo_9.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{8B75E6CB-1659-421D-9B39-22F5BDD59CEC}</ProjectGuid>
-    <RootNamespace>demos</RootNamespace>
+    <ProjectGuid>{9e431cbb-dfbe-474f-b701-cb151826fa17}</ProjectGuid>
+    <RootNamespace>demo9</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>demo_4</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
