@@ -109,7 +109,7 @@ int main(int argc, char** argv)
         rnd::rand_float(-.95f, 1.5f),
         rnd::rand_float(-1.f, 1.f),
         rnd::rand_float(-1.f, 4.f),
-        rnd::rand_float(-0.8, 1.5f)
+        rnd::rand_float(-0.8f, 1.5f)
       };
       if (i == 0) // First show the default sound.
        vp.clear();
@@ -134,7 +134,7 @@ int main(int argc, char** argv)
         rnd::rand_float(-1.f, 1.1f),
         rnd::rand_float(-1.f, 1.5f),
         rnd::rand_float(-0.95f, 5.f),
-        rnd::rand_float(-0.9, 2.f),
+        rnd::rand_float(-0.9f, 2.f),
         rnd::rand_float(-1.f, 2.f),
         rnd::rand_float(-1.f, 20.f),
         rnd::rand_float(-1.f, 4.f),
