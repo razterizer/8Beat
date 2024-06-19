@@ -21,6 +21,7 @@ xcdebugger/
 ### Visual Studio ###
 
 .vs/
+*.vcxproj.user
 
 x64/
 x86/
