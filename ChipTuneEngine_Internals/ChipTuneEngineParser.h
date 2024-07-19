@@ -957,12 +957,12 @@ namespace audio
                     params.arpeggio.emplace_back(ap);
                   else if (ap_idx == 0)
                   {
-                    utils::sscanf(item.c_str(), "%f", &ap.time);
+                    std::sscanf(item.c_str(), "%f", &ap.time);
                     ap_idx = 1;
                   }
                   else if (ap_idx == 1)
                   {
-                    utils::sscanf(item.c_str(), "%f", &ap.freq_mult);
+                    std::sscanf(item.c_str(), "%f", &ap.freq_mult);
                     ap_idx = 0;
                   }
                   idx0 = idx + 1;
