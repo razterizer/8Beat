@@ -14,7 +14,7 @@
 
 int main(int argc, char** argv)
 {
-  keyboard::enableRawMode();
+  keyboard::StreamKeyboard keyboard;
 
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
 // Plot Audio
 
   std::cout << "Please make sure your terminal window is at least 150 chars wide.\n";
-  keyboard::pressAnyKey();
+  keyboard.pressAnyKey();
 
   int width = 150;
   int height = 20;
@@ -130,7 +130,7 @@ int main(int argc, char** argv)
   std::cout << "filled from t-axis:\n";
   audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::FILLED_FROM_T_AXIS, width, height, start, end);
   
-  keyboard::pressAnyKey();
+  keyboard.pressAnyKey();
   
   return 0;
 }

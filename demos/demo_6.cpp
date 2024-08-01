@@ -14,7 +14,7 @@
 
 int main(int argc, char** argv)
 {
-  keyboard::enableRawMode();
+  keyboard::StreamKeyboard keyboard;
   
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     src_handler.remove_source(src_synth);
   synth_sources.clear();
   
-  keyboard::pressAnyKey();
+  keyboard.pressAnyKey();
   
   return 0;
 }
