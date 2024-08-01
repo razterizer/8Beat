@@ -15,7 +15,7 @@
 
 int main(int argc, char** argv)
 {
-  keyboard::enableRawMode();
+  keyboard::StreamKeyboard keyboard;
 
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     }
   }
  
-  keyboard::pressAnyKey();
+  keyboard.pressAnyKey();
   
   return 0;
 }
