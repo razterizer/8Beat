@@ -1,5 +1,7 @@
 # 8Beat
 
+![GitHub License](https://img.shields.io/github/license/razterizer/8Beat?color=blue)
+
 Documentation is a work in progress for the moment being. For example on how to use this lib, please clone repo [`Pilot Episode`](https://github.com/razterizer/Pilot-Episode) and follow the instructions there.
 
 ## Licensing
