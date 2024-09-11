@@ -29,6 +29,10 @@ jobs:
       - name: Install OpenAL
         run: sudo apt install libopenal-dev
       
+      # Step 5: Install libsndio
+      - name: Install libsndio
+        run: sudo apt install libsndfile-dev
+
       # Step 4: Change to the correct directory and build
       - name: Build project
         run: |
