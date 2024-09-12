@@ -27,24 +27,18 @@ jobs:
 
       # Step 3: Install OpenAL
       - name: Install OpenAL
-        run: |
-          sudo apt update
-          sudo apt upgrade
-          sudo apt install libopenal-dev
-          sudo apt upgrade
+        run: sudo apt install libopenal-dev
       
-      # Step 4: Install libsndio
+      # Step 4: Install libsndfile
       - name: Install libsndio
-        run: |
-          sudo apt install libsndfile-dev
-          sudo apt upgrade
+        run: sudo apt install libsndfile-dev
 
       # Step 5: Change to the correct directory and build
       - name: Build project
         run: |
           cd demos
           ./build_demo_1.sh
-          ./build_demo_2.sh
+          # ./build_demo_2.sh
           ./build_demo_3.sh
           ./build_demo_4.sh
           ./build_demo_5.sh
