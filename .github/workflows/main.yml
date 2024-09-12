@@ -30,7 +30,7 @@ jobs:
         run: sudo apt install libopenal-dev
       
       # Step 4: Install libsndfile
-      - name: Install libsndio
+      - name: Install libsndfile
         run: sudo apt install libsndfile-dev
 
       # Step 5: Change to the correct directory and build
