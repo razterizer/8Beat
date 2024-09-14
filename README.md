@@ -1,7 +1,10 @@
 # 8Beat
 
 ![GitHub License](https://img.shields.io/github/license/razterizer/8Beat?color=blue)
-[![Build Check](https://github.com/razterizer/8Beat/actions/workflows/main.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/main.yml)
+
+[![build check ubuntu](https://github.com/razterizer/8Beat/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-ubuntu.yml)
+[![build check macos](https://github.com/razterizer/8Beat/actions/workflows/build-macos.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-macos.yml)
+[![build check ubuntu](https://github.com/razterizer/8Beat/actions/workflows/build-windows.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-windows.yml)
 
 Documentation is a work in progress for the moment being. For example on how to use this lib, please clone repo [`Pilot Episode`](https://github.com/razterizer/Pilot-Episode) and follow the instructions there.
 
