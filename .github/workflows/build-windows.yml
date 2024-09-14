@@ -40,6 +40,11 @@ jobs:
         run: |
           Expand-Archive -Path $env:GITHUB_WORKSPACE\..\openal-soft.zip -DestinationPath $env:GITHUB_WORKSPACE\..
 
+      # Step to list the directory structure of OpenAL Soft after unzipping
+      - name: List contents of openal-soft directory
+        run: |
+          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\openal-soft
+          
       # Step 6: Copy OpenAL Soft files to 3rdparty directories
       - name: Copy OpenAL Soft files
         run: |
