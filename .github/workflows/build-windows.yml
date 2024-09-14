@@ -1,0 +1,58 @@
+name: build check windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+  
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Move to the parent directory and fetch dependencies
+      - name: Fetch dependencies
+        run: |
+          cd ..
+          git clone https://github.com/razterizer/Core.git
+          git clone https://github.com/razterizer/Termin8or.git
+          git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
+
+      # Step 3: Create 3rdparty directories
+      - name: Create 3rdparty directories
+        run: |
+          mkdir -p ${{ github.workspace }}/lib/3rdparty/include/OpenAL_Soft
+          mkdir -p ${{ github.workspace }}/lib/3rdparty/lib
+          
+      # Step 4: Download OpenAL Soft
+      - name: Download OpenAL Soft
+        run: curl -L https://www.openal-soft.org/openal-binaries/openal-soft-1.23.1-bin.zip -o openal-soft.zip
+        
+      # Step 5: Unzip OpenAL Soft
+      - name: Unzip OpenAL Soft
+      run: |
+        sudo apt-get install unzip
+        unzip openal-soft.zip -d openal-soft
+        
+      # Step 6: Copy OpenAL Soft files
+      - name: Copy OpenAL Soft files
+      run: |
+        cp openal-soft/include/AL/* ${{ github.workspace }}/lib/3rdparty/include/OpenAL_Soft/
+        cp openal-soft/bin/OpenAL32.dll ${{ github.workspace }}/lib/3rdparty/lib/
+        cp openal-soft/lib/OpenAL32.lib ${{ github.workspace }}/lib/3rdparty/lib/
+        
+      # Step 7: Fix step for libsndfile
+
+      # Step 8: Change to the correct directory and build
+      - name: Run build.bat
+        continue-on-error: false # Ensure errors are not bypassed
+        run: |
+          cd demos
+          .\build_demo_1.bat
