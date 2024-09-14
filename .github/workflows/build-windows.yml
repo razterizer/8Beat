@@ -43,9 +43,9 @@ jobs:
       # Step 6: Copy OpenAL Soft files
       - name: Copy OpenAL Soft files
         run: |
-          Copy-Item -Path openal-soft\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\..\3rdparty\include\OpenAL_Soft\ -Force
-          Copy-Item -Path openal-soft\bin\Win64\OpenAL32.dll -Destination $env:GITHUB_WORKSPACE\..\..\3rdparty\lib\ -Force
-          Copy-Item -Path openal-soft\lib\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\..\3rdparty\lib\ -Force
+          Copy-Item -Path openal-soft\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\..\..\..\3rdparty\include\OpenAL_Soft\ -Force
+          Copy-Item -Path openal-soft\bin\Win64\OpenAL32.dll -Destination $env:GITHUB_WORKSPACE\..\..\..\..\3rdparty\lib\ -Force
+          Copy-Item -Path openal-soft\lib\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\..\..\..\3rdparty\lib\ -Force
 
       # Step 7: Fix step for libsndfile (if needed)
 
