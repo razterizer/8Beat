@@ -39,18 +39,16 @@ jobs:
       - name: Unzip OpenAL Soft
         run: |
           Expand-Archive -Path $env:GITHUB_WORKSPACE\..\openal-soft.zip -DestinationPath $env:GITHUB_WORKSPACE\..
-
-      # Step to list the directory structure of OpenAL Soft after unzipping
-      - name: List contents of openal-soft directory
-        run: |
-          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\openal-soft
           
       # Step 6: Copy OpenAL Soft files to 3rdparty directories
       - name: Copy OpenAL Soft files
         run: |
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft\ -Force
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft\bin\Win64\OpenAL32.dll -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft\lib\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
+          # Copy OpenAL Soft headers
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft\ -Force
+          # Copy OpenAL32.dll (assuming it's in the bin folder)
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\bin\OpenAL32.dll -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
+          # Copy OpenAL32.lib (assuming it's in the libs folder)
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\libs\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
 
       # Step 7: Fix step for libsndfile (if needed)
 
