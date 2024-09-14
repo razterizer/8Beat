@@ -38,5 +38,4 @@ jobs:
       # Step 5: Unzip OpenAL Soft
       - name: Unzip OpenAL Soft
         run: |
-          sudo apt-get install unzip
-          unzip openal-soft.zip -d openal-soft
+          Expand-Archive -Path openal-soft.zip -DestinationPath openal-soft
