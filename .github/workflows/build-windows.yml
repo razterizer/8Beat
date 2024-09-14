@@ -34,3 +34,9 @@ jobs:
       # Step 4: Download OpenAL Soft
       - name: Download OpenAL Soft
         run: curl -L https://www.openal-soft.org/openal-binaries/openal-soft-1.23.1-bin.zip -o openal-soft.zip
+
+      # Step 5: Unzip OpenAL Soft
+      - name: Unzip OpenAL Soft
+        run: |
+          sudo apt-get install unzip
+          unzip openal-soft.zip -d openal-soft
