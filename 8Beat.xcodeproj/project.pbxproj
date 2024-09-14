@@ -14,6 +14,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0709B9B62C957C7C00A43834 /* build_demo_1.bat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build_demo_1.bat; sourceTree = "<group>"; };
 		071671282B7867B90043E9F2 /* Waveform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Waveform.h; sourceTree = "<group>"; };
 		0716712C2B7FA58F0043E9F2 /* WaveformIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformIO.h; sourceTree = "<group>"; };
 		0716712D2B7FF4DB0043E9F2 /* Spectrum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Spectrum.h; sourceTree = "<group>"; };
@@ -69,10 +70,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0709B9B52C957C6800A43834 /* scripts_windows */ = {
+			isa = PBXGroup;
+			children = (
+				0709B9B62C957C7C00A43834 /* build_demo_1.bat */,
+			);
+			name = scripts_windows;
+			sourceTree = "<group>";
+		};
 		0739D9C22BA59C8300964E96 /* demos */ = {
 			isa = PBXGroup;
 			children = (
-				078F2B862C03E27B00FF60F8 /* scripts */,
+				0709B9B52C957C6800A43834 /* scripts_windows */,
+				078F2B862C03E27B00FF60F8 /* scripts_linmac */,
 				0739D9C62BA6148E00964E96 /* sounds */,
 				0739D9C32BA59D0200964E96 /* demo_1.cpp */,
 				0739D9C42BA6111D00964E96 /* demo_2.cpp */,
@@ -115,7 +125,7 @@
 			path = ChipTuneEngine_Internals;
 			sourceTree = "<group>";
 		};
-		078F2B862C03E27B00FF60F8 /* scripts */ = {
+		078F2B862C03E27B00FF60F8 /* scripts_linmac */ = {
 			isa = PBXGroup;
 			children = (
 				078F2B912C03E2D100FF60F8 /* build_demo_1.sh */,
@@ -131,7 +141,7 @@
 				078F2B8F2C03E2B800FF60F8 /* build_all_demos.sh */,
 				078F2B902C03E2B800FF60F8 /* run_all_demos.sh */,
 			);
-			name = scripts;
+			name = scripts_linmac;
 			sourceTree = "<group>";
 		};
 		07A763122B5B225500705D31 = {
