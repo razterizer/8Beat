@@ -25,27 +25,27 @@ jobs:
           git clone https://github.com/razterizer/Termin8or.git
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
 
-      # Step 3: Create 3rdparty directories in the parent folder (D:\a\)
+      # Step 3: Create 3rdparty directories in D:\a\DungGine
       - name: Create 3rdparty directories
         run: |
-          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\..\3rdparty\include\OpenAL_Soft
-          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\..\3rdparty\lib
+          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft
+          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\lib
 
-      # Step 4: Download OpenAL Soft
+      # Step 4: Download OpenAL Soft to D:\a\DungGine
       - name: Download OpenAL Soft
-        run: curl -L https://www.openal-soft.org/openal-binaries/openal-soft-1.23.1-bin.zip -o openal-soft.zip
+        run: curl -L https://www.openal-soft.org/openal-binaries/openal-soft-1.23.1-bin.zip -o $env:GITHUB_WORKSPACE\..\openal-soft.zip
 
-      # Step 5: Unzip OpenAL Soft
+      # Step 5: Unzip OpenAL Soft to D:\a\DungGine
       - name: Unzip OpenAL Soft
         run: |
-          Expand-Archive -Path openal-soft.zip -DestinationPath openal-soft
+          Expand-Archive -Path $env:GITHUB_WORKSPACE\..\openal-soft.zip -DestinationPath $env:GITHUB_WORKSPACE\..
 
-      # Step 6: Copy OpenAL Soft files
+      # Step 6: Copy OpenAL Soft files to 3rdparty directories
       - name: Copy OpenAL Soft files
         run: |
-          Copy-Item -Path openal-soft\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\..\..\..\3rdparty\include\OpenAL_Soft\ -Force
-          Copy-Item -Path openal-soft\bin\Win64\OpenAL32.dll -Destination $env:GITHUB_WORKSPACE\..\..\..\..\3rdparty\lib\ -Force
-          Copy-Item -Path openal-soft\lib\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\..\..\..\3rdparty\lib\ -Force
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft\ -Force
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft\bin\Win64\OpenAL32.dll -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft\lib\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
 
       # Step 7: Fix step for libsndfile (if needed)
 
