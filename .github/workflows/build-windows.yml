@@ -39,6 +39,13 @@ jobs:
       - name: Unzip OpenAL Soft
         run: |
           Expand-Archive -Path $env:GITHUB_WORKSPACE\..\openal-soft.zip -DestinationPath $env:GITHUB_WORKSPACE\..
+
+
+      # Step 6: List contents of source directories to verify files
+      - name: List contents of OpenAL Soft directories
+        run: |
+          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\include
+          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\libs
           
       # Step 6: Copy OpenAL Soft files to 3rdparty directories
       - name: Copy OpenAL Soft files
