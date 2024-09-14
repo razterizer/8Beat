@@ -28,8 +28,8 @@ jobs:
       # Step 3: Create 3rdparty directories
       - name: Create 3rdparty directories
         run: |
-          mkdir -p ${{ github.workspace }}/../3rdparty/include/OpenAL_Soft
-          mkdir -p ${{ github.workspace }}/../3rdparty/lib
+          mkdir -p ${{ github.workspace }}/../../3rdparty/include/OpenAL_Soft
+          mkdir -p ${{ github.workspace }}/../../3rdparty/lib
           
       # Step 4: Download OpenAL Soft
       - name: Download OpenAL Soft
