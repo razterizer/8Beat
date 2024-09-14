@@ -20,7 +20,7 @@ jobs:
       # Step 2: Move to the parent directory and fetch dependencies
       - name: Fetch dependencies
         run: |
-          cd ..
+          cd $env:GITHUB_WORKSPACE\..
           git clone https://github.com/razterizer/Core.git
           git clone https://github.com/razterizer/Termin8or.git
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
