@@ -25,11 +25,11 @@ jobs:
           git clone https://github.com/razterizer/Termin8or.git
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
 
-      # Step 3: Create 3rdparty directories
+      # Step 3: Create 3rdparty directories in the parent folder (D:\a\)
       - name: Create 3rdparty directories
         run: |
-          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft
-          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\lib
+          New-Item -ItemType Directory -Force -Path $(System.DefaultWorkingDirectory)\3rdparty\include\OpenAL_Soft
+          New-Item -ItemType Directory -Force -Path $(System.DefaultWorkingDirectory)\3rdparty\lib
 
       # Step 4: Download OpenAL Soft
       - name: Download OpenAL Soft
@@ -43,9 +43,9 @@ jobs:
       # Step 6: Copy OpenAL Soft files
       - name: Copy OpenAL Soft files
         run: |
-          Copy-Item -Path openal-soft\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft\ -Force
-          Copy-Item -Path openal-soft\bin\Win64\OpenAL32.dll -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
-          Copy-Item -Path openal-soft\lib\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
+          Copy-Item -Path openal-soft\include\AL\* -Destination $(System.DefaultWorkingDirectory)\3rdparty\include\OpenAL_Soft\ -Force
+          Copy-Item -Path openal-soft\bin\Win64\OpenAL32.dll -Destination $(System.DefaultWorkingDirectory)\3rdparty\lib\ -Force
+          Copy-Item -Path openal-soft\lib\Win64\OpenAL32.lib -Destination $(System.DefaultWorkingDirectory)\3rdparty\lib\ -Force
 
       # Step 7: Fix step for libsndfile (if needed)
 
