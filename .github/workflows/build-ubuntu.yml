@@ -1,4 +1,4 @@
-name: Build Check
+name: build check ubuntu
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-ubuntu:
     runs-on: ubuntu-latest
     
     steps:
