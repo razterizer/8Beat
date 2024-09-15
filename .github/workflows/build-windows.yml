@@ -57,7 +57,7 @@ jobs:
 
       # Step 6b: List contents of 3rdparty includes.
       - name: List 3rdparty/include files
-        run: ls $env:GITHUB_WORKSPACE\..\3rpdarty\include
+        run: ls $env:GITHUB_WORKSPACE\..\3rpdarty\include\OpenAL_Soft
 
       # Step 7: Fix step for libsndfile (if needed)
 
