@@ -55,13 +55,17 @@ jobs:
           # Copy OpenAL32.lib (assuming it's in the libs folder)
           Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\libs\Win32\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
 
+      # Step 6b: List contents of 3rdparty includes.
+      - name: List 3rdparty/include files
+        run: ls $env:GITHUB_WORKSPACE\..\3rpdarty\include
+
       # Step 7: Fix step for libsndfile (if needed)
 
       # Step 8: Change to the correct directory and build
-      - name: Run build.bat
-        continue-on-error: false  # Ensure errors are not bypassed
-        run: |
-          cd demos
-          pwd
-          dir
-          .\build_demo_1.bat
+      # - name: Run build.bat
+      #  continue-on-error: false  # Ensure errors are not bypassed
+      #  run: |
+      #    cd demos
+      #    pwd
+      #    dir
+      #    .\build_demo_1.bat
