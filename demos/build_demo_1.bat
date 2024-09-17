@@ -2,7 +2,7 @@
 call ..\..\Core\build.bat
  
 REM Compile the demo using VC++
-cl /std:c++20 /EHsc /Fo:bin/demo_1.obj /Fe:bin/demo_1.exe .\demo_1.cpp /I..\.. /I..\..\..\3rdparty\include\OpenAL_Soft
+cl /std:c++20 /EHsc /Fo:bin/demo_1.obj /Fe:bin/demo_1.exe .\demo_1.cpp /I..\.. /I..\..\..\3rdparty\include
 
 if %errorlevel% neq 0 (
     echo Compilation failed with error code %errorlevel%.
