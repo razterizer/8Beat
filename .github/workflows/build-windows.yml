@@ -66,9 +66,9 @@ jobs:
 
       # Step 8: Change to the correct directory and build
       - name: Run build.bat
-       continue-on-error: false  # Ensure errors are not bypassed
-       run: |
-         cd demos
-         pwd
-         dir
-         .\build_demo_1.bat
+        continue-on-error: false  # Ensure errors are not bypassed
+        run: |
+          cd demos
+          pwd
+          dir
+          .\build_demo_1.bat
