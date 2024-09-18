@@ -7,7 +7,8 @@ cl /std:c++20 /EHsc /Fo:bin/demo_1.obj /Fe:bin/demo_1.exe .\demo_1.cpp ^
 /I..\..\Core ^
 /I..\..\Termin8or ^
 /I..\..\AudioLibSwitcher_OpenAL ^
-/I..\..\..\3rdparty\include
+/I..\..\..\3rdparty\include ^
+/D_CRT_FUNCTIONS_REQUIRED
 
 if %errorlevel% neq 0 (
     echo Compilation failed with error code %errorlevel%.
