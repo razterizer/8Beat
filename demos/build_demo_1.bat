@@ -2,7 +2,7 @@
 call ..\..\Core\build.bat
 
 REM Compile the demo using VC++
-cl /std:c++20 /EHsc /D_CRT_FUNCTIONS_REQUIRED /Fo:bin/demo_1.obj /Fe:bin/demo_1.obj .\demo_1.cpp ^
+cl /std:c++20 /EHsc /D_CRT_FUNCTIONS_REQUIRED /D_USE_MATH_DEFINES /Fo:bin/demo_1.obj /Fe:bin/demo_1.obj .\demo_1.cpp ^
 /I..\.. ^
 /I..\..\Core ^
 /I..\..\Termin8or ^
