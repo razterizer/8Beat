@@ -14,7 +14,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0709B9B62C957C7C00A43834 /* build_demo_1.bat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build_demo_1.bat; sourceTree = "<group>"; };
+		0709B9B62C957C7C00A43834 /* build_all_demos.bat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build_all_demos.bat; sourceTree = "<group>"; };
 		0709B9BF2C95831C00A43834 /* build-macos.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-macos.yml"; path = ".github/workflows/build-macos.yml"; sourceTree = "<group>"; };
 		0709B9C02C95831C00A43834 /* build-windows.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-windows.yml"; path = ".github/workflows/build-windows.yml"; sourceTree = "<group>"; };
 		0709B9C12C95831C00A43834 /* build-ubuntu.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-ubuntu.yml"; path = ".github/workflows/build-ubuntu.yml"; sourceTree = "<group>"; };
@@ -76,7 +76,7 @@
 		0709B9B52C957C6800A43834 /* scripts_windows */ = {
 			isa = PBXGroup;
 			children = (
-				0709B9B62C957C7C00A43834 /* build_demo_1.bat */,
+				0709B9B62C957C7C00A43834 /* build_all_demos.bat */,
 			);
 			name = scripts_windows;
 			sourceTree = "<group>";
