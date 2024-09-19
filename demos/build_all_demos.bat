@@ -7,7 +7,8 @@ SET configuration="Release"
 IF "%~1" == "Debug" SET configuration="Debug"
 SET target="x64"
 IF "%~2" == "x86" SET target="x86"
-msbuild demos.sln /p:Configuration=%configuration% /p:Platform=%target%
+REM msbuild demos.sln /p:Configuration=%configuration% /p:Platform=%target%
+msbuilda demo_1.vcxproj /p:Configuration=%configuration% /p:Platform=%target%
 
 cd ..
 
