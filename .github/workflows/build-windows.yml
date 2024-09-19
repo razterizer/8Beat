@@ -74,4 +74,4 @@ jobs:
           cd demos
           pwd
           dir
-          .\build_demo_1.bat
+          .\build_all_demos.bat
