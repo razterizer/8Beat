@@ -28,8 +28,8 @@ jobs:
       # Step 3: Create 3rdparty directories in D:\a\DungGine
       - name: Create 3rdparty directories
         run: |
-          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\lib\3rdparty\include\OpenAL_Soft
-          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\lib\3rdparty\lib
+          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft
+          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\lib
 
       # Step 4: Download OpenAL Soft to D:\a\DungGine
       - name: Download OpenAL Soft
@@ -51,9 +51,9 @@ jobs:
       - name: Copy OpenAL Soft files
         run: |
           # Copy OpenAL Soft headers
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\lib\3rdparty\include\OpenAL_Soft\ -Force
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft\ -Force
           # Copy OpenAL32.lib (assuming it's in the libs folder)
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\libs\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\lib\3rdparty\lib\ -Force
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\libs\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
 
       # Step 6b: List contents of 3rdparty includes.
       - name: List 3rdparty/include files
