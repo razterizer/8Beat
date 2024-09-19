@@ -61,9 +61,9 @@ jobs:
         run: |
           ls $env:GITHUB_WORKSPACE
           ls $env:GITHUB_WORKSPACE/..
-          ls $env:GITHUB_WORKSPACE/../3rdparty
-          ls $env:GITHUB_WORKSPACE/../3rdparty/include
-          ls $env:GITHUB_WORKSPACE/../3rdparty/include/OpenAL_Soft
+          ls $env:GITHUB_WORKSPACE/../lib/3rdparty/include
+          ls $env:GITHUB_WORKSPACE/../lib/3rdparty/include/OpenAL_Soft
+          ls $env:GITHUB_WORKSPACE/../lib/3rdparty/lib
 
       # Step 7: Fix step for libsndfile (if needed)
 
