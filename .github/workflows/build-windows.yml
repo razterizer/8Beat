@@ -13,11 +13,11 @@ jobs:
     runs-on: windows-latest
   
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout the repository.
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Move to the parent directory and fetch dependencies
+      # Step 2: Move to the parent directory and fetch dependencies.
       - name: Fetch dependencies
         run: |
           cd $env:GITHUB_WORKSPACE\..
@@ -25,37 +25,62 @@ jobs:
           git clone https://github.com/razterizer/Termin8or.git
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
 
-      # Step 3: Create 3rdparty directories in D:\a\DungGine
+      # Step 3: Create 3rdparty directories in D:\a\DungGine.
       - name: Create 3rdparty directories
         run: |
           New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft
           New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\lib
 
-      # Step 4: Download OpenAL Soft to D:\a\DungGine
+      # Step 4: Download OpenAL Soft to D:\a\DungGine.
       - name: Download OpenAL Soft
         run: curl -L https://www.openal-soft.org/openal-binaries/openal-soft-1.23.1-bin.zip -o $env:GITHUB_WORKSPACE\..\openal-soft.zip
 
-      # Step 5: Unzip OpenAL Soft to D:\a\DungGine
+      # Step 5: Unzip OpenAL Soft to D:\a\DungGine.
       - name: Unzip OpenAL Soft
         run: |
           Expand-Archive -Path $env:GITHUB_WORKSPACE\..\openal-soft.zip -DestinationPath $env:GITHUB_WORKSPACE\..
 
-
-      # Step 6: List contents of source directories to verify files
+      # Step 6: List contents of source directories to verify files.
       - name: List contents of OpenAL Soft directories
         run: |
           Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\include
           Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\libs
           
-      # Step 6: Copy OpenAL Soft files to 3rdparty directories
+      # Step 7: Copy OpenAL Soft files to 3rdparty directories.
       - name: Copy OpenAL Soft files
         run: |
           # Copy OpenAL Soft headers
           Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft\ -Force
-          # Copy OpenAL32.lib (assuming it's in the libs folder)
+          # Copy OpenAL32.lib
           Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.23.1-bin\libs\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
 
-      # Step 6b: List contents of 3rdparty includes.
+      # Step 8: Download libsndfile to D:\a\DungGine.
+      - name: Download libsndfile
+        run: curl -L https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2-win64.zip -o $env:GITHUB_WORKSPACE\..\libsndfile.zip
+
+      # Step 9: Unzip libsndfile to D:\a\DungGine.
+      - name: Unzip libsndfile
+        run: |
+          Expand-Archive -Path $env:GITHUB_WORKSPACE\..\libsndfile.zip -DestinationPath $env:GITHUB_WORKSPACE\..
+
+      # Step 10: List contents of source directories to verify files.
+      - name: List contents of libsndfile directories
+        run: |
+          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\include
+          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\lib
+          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\bin
+          
+      # Step 11: Copy libsndfile files to 3rdparty directories.
+      - name: Copy libsndfile files
+        run: |
+          # Copy libsndfile headers
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\include\* -Destination $env:GITHUB_WORKSPACE\..\3rdparty\include\ -Force
+          # Copy sndfile.lib
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\lib\sndfile.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
+          # Copy sndfile.dll
+          Copy-Item -Path $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\bin\sndfile.dll -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
+
+      # Step 12: List contents of 3rdparty includes.
       - name: List 3rdparty/include files
       #  run: ls $env:GITHUB_WORKSPACE\..\3rpdarty\include\OpenAL_Soft
         run: |
@@ -65,9 +90,7 @@ jobs:
           ls $env:GITHUB_WORKSPACE/../3rdparty/include/OpenAL_Soft
           ls $env:GITHUB_WORKSPACE/../3rdparty/lib
 
-      # Step 7: Fix step for libsndfile (if needed)
-
-      # Step 8: Change to the correct directory and build
+      # Step 13: Change to the correct directory and build
       - name: Run build.bat
         continue-on-error: false  # Ensure errors are not bypassed
         run: |
