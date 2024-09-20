@@ -49,3 +49,18 @@ jobs:
           ./build_demo_9.sh
           ./build_demo_10.sh
         continue-on-error: false # Ensure errors are not bypassed
+
+  build-unit-tests-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: test
+        run: ls
+
+  unit-tests-ubuntu:
+    needs: build-unit-tests-ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: test
+        run: ls
