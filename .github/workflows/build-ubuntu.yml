@@ -58,7 +58,7 @@ jobs:
         run: ls
 
   unit-tests-ubuntu:
-    needs: build-unit-tests-ubuntu
+    needs: [build-ubuntu, build-unit-tests-ubuntu]
     runs-on: ubuntu-latest
 
     steps:
