@@ -51,6 +51,7 @@ jobs:
         continue-on-error: false # Ensure errors are not bypassed
 
   build-unit-tests-ubuntu:
+    needs: build-ubuntu
     runs-on: ubuntu-latest
 
     steps:
@@ -58,7 +59,7 @@ jobs:
         run: ls
 
   unit-tests-ubuntu:
-    needs: [build-ubuntu, build-unit-tests-ubuntu]
+    needs: build-unit-tests-ubuntu
     runs-on: ubuntu-latest
 
     steps:
