@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-program:
+  build-demos:
     runs-on: macos-latest
     
     steps:
