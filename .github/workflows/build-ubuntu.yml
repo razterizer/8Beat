@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-program:
+  build-demos:
     runs-on: ubuntu-latest
     
     steps:
@@ -51,7 +51,7 @@ jobs:
         continue-on-error: false # Ensure errors are not bypassed
 
   build-unit-tests:
-    needs: build-program
+    needs: build-demos
     runs-on: ubuntu-latest
 
     steps:
