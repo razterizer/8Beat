@@ -41,6 +41,7 @@
 		0739DB842BCEE98C00964E96 /* demo_10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_10.cpp; sourceTree = "<group>"; };
 		075A33DA2BF8BB85004547CC /* SFX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFX.h; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		076AB05B2C9DD60C00531419 /* run_all_demos.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = run_all_demos.bat; sourceTree = "<group>"; };
 		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
 		078F2B872C03E29D00FF60F8 /* build_demo_6.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_6.sh; sourceTree = "<group>"; };
@@ -76,6 +77,7 @@
 		0709B9B52C957C6800A43834 /* scripts_windows */ = {
 			isa = PBXGroup;
 			children = (
+				076AB05B2C9DD60C00531419 /* run_all_demos.bat */,
 				0709B9B62C957C7C00A43834 /* build_all_demos.bat */,
 			);
 			name = scripts_windows;
