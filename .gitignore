@@ -27,3 +27,7 @@ x64/
 x86/
 Debug/
 Release/
+
+### External Tools ###
+
+.aider*
