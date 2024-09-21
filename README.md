@@ -132,6 +132,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
 This header-only library depends on the following header-only libraries:
 * [`Core`](https://github.com/razterizer/Core)
 * [`AudioLibSwitcher_OpenAL`](https://github.com/razterizer/AudioLibSwitcher_OpenAL)
+* [`TrainOfThrought`](https://github.com/razterizer/TrainOfThought)
 
 and uses the header-only library [`Termin8or`](https://github.com/razterizer/Termin8or) for the demos.
 
@@ -140,6 +141,7 @@ These libs are expected to be located in checkout dirs with the same names and n
 <source>/<lib>/Core
 <source>/<lib>/AudioLibSwitcher_OpenAL
 <source>/<lib>/Termin8or
+<source>/<lib>/TrainOfThought
 ```
 where `<source>` is where you normally put your git repos and `<lib>` is recommended to be "`lib`" but can be named something different or left out all-together. The game [`Pilot_Episode`](https://github.com/razterizer/Pilot_Episode) however, requires them to be located in a sub-folder called "`lib`" or else the game will not build.
 
