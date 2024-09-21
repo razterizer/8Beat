@@ -24,6 +24,7 @@ jobs:
           git clone https://github.com/razterizer/Core.git
           git clone https://github.com/razterizer/Termin8or.git
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
+          git clone https://github.com/razterizer/TrainOfThought.git
 
       # Step 3: Create 3rdparty directories in D:\a\DungGine.
       - name: Create 3rdparty directories
