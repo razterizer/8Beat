@@ -30,6 +30,24 @@ namespace audio
     std::cout << std::endl;
       
     WaveformHelper::print_waveform_graph_idx(wave, GraphType::PLOT_THIN, N, 5);
+    
+    auto butter = WaveformHelper::create_Butterworth_filter(1,
+                                                            FilterOpType::LowPass,
+                                                            wave.frequency*0.9f, {},
+                                                            wave.sample_rate);
+    std::cout << "Filter Butterworth:" << std::endl;
+    std::cout << "  a:" << std::endl;
+    for (auto a : butter.a)
+      std::cout << "    " << a << std::endl;
+    std::cout << "  b:" << std::endl;
+    for (auto b : butter.b)
+      std::cout << "    " << b  << std::endl;
+    
+    assert(butter.a.size() == 2);
+    assert(butter.a[0] == 1.f);
+    assert(butter.a[1] - (-0.739251f) < 1e-6f);
+    assert(butter.b.size() == 1);
+    assert(butter.b[0] - (0.130375f) < 1e-6f);
   }
 
 }
