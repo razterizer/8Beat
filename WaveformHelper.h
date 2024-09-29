@@ -1144,9 +1144,9 @@ namespace audio
     }
     
     
-    static void print_waveform_graph(const Waveform& wave, GraphType type,
-                                     int width = 100, int height = 20,
-                                     int a_idx_start = 0, std::optional<int> a_idx_end = std::nullopt)
+    static void print_waveform_graph_idx(const Waveform& wave, GraphType type,
+                                         int width = 100, int height = 20,
+                                         int a_idx_start = 0, std::optional<int> a_idx_end = std::nullopt)
     {
       int tot_buffer_len = static_cast<int>(wave.buffer.size());
       int idx_start = a_idx_start;
@@ -1250,9 +1250,9 @@ namespace audio
       }
     }
     
-    static void print_waveform_graph(const Waveform& wave, GraphType type,
-                                     int width = 100, int height = 20,
-                                     float t_start = 0.f, std::optional<float> t_end = std::nullopt)
+    static void print_waveform_graph_t(const Waveform& wave, GraphType type,
+                                       int width = 100, int height = 20,
+                                       float t_start = 0.f, std::optional<float> t_end = std::nullopt)
     {
       float dt = 1.f/wave.sample_rate;
       auto tot_buffer_len = static_cast<int>(wave.duration / dt);
@@ -1263,7 +1263,7 @@ namespace audio
       if (idx_end >= tot_buffer_len)
         idx_end = tot_buffer_len - 1;
       
-      print_waveform_graph(wave, type, width, height, idx_start, idx_end);
+      print_waveform_graph_idx(wave, type, width, height, idx_start, idx_end);
     }
     
     static float calc_time_from_num_cycles(const Waveform& wave, float num_cycles)
