@@ -431,6 +431,11 @@
 				HEADER_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					"/opt/homebrew/opt/openal-soft/include/",
+					/opt/homebrew/opt/libsndfile/include,
+					../,
+				);
 			};
 			name = Debug;
 		};
@@ -443,6 +448,11 @@
 				HEADER_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					"/opt/homebrew/opt/openal-soft/include/",
+					/opt/homebrew/opt/libsndfile/include,
+					../,
+				);
 			};
 			name = Release;
 		};
