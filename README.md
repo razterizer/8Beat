@@ -2,9 +2,9 @@
 
 ![GitHub License](https://img.shields.io/github/license/razterizer/8Beat?color=blue)
 
-[![build check and unit tests ubuntu](https://github.com/razterizer/8Beat/actions/workflows/build-and-test-ubuntu.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-and-test-ubuntu.yml)
-[![build check macos](https://github.com/razterizer/8Beat/actions/workflows/build-macos.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-macos.yml)
-[![build check ubuntu](https://github.com/razterizer/8Beat/actions/workflows/build-windows.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-windows.yml)
+[![build and test ubuntu](https://github.com/razterizer/8Beat/actions/workflows/build-and-test-ubuntu.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-and-test-ubuntu.yml)
+[![build macos](https://github.com/razterizer/8Beat/actions/workflows/build-macos.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-macos.yml)
+[![build ubuntu](https://github.com/razterizer/8Beat/actions/workflows/build-windows.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-windows.yml)
 
 ![Top Languages](https://img.shields.io/github/languages/top/razterizer/8Beat)
 ![Goto](https://img.shields.io/github/search/razterizer/8Beat/goto)
