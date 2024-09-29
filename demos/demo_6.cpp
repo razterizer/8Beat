@@ -32,7 +32,7 @@ int main(int argc, char** argv)
   auto src_sine = src_handler.create_source_from_waveform(wd_sine);
   src_sine->set_volume(0.8f);
   src_sine->play(true);
-  audio::WaveformHelper::print_waveform_graph(wd_sine, audio::GraphType::PLOT_THICK0, 150, 20, 0, std::nullopt);
+  audio::WaveformHelper::print_waveform_graph_idx(wd_sine, audio::GraphType::PLOT_THICK0, 150, 20, 0, std::nullopt);
 #endif
   std::optional<audio::Waveform> wd_rev_kernel = std::nullopt;
 #ifdef USE_SYNTH_REVERB

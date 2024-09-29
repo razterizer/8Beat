@@ -105,7 +105,9 @@ int main(int argc, char** argv)
 
   int width = 150;
   int height = 20;
-#if 1
+  
+#define USE_TIME_INTERVAL
+#ifdef USE_TIME_INTERVAL
   auto T = audio::WaveformHelper::calc_time_from_num_cycles(wd2, 1);
   float start = 0.f; //100*T;
   //float dt = 1.f/wd.sample_rate;
@@ -115,20 +117,32 @@ int main(int argc, char** argv)
   int start = 0;
   std::optional<int> end = std::nullopt;//400;
 #endif
+
+  auto print_waveform_graph = [](const Waveform& wave, audio::GraphType graph_type,
+                                 int width, int height,
+                                 auto start, auto end)
+  {
+#ifdef USE_TIME_INTERVAL
+    audio::WaveformHelper::print_waveform_graph_t(wave, graph_type, width, height, start, end);
+#else
+    audio::WaveformHelper::print_waveform_graph_idx(wave, graph_type, width, height, start, end);
+#endif
+  };
+
   std::cout << "plot thin:\n";
-  audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::PLOT_THIN, width, height, start, end);
+  print_waveform_graph(wd2, audio::GraphType::PLOT_THIN, width, height, start, end);
   std::cout << "plot thick 0:\n";
-  audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::PLOT_THICK0, width, height, start, end);
+  print_waveform_graph(wd2, audio::GraphType::PLOT_THICK0, width, height, start, end);
   std::cout << "plot thick 1:\n";
-  audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::PLOT_THICK1, width, height, start, end);
+  print_waveform_graph(wd2, audio::GraphType::PLOT_THICK1, width, height, start, end);
   std::cout << "plot thick 2:\n";
-  audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::PLOT_THICK2, width, height, start, end);
+  print_waveform_graph(wd2, audio::GraphType::PLOT_THICK2, width, height, start, end);
   std::cout << "plot thick 3:\n";
-  audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::PLOT_THICK3, width, height, start, end);
+  print_waveform_graph(wd2, audio::GraphType::PLOT_THICK3, width, height, start, end);
   std::cout << "filled bottom-up:\n";
-  audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::FILLED_BOTTOM_UP, width, height, start, end);
+  print_waveform_graph(wd2, audio::GraphType::FILLED_BOTTOM_UP, width, height, start, end);
   std::cout << "filled from t-axis:\n";
-  audio::WaveformHelper::print_waveform_graph(wd2, audio::GraphType::FILLED_FROM_T_AXIS, width, height, start, end);
+  print_waveform_graph(wd2, audio::GraphType::FILLED_FROM_T_AXIS, width, height, start, end);
   
   keyboard.pressAnyKey();
   
