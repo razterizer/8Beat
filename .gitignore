@@ -5,6 +5,8 @@ demos/bin_windows/
 demos/sounds/cat meow saved.wav
 demos/sounds/cat meow reverb saved.wav
 
+Tests/bin/
+
 ### XCode ###
 
 # Ignore Xcode worspace settings
