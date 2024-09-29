@@ -118,7 +118,7 @@ int main(int argc, char** argv)
   std::optional<int> end = std::nullopt;//400;
 #endif
 
-  auto print_waveform_graph = [](const Waveform& wave, audio::GraphType graph_type,
+  auto print_waveform_graph = [](const audio::Waveform& wave, audio::GraphType graph_type,
                                  int width, int height,
                                  auto start, auto end)
   {
