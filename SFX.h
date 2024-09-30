@@ -114,6 +114,7 @@ namespace audio
           return wd;
       }
     }
+    return wd;
   };
   
 }
