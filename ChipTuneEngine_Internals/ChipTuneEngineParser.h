@@ -829,7 +829,7 @@ namespace audio
       bool normalize = false;
       
       iss >> filter_nr >> type >> op_type >> order >> cutoff >> bandwidth >> ripple >> normalize;
-      if (m_filter_args.size() < filter_nr + 1)
+      if (static_cast<int>(m_filter_args.size()) < filter_nr + 1)
         m_filter_args.resize(filter_nr + 1);
       
       auto str2type = [](const std::string& str)
