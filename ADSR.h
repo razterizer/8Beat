@@ -92,8 +92,15 @@ namespace audio
     ADSR() = default;
     ADSR(const Attack& a, const Decay& d, const Sustain& s, const Release& r)
       : attack(a), decay(d), sustain(s), release(r)
+      , level_a0(a.level_0.value_or(0.f))
+      , level_a1(a.level_1.value_or(d.level_0.value_or(1.f)))
+      , level_d0(d.level_0.value_or(a.level_1.value_or(1.f)))
+      , level_d1(d.level_1.value_or(s.sustain_level))
+      , level_s(s.sustain_level)
+      , level_r0(r.level_0.value_or(s.sustain_level))
+      , level_r1(r.level_1.value_or(0.f))
     {
-      adjust_levels();
+      //adjust_levels();
     }
     
     void adjust_levels()
