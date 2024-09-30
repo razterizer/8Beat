@@ -876,7 +876,7 @@ namespace audio
       int params_nr = -1;
       
       iss >> params_nr;
-      if (m_waveform_params.size() < params_nr + 1)
+      if (static_cast<int>(m_waveform_params.size()) < params_nr + 1)
         m_waveform_params.resize(params_nr + 1);
       
       std::string modifier, modifier_name, modifier_val;
