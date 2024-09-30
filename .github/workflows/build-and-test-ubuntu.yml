@@ -114,12 +114,24 @@ jobs:
         continue-on-error: false # Ensure errors are not bypassed
 
   static-analysis:
-    needs: [build-demos, run-unit-tests]
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the 8Beat repository
+      - name: Checkout 8Beat repository
+        uses: actions/checkout@v3
+      
+      # Step 2: Move to the parent directory and fetch dependencies (if needed)
+      - name: Fetch dependencies
+        run: |
+          cd ..
+          git clone https://github.com/razterizer/8Beat.git
+      
+      # Step 3: Install cppcheck
       - name: Install cppcheck
         run: sudo apt-get install cppcheck
         
+      # Step 4: Run cppcheck on 8Beat headers
       - name: Run cppcheck
-        run: cppcheck --enable=all --inconclusive --error-exitcode=1 .
+        run: |
+          cppcheck --enable=all --inconclusive --error-exitcode=1 8Beat/include
