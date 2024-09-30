@@ -1589,7 +1589,7 @@ namespace audio
       for (const auto& root : roots)
       {
         y.insert(y.begin(), 0.);  // Multiply by (z - root)
-        for (int j = 0; j < y.size() - 1; ++j)
+        for (int j = 0; j < static_cast<int>(y.size()) - 1; ++j)
           y[j] -= root * y[j + 1];
       }
       std::reverse(std::begin(y), std::end(y));
