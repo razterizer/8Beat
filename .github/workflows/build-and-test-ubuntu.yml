@@ -113,3 +113,10 @@ jobs:
           ./bin/unit_tests
         continue-on-error: false # Ensure errors are not bypassed
 
+  static-analysis:
+    needs: [build-demos, run-unit-tests]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run cppcheck
+        run: cppcheck --enable=all --inconclusive --error-exitcode=1 .
