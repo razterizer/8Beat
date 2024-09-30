@@ -128,4 +128,4 @@ jobs:
       # Run cppcheck on 8Beat headers
       - name: Run cppcheck
         run: |
-          cppcheck --enable=all --inconclusive --error-exitcode=1 8Beat/include
+          cppcheck --enable=all --inconclusive --error-exitcode=1 8Beat
