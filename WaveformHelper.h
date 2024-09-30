@@ -366,12 +366,12 @@ namespace audio
     }
     
     // Compresses all samples above a certain threshold.
-    //   /\          /\  |*
-    //  /..\......../..\.v..     /^^\      /^^\
-    // /____\______/____\    => /____\____/____\
-    //       \    /                   \  /
-    //  ......\../..........           vv
-    //         --
+    //   /\          /\  |*                          |
+    //  /..\......../..\.v..     /^^\      /^^\      |
+    // /____\______/____\    => /____\____/____\     |
+    //       \    /                   \  /           |
+    //  ......\../..........           vv            |
+    //         --                                    |
     // * : squeezed interval by factor upper_scale * (abs(sample) - upper_limit)
     //     for sample > upper_limit. Analogously for negative samples values.
     // upper_limit <= 1 and upper_scale <= (normally).
