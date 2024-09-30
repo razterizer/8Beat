@@ -707,7 +707,7 @@ namespace audio
       
       iss >> adsr_nr;
       
-      if (m_envelopes.size() < adsr_nr + 1)
+      if (static_cast<int>(m_envelopes.size()) < adsr_nr + 1)
         m_envelopes.resize(adsr_nr + 1);
       
       std::string unread = iss.eof()  ?  "" : iss.str().substr(iss.tellg());
