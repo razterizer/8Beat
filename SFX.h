@@ -113,8 +113,8 @@ namespace audio
         case SFXType::NUM_ITEMS:
           return wd;
       }
+      return wd;
     }
-    return wd;
   };
   
 }
