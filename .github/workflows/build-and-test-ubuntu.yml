@@ -133,6 +133,15 @@ jobs:
           git clone https://github.com/razterizer/Core.git
           git clone https://github.com/razterizer/TrainOfThought.git
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
+          
+      # Install OpenAL
+      - name: Install OpenAL
+        run: sudo apt install libopenal-dev
+      
+      # Install libsndfile
+      - name: Install libsndfile
+        run: sudo apt install libsndfile-dev
+        # run: sudo apt install libsndfile1-dev
   
       # Run Clang Static Analyzer on static_analysis.cpp
       - name: Run Clang Static Analyzer
