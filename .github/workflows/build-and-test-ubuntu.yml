@@ -118,13 +118,20 @@ jobs:
     if: true # turn off for now.
   
     steps:
-      # Checkout the 8Beat repository
-      - name: Checkout 8Beat repository
+      # Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v3
   
       # Install Clang Static Analyzer tools
       - name: Install Clang Static Analyzer
         run: sudo apt-get install clang-tools
+        
+      # Move to the parent directory and fetch dependencies
+      - name: Fetch dependencies
+        run: |
+          cd ..
+          git clone https://github.com/razterizer/Core.git
+          git clone https://github.com/razterizer/TrainOfThought.git
   
       # Run Clang Static Analyzer on static_analysis.cpp
       - name: Run Clang Static Analyzer
