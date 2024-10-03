@@ -88,7 +88,6 @@ namespace audio
       wd.duration = duration;
       
       auto buffer_len = static_cast<int>(duration * sample_rate);
-      float freq_mod = freq_val;
       float ampl_mod = 1.f;
       
       wd.buffer.resize(buffer_len);
@@ -134,7 +133,7 @@ namespace audio
         t = static_cast<float>(i) / sample_rate;
         
         // Frequency
-        freq_mod = freq_func(t, duration, freq_val);
+        float freq_mod = freq_func(t, duration, freq_val);
         freq_mod *= static_cast<float>(std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t));
         if (!params.arpeggio.empty())
         {
