@@ -129,4 +129,4 @@ jobs:
       # Run Clang Static Analyzer on static_analysis.cpp
       - name: Run Clang Static Analyzer
         run: |
-          scan-build clang++ -std=c++20 -c static_analysis.cpp
+          scan-build clang++ -std=c++20 -c static_analysis.cpp -I..
