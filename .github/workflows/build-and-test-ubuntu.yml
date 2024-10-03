@@ -132,6 +132,7 @@ jobs:
           cd ..
           git clone https://github.com/razterizer/Core.git
           git clone https://github.com/razterizer/TrainOfThought.git
+          git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
   
       # Run Clang Static Analyzer on static_analysis.cpp
       - name: Run Clang Static Analyzer
