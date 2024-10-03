@@ -116,17 +116,17 @@ jobs:
   static-analysis:
     runs-on: ubuntu-latest
     if: true # turn off for now.
-
+  
     steps:
       # Checkout the 8Beat repository
       - name: Checkout 8Beat repository
         uses: actions/checkout@v3
-            
-      # Install cppcheck
-      - name: Install cppcheck
-        run: sudo apt-get install cppcheck
-        
-      # Run cppcheck on 8Beat headers
-      - name: Run cppcheck
+  
+      # Install Clang Static Analyzer tools
+      - name: Install Clang Static Analyzer
+        run: sudo apt-get install clang-tools
+  
+      # Run Clang Static Analyzer on static_analysis.cpp
+      - name: Run Clang Static Analyzer
         run: |
-          cppcheck --enable=all --inconclusive --error-exitcode=1 .
+          scan-build clang++ -c static_analysis.cpp
