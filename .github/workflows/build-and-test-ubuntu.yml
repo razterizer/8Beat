@@ -115,7 +115,7 @@ jobs:
 
   static-analysis:
     runs-on: ubuntu-latest
-    if: false # turn off for now.
+    if: true # turn off for now.
 
     steps:
       # Checkout the 8Beat repository
