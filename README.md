@@ -1,6 +1,7 @@
 # 8Beat
 
 ![GitHub License](https://img.shields.io/github/license/razterizer/8Beat?color=blue)
+![Static Badge](https://img.shields.io/badge/linkage-header_only-yellow)
 
 [![build and test ubuntu](https://github.com/razterizer/8Beat/actions/workflows/build-and-test-ubuntu.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-and-test-ubuntu.yml)
 [![build macos](https://github.com/razterizer/8Beat/actions/workflows/build-macos.yml/badge.svg)](https://github.com/razterizer/8Beat/actions/workflows/build-macos.yml)
@@ -13,6 +14,10 @@
 ![Last Commit](https://img.shields.io/github/last-commit/razterizer/8Beat?color=blue)
 ![Contributors](https://img.shields.io/github/contributors/razterizer/8Beat?color=blue)
 <!-- ![Languages](https://img.shields.io/github/languages/count/razterizer/8Beat) -->
+
+This library is a cross-platform and header only library (except for 3rd-party libs necessary).
+This library is for synthesizing, loading and saving sound and also has a chip-tune engine which allow you full flexibility to design instruments and to use these instruments when composing your chip-tune tune.
+The library depends on an implementation of the interface `AudioLibSwitcher`. See below for more info.
 
 Documentation is a work in progress for the moment being. For example on how to use this lib, please clone repo [`Pilot Episode`](https://github.com/razterizer/Pilot-Episode) and follow the instructions there.
 
