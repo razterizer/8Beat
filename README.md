@@ -11,7 +11,7 @@
 
 ![Top Languages](https://img.shields.io/github/languages/top/razterizer/8Beat)
 ![GitHub repo size](https://img.shields.io/github/repo-size/razterizer/8Beat)
-![Goto](https://img.shields.io/github/search/razterizer/8Beat/goto)
+<!-- ![Goto](https://img.shields.io/github/search/razterizer/8Beat/goto) -->
 ![Commit Activity](https://img.shields.io/github/commit-activity/t/razterizer/8Beat)
 ![Last Commit](https://img.shields.io/github/last-commit/razterizer/8Beat?color=blue)
 ![Contributors](https://img.shields.io/github/contributors/razterizer/8Beat?color=blue)
