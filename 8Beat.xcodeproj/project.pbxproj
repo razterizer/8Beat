@@ -59,6 +59,7 @@
 		078F2B922C03E2D100FF60F8 /* build_demo_9.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_9.sh; sourceTree = "<group>"; };
 		07A763282B5BC85300705D31 /* AudioSourceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
 		07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngine.h; sourceTree = "<group>"; };
+		07B91EFC2CF24D9C00449D7E /* ChipTuneEngineListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineListener.h; sourceTree = "<group>"; };
 		07BB7BDB2B7794FD002899C9 /* WaveformHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformHelper.h; sourceTree = "<group>"; };
 		07BB7BDC2B779BA0002899C9 /* WaveformGeneration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformGeneration.h; sourceTree = "<group>"; };
 		07FDE9862CA8D31E00116BA7 /* WaveformHelper_tests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformHelper_tests.h; sourceTree = "<group>"; };
@@ -180,6 +181,7 @@
 				07BB7BDB2B7794FD002899C9 /* WaveformHelper.h */,
 				07A763282B5BC85300705D31 /* AudioSourceHandler.h */,
 				07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */,
+				07B91EFC2CF24D9C00449D7E /* ChipTuneEngineListener.h */,
 				0739D9DF2BA651A300964E96 /* ChipTuneEngine_Internals */,
 				07FDE9852CA8D2F200116BA7 /* Tests */,
 				0739D9C92BA61E5900964E96 /* Frameworks */,
