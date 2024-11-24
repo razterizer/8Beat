@@ -6,12 +6,18 @@
 //
 
 #pragma once
-#include <Core/IListener.h>
+#include <Core/events/IListener.h>
 #include <string>
 #include <optional>
 
-
-struct ChipTuneEngineListener : IListener
+namespace audio
 {
-  virtual std::optional<std::string> on_tune_ended(const std::string& /*curr_tune_filepath*/) = 0;
-};
+  class ChipTuneEngine;
+  
+  
+  struct ChipTuneEngineListener : IListener
+  {
+    virtual void on_tune_ended(ChipTuneEngine* /*engine*/, const std::string& /*curr_tune_filepath*/) = 0;
+  };
+  
+}
