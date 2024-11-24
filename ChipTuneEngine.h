@@ -7,22 +7,25 @@
 #pragma once
 
 #include "ChipTuneEngine_Internals/ChipTuneEngineParser.h"
+#include "ChipTuneEngineListener.h"
 #include "AudioSourceHandler.h"
 #include "Waveform.h"
 #include "WaveformGeneration.h"
 
 #include <Core/Delay.h>
 #include <Core/StringHelper.h>
+#include <Core/events/EventBroadcaster.h>
 
 #include <vector>
 #include <chrono>
 #include <thread>
 #include <atomic>
 
+
 namespace audio
 {
 
-  class ChipTuneEngine : public ChipTuneEngineParser
+  class ChipTuneEngine : public ChipTuneEngineParser, public EventBroadcaster<ChipTuneEngineListener>
   {
   public:
     ChipTuneEngine(AudioSourceHandler& audio_handler, const WaveformGeneration& waveform_gen)
@@ -266,6 +269,8 @@ namespace audio
       // Cooldown.
       do {}
       while (stlutils::contains_if(m_voices, [](const auto& voice) { return voice.src->is_playing(); }));
+      
+      broadcast([this](auto* listener) { listener->on_tune_ended(this, m_curr_file_path); });
       
       return true;
     }

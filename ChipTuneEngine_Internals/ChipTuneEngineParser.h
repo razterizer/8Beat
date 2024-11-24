@@ -20,6 +20,39 @@ namespace audio
 
   class ChipTuneEngineParser
   {
+    void clear()
+    {
+      m_instruments_basic.clear();
+      m_instruments_ring_mod.clear();
+      m_instruments_conv.clear();
+      m_instruments_weight_avg.clear();
+      m_instruments_lib.clear();
+      m_envelopes.clear();
+      m_filter_args.clear();
+      m_waveform_params.clear();
+      
+          
+      m_time_step_ms.clear();
+      m_curr_time_step_ms = 100;
+    
+      m_volume.clear();
+      m_curr_volume = 1.f;
+    
+      m_labels.clear(); // note_idx -> Label (label, id)
+      m_gotos.clear(); // note_idx -> Goto (from_label, to_label, count)
+      m_al_fine = false;
+      m_al_coda = false;
+      m_to_coda = false;
+    
+      m_print_switches.clear();
+    
+      num_voices = 0;
+      m_voices.clear();
+      //std::vector<Instrument> m_instruments;
+      note_start_idx = 0;
+      num_notes_parsed = 0;
+    }
+    
   public:
     ChipTuneEngineParser(AudioSourceHandler& audio_handler, const WaveformGeneration& waveform_gen)
       : m_audio_handler(audio_handler)
@@ -35,6 +68,8 @@ namespace audio
     // Load tune from a text file with a specific format
     bool load_tune(const std::string& file_path, bool verbose = false)
     {
+      clear();
+    
       if (!file_path.ends_with(".ct"))
       {
         std::cerr << "Wrong file ending in filepath argument. Expected *.ct" << std::endl;
@@ -47,6 +82,8 @@ namespace audio
         std::cerr << "Error opening tune file: " << file_path << std::endl;
         return false;
       }
+      
+      m_curr_file_path = file_path;
 
       if (verbose)
         std::cout << "Parsing Tune" << std::endl;
@@ -184,6 +221,7 @@ namespace audio
 
     AudioSourceHandler& m_audio_handler;
     const WaveformGeneration& m_waveform_gen;
+    std::string m_curr_file_path;
     std::vector<InstrumentBasic> m_instruments_basic;
     std::vector<InstrumentRingMod> m_instruments_ring_mod;
     std::vector<InstrumentConv> m_instruments_conv;
