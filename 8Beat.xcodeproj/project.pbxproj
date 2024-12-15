@@ -22,6 +22,9 @@
 		071671282B7867B90043E9F2 /* Waveform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Waveform.h; sourceTree = "<group>"; };
 		0716712C2B7FA58F0043E9F2 /* WaveformIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformIO.h; sourceTree = "<group>"; };
 		0716712D2B7FF4DB0043E9F2 /* Spectrum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Spectrum.h; sourceTree = "<group>"; };
+		072AE7FF2D0E73C5004F92D3 /* setup_and_build_demos.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = setup_and_build_demos.bat; sourceTree = SOURCE_ROOT; };
+		072AE8002D0E73D2004F92D3 /* setup_and_build_demos_debian.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_debian.sh; sourceTree = SOURCE_ROOT; };
+		072AE8012D0E73D2004F92D3 /* setup_and_build_demos_macos.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_macos.sh; sourceTree = SOURCE_ROOT; };
 		0739D9C12BA2434200964E96 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		0739D9C32BA59D0200964E96 /* demo_1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_1.cpp; sourceTree = "<group>"; };
 		0739D9C42BA6111D00964E96 /* demo_2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_2.cpp; sourceTree = "<group>"; };
@@ -82,6 +85,7 @@
 		0709B9B52C957C6800A43834 /* scripts_windows */ = {
 			isa = PBXGroup;
 			children = (
+				072AE7FF2D0E73C5004F92D3 /* setup_and_build_demos.bat */,
 				076AB05B2C9DD60C00531419 /* run_all_demos.bat */,
 				0709B9B62C957C7C00A43834 /* build_all_demos.bat */,
 			);
@@ -148,6 +152,8 @@
 		078F2B862C03E27B00FF60F8 /* scripts_linmac */ = {
 			isa = PBXGroup;
 			children = (
+				072AE8002D0E73D2004F92D3 /* setup_and_build_demos_debian.sh */,
+				072AE8012D0E73D2004F92D3 /* setup_and_build_demos_macos.sh */,
 				078F2B912C03E2D100FF60F8 /* build_demo_1.sh */,
 				078F2B892C03E29D00FF60F8 /* build_demo_2.sh */,
 				078F2B8B2C03E29D00FF60F8 /* build_demo_3.sh */,
