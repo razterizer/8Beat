@@ -6,6 +6,20 @@ set BUILD_DIR=demos
 REM Change directory
 cd ..
 
+REM Define the required folder name
+set "REQUIRED_NAME=lib"
+REM Get the current folder name
+for %%F in ("%CD%") do set "CURRENT_NAME=%%~nF"
+REM Check if the current folder name matches the required name
+if not "%CURRENT_NAME%"=="%REQUIRED_NAME%" (
+    color 0C
+    echo Warning: You are not in the correct folder. It is highly recommended that you check out the 8Beat repo in a folder named "%REQUIRED_NAME%". The demos will run fine but other repos might expect to find it there.
+    REM pause
+    REM exit /b 1
+)
+REM Reset color and continue with the script
+color 07
+
 REM Run the dependency fetch script
 python "%REPO_DIR%\fetch-dependencies.py" "%REPO_DIR%\dependencies"
 
