@@ -5,6 +5,8 @@ BUILD_DIR="demos"
 
 brew install openal-soft
 
+brew install libsndfile
+
 cd ..
 
 # Define the required folder name
