@@ -153,12 +153,13 @@ and uses the header-only library [`Termin8or`](https://github.com/razterizer/Ter
 
 These libs are expected to be located in checkout dirs with the same names and next to each other. Like this:
 ```xml
-<source>/<lib>/Core
-<source>/<lib>/TrainOfThought              ; Used by `WaveformHelper.h`.
-<source>/<lib>/AudioLibSwitcher_OpenAL     ; Needed for now, but in the future you will be able to choose.
-<source>/<lib>/3rdparty_OpenAL             ; Windows only. The OpenAL-Soft libs/dlls necessary for the **Windows** build.
-<source>/<lib>/3rdparty_libsndfile         ; Windows only. The libsndfile libs/dlls necessary for `WaveformIO.h` to work on windows.
-<source>/<lib>/Termin8or                   ; Only for the demos.
+<my_source_code_dir>/lib/Core/
+<my_source_code_dir>/lib/TrainOfThought/              ; Used by `WaveformHelper.h`.
+<my_source_code_dir>/lib/AudioLibSwitcher_OpenAL/     ; Needed for now, but in the future you will be able to choose.
+<my_source_code_dir>/lib/3rdparty_OpenAL/             ; Windows only. The OpenAL-Soft libs/dlls necessary for the **Windows** build.
+<my_source_code_dir>/lib/3rdparty_libsndfile/         ; Windows only. The libsndfile libs/dlls necessary for `WaveformIO.h` to work on windows.
+<my_source_code_dir>/lib/Termin8or/                   ; Only for the demos.
+<my_source_code_dir>/lib/8Beat/
 ```
 where `<source>` is where you normally put your git repos and `<lib>` is recommended to be "`lib`" but can be named something different or left out all-together. However, the following programs requires them to be located in a sub-folder called "`lib`" or else these programs will not build:
 * [`Pilot_Episode`](https://github.com/razterizer/Pilot_Episode)
