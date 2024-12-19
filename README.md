@@ -144,58 +144,42 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 This header-only library depends on the following header-only libraries:
 * [`Core`](https://github.com/razterizer/Core)
-* [`AudioLibSwitcher_OpenAL`](https://github.com/razterizer/AudioLibSwitcher_OpenAL)
 * [`TrainOfThrought`](https://github.com/razterizer/TrainOfThought)
+* [`AudioLibSwitcher_OpenAL`](https://github.com/razterizer/AudioLibSwitcher_OpenAL)
+* Windows: [`3rdparty_OpenAL`](https://github.com/razterizer/3rdparty_OpenAL)
+* Windows: [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) (only necessary for `WaveformIO.h`)
 
 and uses the header-only library [`Termin8or`](https://github.com/razterizer/Termin8or) for the demos.
 
 These libs are expected to be located in checkout dirs with the same names and next to each other. Like this:
 ```xml
 <source>/<lib>/Core
-<source>/<lib>/AudioLibSwitcher_OpenAL
-<source>/<lib>/Termin8or
-<source>/<lib>/TrainOfThought
+<source>/<lib>/TrainOfThought              ; Used by `WaveformHelper.h`.
+<source>/<lib>/AudioLibSwitcher_OpenAL     ; Needed for now, but in the future you will be able to choose.
+<source>/<lib>/3rdparty_OpenAL             ; Windows only. The OpenAL-Soft libs/dlls necessary for the **Windows** build.
+<source>/<lib>/3rdparty_libsndfile         ; Windows only. The libsndfile libs/dlls necessary for `WaveformIO.h` to work on windows.
+<source>/<lib>/Termin8or                   ; Only for the demos.
 ```
-where `<source>` is where you normally put your git repos and `<lib>` is recommended to be "`lib`" but can be named something different or left out all-together. The game [`Pilot_Episode`](https://github.com/razterizer/Pilot_Episode) however, requires them to be located in a sub-folder called "`lib`" or else the game will not build.
+where `<source>` is where you normally put your git repos and `<lib>` is recommended to be "`lib`" but can be named something different or left out all-together. However, the following programs requires them to be located in a sub-folder called "`lib`" or else these programs will not build:
+* [`Pilot_Episode`](https://github.com/razterizer/Pilot_Episode)
+* [`Christmas_Demo`](https://github.com/razterizer/Christmas_Demo)
 
-The header only libs uses relative include paths (which is mayhaps a bit suboptimal), but I'll see if I can find a better solution for this in the future.
+The header only libs use relative include paths (which is mayhaps a bit suboptimal), but I'll see if I can find a better solution for this in the future.
 
-There are currently eight demos under the `demos` folder that you can build and run under linux / macos.
-First cd o folder `demos`. To build `demo_1` type `./build_demo_1.sh l`. Then run by typing `./bin_linux/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh`.
+There are currently ten demos under the `demos` folder that you can build and run under linux / macos.
+First cd to folder `demos`. To build `demo_1` type `./build_demo_1.sh`. Then run by typing `./bin/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh` or `build_all_demos.bat`.
+
+An easier way to get started is to use any of the scripts `setup_and_build_demos_debian.sh`, `setup_and_build_demos_macos.sh` or `setup_and_build_demos.bat`. If you use these, you can then skip the section below. These scripts automatically clones the repos necessary for your platform.
 
 ## 3rd-party Libraries
 
 You'll need [`OpenAL Soft`](https://www.openal-soft.org) for all demos and [`sndfile`](https://github.com/libsndfile/libsndfile) for some of the demos.
 
+However, the libs and dlls from these are mirrored in [`3rdparty_OpenAL`](https://github.com/razterizer/3rdparty_OpenAL) and [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) respectively and `8Beat` expects the folder structure used in these repos, so the most easy way to get started is to use any of the `setup_and_build_demos` scripts in the root folder. See the `Getting Started` section for the folder layout that is expected by `8Beat`.
+
 ### Windows:
 
-Grab a copy of [`OpenAL Soft`](https://www.openal-soft.org). Then copy its files to below folders according to the instructions.
-
-You need the following 3rdparty folder with subfolders:
-```xml
-<my_source_code_dir>/lib/3rdparty/
-<my_source_code_dir>/lib/3rdparty/include/
-<my_source_code_dir>/lib/3rdparty/include/OpenAL_Soft/
-<my_source_code_dir>/lib/3rdparty/lib/
-```
-
-`<my_source_code_dir>/lib/3rdparty/lib/` should contain:
-* `OpenAL32.lib`.
-* `sndfile.lib`.
-* `sndfile.dll`.
-
-The dll `sndfile.dll` should then be copied to where the executable lands.
-
-`<my_source_code_dir>/lib/3rdparty/include/` should contain:
-* `sndfile.h`.
-
-`<my_source_code_dir>/lib/3rdparty/include/OpenAL_Soft/` should contain:
-* `al.h`.
-* `alc.h`.
-* `alext.h`.
-* `efx.h`.
-* `efx-creative.h`.
-* `efx-presets.h`.
+On Windows no installation of **OpenAL Soft** or **libsndfile** is necessary. Only the `3rdparty_OpenAL` (and optionally `3rdparty_libsndfile`) repos are necessary. See above.
 
 ### MacOS:
 
