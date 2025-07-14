@@ -270,6 +270,9 @@ namespace audio
     
     void remove_source(AudioStreamSource* source)
     {
+      if (source == nullptr)
+        return;
+        
       auto it = std::remove_if(m_stream_sources.begin(), m_stream_sources.end(),
                                [source](const auto& ptr) { return ptr.get() == source; });
       
