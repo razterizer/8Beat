@@ -48,6 +48,11 @@ namespace audio
     std::optional<float> max_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
     std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
+    std::optional<float> freq_vibrato_depth = std::nullopt;
+    std::optional<float> freq_vibrato_freq = std::nullopt;
+    std::optional<float> freq_vibrato_freq_vel = std::nullopt;
+    std::optional<float> freq_vibrato_freq_acc = std::nullopt;
+    std::optional<float> freq_vibrato_freq_acc_max_vel_limit = std::nullopt;
     std::optional<float> vibrato_depth = std::nullopt;
     std::optional<float> vibrato_freq = std::nullopt;
     std::optional<float> vibrato_freq_vel = std::nullopt;
@@ -122,11 +127,31 @@ namespace audio
       if (!params.arpeggio.empty() && params.arpeggio[0].time > 0.f)
         params.arpeggio.insert(params.arpeggio.begin(), { 0.f, 1.f });
       int Narp = static_cast<int>(params.arpeggio.size());
-      
-      float vib_freq = params.vibrato_freq.value_or(0.f);
-      
+            
       const int N = static_cast<int>(params.noise_filter_slot_dur_s * sample_rate);
       std::vector<float> noise_buffer(N, 0.f);
+      
+      auto f_calc_vibrato = [](float& mod, float t,
+                               const std::optional<float>& vibrato_depth,
+                               const std::optional<float>& vibrato_freq,
+                               const std::optional<float>& vibrato_freq_vel,
+                               const std::optional<float>& vibrato_freq_acc,
+                               const std::optional<float>& vibrato_freq_acc_max_vel_limit)
+      {
+        if (vibrato_depth.has_value())
+        {
+          float vib_freq = vibrato_freq.value_or(0.f);
+          float vib_depth = vibrato_depth.value_or(0.f);
+          float vib_freq_vel = vibrato_freq_vel.value_or(0.f);
+          float vib_freq_acc = vibrato_freq_acc.value_or(0.f);
+          float vib_freq_acc_term = 0.5f*vib_freq_acc*t;
+          if (vibrato_freq_acc_max_vel_limit.has_value())
+            math::minimize(vib_freq_acc_term, vibrato_freq_acc_max_vel_limit.value());
+          vib_freq = std::max(0.f, vib_freq + (vib_freq_vel + vib_freq_acc_term)*t);
+          float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi*vib_freq*t);
+          mod *= vibrato;
+        }
+      };
       
       for (int i = 0; i < buffer_len; ++i)
       {
@@ -134,6 +159,12 @@ namespace audio
         
         // Frequency
         float freq_mod = freq_func(t, duration, freq_val);
+        f_calc_vibrato(freq_mod, t,
+                       params.freq_vibrato_depth,
+                       params.freq_vibrato_freq,
+                       params.freq_vibrato_freq_vel,
+                       params.freq_vibrato_freq_acc,
+                       params.freq_vibrato_freq_acc_max_vel_limit);
         freq_mod *= static_cast<float>(std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t));
         if (!params.arpeggio.empty())
         {
@@ -152,18 +183,12 @@ namespace audio
         
         // Amplitude
         ampl_mod = ampl_func(t, duration);
-        if (params.vibrato_depth.has_value())
-        {
-          float vib_depth = params.vibrato_depth.value_or(0.f);
-          float vib_freq_vel = params.vibrato_freq_vel.value_or(0.f);
-          float vib_freq_acc = params.vibrato_freq_acc.value_or(0.f);
-          float vib_freq_acc_term = 0.5f*vib_freq_acc*t;
-          if (params.vibrato_freq_acc_max_vel_limit.has_value())
-            math::minimize(vib_freq_acc_term, params.vibrato_freq_acc_max_vel_limit.value());
-          vib_freq = std::max(0.f, vib_freq + (vib_freq_vel + vib_freq_acc_term)*t);
-          float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi*vib_freq*t);
-          ampl_mod *= vibrato;
-        }
+        f_calc_vibrato(ampl_mod, t,
+                       params.vibrato_depth,
+                       params.vibrato_freq,
+                       params.vibrato_freq_vel,
+                       params.vibrato_freq_acc,
+                       params.vibrato_freq_acc_max_vel_limit);
         
         // Duty Cycle
         if (params.duty_cycle_sweep.has_value())
