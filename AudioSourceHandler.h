@@ -244,6 +244,9 @@ namespace audio
     
     void remove_source(AudioSource* source)
     {
+      if (source == nullptr)
+        return;
+    
       auto it = std::remove_if(m_sources.begin(), m_sources.end(),
                                [source](const auto& ptr) { return ptr.get() == source; });
       
