@@ -53,11 +53,13 @@ namespace audio
     std::optional<float> freq_vibrato_freq_vel = std::nullopt;
     std::optional<float> freq_vibrato_freq_acc = std::nullopt;
     std::optional<float> freq_vibrato_freq_acc_max_vel_limit = std::nullopt;
+    std::optional<float> freq_vibrato_phase = std::nullopt;
     std::optional<float> vibrato_depth = std::nullopt;
     std::optional<float> vibrato_freq = std::nullopt;
     std::optional<float> vibrato_freq_vel = std::nullopt;
     std::optional<float> vibrato_freq_acc = std::nullopt;
     std::optional<float> vibrato_freq_acc_max_vel_limit = std::nullopt;
+    std::optional<float> vibrato_phase = std::nullopt;
     int noise_filter_order = 2;
     float noise_filter_rel_bw = 0.2f;
     float noise_filter_slot_dur_s = 1e-2f;
@@ -136,7 +138,8 @@ namespace audio
                                const std::optional<float>& vibrato_freq,
                                const std::optional<float>& vibrato_freq_vel,
                                const std::optional<float>& vibrato_freq_acc,
-                               const std::optional<float>& vibrato_freq_acc_max_vel_limit)
+                               const std::optional<float>& vibrato_freq_acc_max_vel_limit,
+                               const std::optional<float>& vibrato_phase)
       {
         if (vibrato_depth.has_value())
         {
@@ -145,10 +148,11 @@ namespace audio
           float vib_freq_vel = vibrato_freq_vel.value_or(0.f);
           float vib_freq_acc = vibrato_freq_acc.value_or(0.f);
           float vib_freq_acc_term = 0.5f*vib_freq_acc*t;
+          float vib_phase = vibrato_phase.value_or(0.f);
           if (vibrato_freq_acc_max_vel_limit.has_value())
             math::minimize(vib_freq_acc_term, vibrato_freq_acc_max_vel_limit.value());
           vib_freq = std::max(0.f, vib_freq + (vib_freq_vel + vib_freq_acc_term)*t);
-          float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi*vib_freq*t);
+          float vibrato = (1.f - vib_depth) + vib_depth*std::sin(math::c_2pi*vib_freq*t + vib_phase);
           mod *= vibrato;
         }
       };
@@ -164,7 +168,8 @@ namespace audio
                        params.freq_vibrato_freq,
                        params.freq_vibrato_freq_vel,
                        params.freq_vibrato_freq_acc,
-                       params.freq_vibrato_freq_acc_max_vel_limit);
+                       params.freq_vibrato_freq_acc_max_vel_limit,
+                       params.freq_vibrato_phase);
         freq_mod *= static_cast<float>(std::pow(2.0, (params.freq_slide_vel.value_or(0.f) + 0.5f*params.freq_slide_acc.value_or(0.f) * t) * t));
         if (!params.arpeggio.empty())
         {
@@ -188,7 +193,8 @@ namespace audio
                        params.vibrato_freq,
                        params.vibrato_freq_vel,
                        params.vibrato_freq_acc,
-                       params.vibrato_freq_acc_max_vel_limit);
+                       params.vibrato_freq_acc_max_vel_limit,
+                       params.vibrato_phase);
         
         // Duty Cycle
         if (params.duty_cycle_sweep.has_value())
