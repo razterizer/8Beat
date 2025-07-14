@@ -75,6 +75,11 @@ We'll often use the term `waveform` as meaning an audio signal here.
     std::optional<float> max_frequency_limit = std::nullopt;
     std::optional<float> freq_slide_vel = std::nullopt; // 8va/s
     std::optional<float> freq_slide_acc = std::nullopt; // 8va/s^2
+    std::optional<float> freq_vibrato_depth = std::nullopt;
+    std::optional<float> freq_vibrato_freq = std::nullopt;
+    std::optional<float> freq_vibrato_freq_vel = std::nullopt;
+    std::optional<float> freq_vibrato_freq_acc = std::nullopt;
+    std::optional<float> freq_vibrato_freq_acc_max_vel_limit = std::nullopt;
     std::optional<float> vibrato_depth = std::nullopt;
     std::optional<float> vibrato_freq = std::nullopt;
     std::optional<float> vibrato_freq_vel = std::nullopt;
