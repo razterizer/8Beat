@@ -34,7 +34,7 @@ jobs:
 
       # Step 4: Download OpenAL Soft to D:\a\DungGine.
       - name: Download OpenAL Soft
-        run: curl -L https://www.openal-soft.org/openal-binaries/openal-soft-1.23.1-bin.zip -o $env:GITHUB_WORKSPACE\..\openal-soft.zip
+        run: curl -L https://openal-soft.org/openal-binaries/openal-soft-1.24.3-bin.zip -o $env:GITHUB_WORKSPACE\..\openal-soft.zip
 
       # Step 5: Unzip OpenAL Soft to D:\a\DungGine.
       - name: Unzip OpenAL Soft
