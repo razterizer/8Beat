@@ -11,7 +11,7 @@
 
 ![Top Languages](https://img.shields.io/github/languages/top/razterizer/8Beat)
 ![GitHub repo size](https://img.shields.io/github/repo-size/razterizer/8Beat)
-![](https://tokei.rs/b1/github/razterizer/8Beat)
+![C++ LOC](https://raw.githubusercontent.com/razterizer/8Beat/badges/loc-badge.svg)
 ![Commit Activity](https://img.shields.io/github/commit-activity/t/razterizer/8Beat)
 ![Last Commit](https://img.shields.io/github/last-commit/razterizer/8Beat?color=blue)
 ![Contributors](https://img.shields.io/github/contributors/razterizer/8Beat?color=blue)
