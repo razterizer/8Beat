@@ -969,7 +969,7 @@ namespace audio
       auto v = static_cast<double>(order + 1);
       for (int i = 1; i <= order; ++i)
       {
-        s.poles.emplace_back(std::exp(1i * math::c_pi * (0.5 * v / order)));
+        s.poles.emplace_back(std::exp(1i * math::cd_pi * (0.5 * v / order)));
         v += 2.;
       }
       // It is supposed to be -1 here. Makes sure the value is clean.
