@@ -1038,7 +1038,7 @@ namespace audio
       auto v = static_cast<double>(1 - order);
       for (int i = 1; i <= order; ++i)
       {
-        auto p = std::exp(1i * math::c_pi * (0.5 * v / order));
+        auto p = std::exp(1i * math::cd_pi * (0.5 * v / order));
         p = -std::sinh(v0) * std::real(p) + 1i * std::cosh(v0) * std::imag(p);
         s.poles.emplace_back(p);
         v += 2.;
