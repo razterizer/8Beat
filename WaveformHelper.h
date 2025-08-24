@@ -969,7 +969,7 @@ namespace audio
       auto v = static_cast<double>(order + 1);
       for (int i = 1; i <= order; ++i)
       {
-        s.poles.emplace_back(std::exp(1i * M_PI * (0.5 * v / order)));
+        s.poles.emplace_back(std::exp(1i * math::c_pi * (0.5 * v / order)));
         v += 2.;
       }
       // It is supposed to be -1 here. Makes sure the value is clean.
@@ -1038,7 +1038,7 @@ namespace audio
       auto v = static_cast<double>(1 - order);
       for (int i = 1; i <= order; ++i)
       {
-        auto p = std::exp(1i * M_PI * (0.5 * v / order));
+        auto p = std::exp(1i * math::c_pi * (0.5 * v / order));
         p = -std::sinh(v0) * std::real(p) + 1i * std::cosh(v0) * std::imag(p);
         s.poles.emplace_back(p);
         v += 2.;
@@ -1103,7 +1103,7 @@ namespace audio
       auto lambda = std::pow(10., ripple / 20.);
       auto phi = std::log(lambda + std::sqrt(math::sq(lambda) - 1.)) / order;
       auto v = math::linspace<double>(0.5, 1, order - 0.5);
-      auto theta = stlutils::mult_scalar(v, M_PI / order);
+      auto theta = stlutils::mult_scalar(v, math::c_pi / order);
       auto st = stlutils::static_cast_vector<std::complex<double>>(
         stlutils::sin(theta));
       auto ct = stlutils::static_cast_vector<std::complex<double>>(
@@ -1323,7 +1323,7 @@ namespace audio
       for (size_t m = 0; m < N; ++m)
       {
         auto m_alias = m % Nh;
-        auto w_m = std::exp(-2.if * static_cast<float>(M_PI * m) / static_cast<float>(N));
+        auto w_m = std::exp(-2.if * static_cast<float>(math::c_pi * m) / static_cast<float>(N));
         y[m] = y_even[m_alias] + w_m * y_odd[m_alias];
       }
       
@@ -1352,7 +1352,7 @@ namespace audio
       for (size_t m = 0; m < N; ++m)
       {
         auto m_alias = m % Nh;
-        auto w_m = std::exp(2.if * static_cast<float>(M_PI * m) / static_cast<float>(N));
+        auto w_m = std::exp(2.if * static_cast<float>(math::c_pi * m) / static_cast<float>(N));
         y[m] = y_even[m_alias] + w_m * y_odd[m_alias];
         //y[m] = (y_even[m_alias] + w_m * y_odd[m_alias])/static_cast<float>(N);
         //y[m] = (y_even[m_alias] + w_m * y_odd[m_alias])/static_cast<float>(Nh);
