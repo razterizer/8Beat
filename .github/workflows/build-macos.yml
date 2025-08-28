@@ -64,8 +64,17 @@ jobs:
         run: |
           cd ..
           ./8Beat/fetch-dependencies.py 8Beat/dependencies -y
+          
+      # Step 3: Install OpenAL
+      - name: Install OpenAL
+        run: brew install openal-soft
+        
+      # Step 4: Install libsndfile
+      - name: Install libsndfile
+        run: brew install libsndfile
+        # run: sudo apt install libsndfile1-dev
       
-      # Step 3: Change to the correct directory and build
+      # Step 5: Change to the correct directory and build
       - name: Build
         run: |
           cd demos
