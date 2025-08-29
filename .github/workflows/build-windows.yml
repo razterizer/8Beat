@@ -121,4 +121,3 @@ jobs:
         run: |
           cd demos
           .\build_all_demos.bat
-        continue-on-error: false # Ensure errors are not bypassed
