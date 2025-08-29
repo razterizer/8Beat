@@ -117,6 +117,7 @@ jobs:
       
       # Step 3: Change to the correct directory and build
       - name: Build
+        continue-on-error: false  # Ensure errors are not bypassed
         run: |
           cd demos
           .\build_all_demos.bat
