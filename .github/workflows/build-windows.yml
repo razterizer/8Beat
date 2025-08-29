@@ -109,15 +109,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      # Step 2: Move to the parent directory and fetch dependencies
+      # Step 2: Setup & Build.
       - name: Fetch dependencies
         run: |
-          cd ..
-          .\8Beat\fetch-dependencies.py .\8Beat\dependencies -y
-      
-      # Step 3: Change to the correct directory and build
-      - name: Build
-        continue-on-error: false  # Ensure errors are not bypassed
-        run: |
-          cd demos
-          .\build_all_demos.bat
+          .\setup_and_build_demos.bat
