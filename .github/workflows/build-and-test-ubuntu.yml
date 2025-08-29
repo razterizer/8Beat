@@ -67,11 +67,11 @@ jobs:
           
       # Step 3: Install OpenAL
       - name: Install OpenAL
-        run: brew install openal-soft
-        
+        run: sudo apt install libopenal-dev
+      
       # Step 4: Install libsndfile
       - name: Install libsndfile
-        run: brew install libsndfile
+        run: sudo apt install libsndfile-dev
         # run: sudo apt install libsndfile1-dev
       
       # Step 5: Change to the correct directory and build
