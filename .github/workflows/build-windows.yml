@@ -100,3 +100,24 @@ jobs:
           pwd
           dir
           .\build_all_demos.bat
+
+  build-demos-with-locked-dependencies:
+    runs-on: windows-latest
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # Step 2: Move to the parent directory and fetch dependencies
+      - name: Fetch dependencies
+        run: |
+          cd ..
+          8Beat\fetch-dependencies.py 8Beat\dependencies -y
+      
+      # Step 3: Change to the correct directory and build
+      - name: Build
+        run: |
+          cd demos
+          build_all_demos.bat
+        continue-on-error: false # Ensure errors are not bypassed
