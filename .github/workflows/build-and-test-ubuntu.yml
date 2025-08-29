@@ -51,6 +51,45 @@ jobs:
           ./build_demo_10.sh
         continue-on-error: false # Ensure errors are not bypassed
 
+  build-demos-with-locked-dependencies:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # Step 2: Move to the parent directory and fetch dependencies
+      - name: Fetch dependencies
+        run: |
+          cd ..
+          ./8Beat/fetch-dependencies.py 8Beat/dependencies -y
+          
+      # Step 3: Install OpenAL
+      - name: Install OpenAL
+        run: brew install openal-soft
+        
+      # Step 4: Install libsndfile
+      - name: Install libsndfile
+        run: brew install libsndfile
+        # run: sudo apt install libsndfile1-dev
+      
+      # Step 5: Change to the correct directory and build
+      - name: Build
+        run: |
+          cd demos
+          ./build_demo_1.sh
+          # ./build_demo_2.sh
+          ./build_demo_3.sh
+          ./build_demo_4.sh
+          ./build_demo_5.sh
+          ./build_demo_6.sh
+          ./build_demo_7.sh
+          ./build_demo_8.sh
+          ./build_demo_9.sh
+          ./build_demo_10.sh
+        continue-on-error: false # Ensure errors are not bypassed
+
   build-unit-tests:
     runs-on: ubuntu-latest
     
