@@ -14,7 +14,7 @@
 
 int main(int argc, char** argv)
 {
-  keyboard::StreamKeyboard keyboard;
+  t8::input::StreamKeyboard keyboard;
 
   std::cout << "Signal:\n";
   audio::Waveform wd_fft;

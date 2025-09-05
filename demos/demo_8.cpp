@@ -21,7 +21,7 @@ class Test : public audio::AudioStreamListener
 
 int main(int argc, char** argv)
 {
-  keyboard::StreamKeyboard keyboard;
+  t8::input::StreamKeyboard keyboard;
 
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
