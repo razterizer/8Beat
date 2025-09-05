@@ -15,7 +15,7 @@
 
 int main(int argc, char** argv)
 {
-  keyboard::StreamKeyboard keyboard;
+  t8::input::StreamKeyboard keyboard;
 
   using namespace audio;
   AudioSourceHandler src_handler;
