@@ -7,14 +7,14 @@
 
 #include "../AudioSourceHandler.h"
 #include "../WaveformHelper.h"
-#include <Termin8or/Keyboard.h>
+#include <Termin8or/input/Keyboard.h>
 #include <Core/StringHelper.h>
 
 
 
 int main(int argc, char** argv)
 {
-  t8::input::StreamKeyboard keyboard;
+  t8::StreamKeyboard keyboard;
 
   std::cout << "Signal:\n";
   audio::Waveform wd_fft;

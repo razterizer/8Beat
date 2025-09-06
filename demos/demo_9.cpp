@@ -8,13 +8,13 @@
 #include "../AudioSourceHandler.h"
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
-#include <Termin8or/Keyboard.h>
+#include <Termin8or/input/Keyboard.h>
 
 
 
 int main(int argc, char** argv)
 {
-  t8::input::StreamKeyboard keyboard;
+  t8::StreamKeyboard keyboard;
   
   audio::AudioSourceHandler src_handler;
   audio::WaveformGeneration wave_gen;
