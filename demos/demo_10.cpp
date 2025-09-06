@@ -9,13 +9,13 @@
 #include "../WaveformGeneration.h"
 #include "../WaveformHelper.h"
 #include "../SFX.h"
-#include <Termin8or/Keyboard.h>
+#include <Termin8or/input/Keyboard.h>
 
 
 
 int main(int argc, char** argv)
 {
-  t8::input::StreamKeyboard keyboard;
+  t8::StreamKeyboard keyboard;
 
   using namespace audio;
   AudioSourceHandler src_handler;
