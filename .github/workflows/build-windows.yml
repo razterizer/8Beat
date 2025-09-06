@@ -25,62 +25,8 @@ jobs:
           git clone https://github.com/razterizer/Termin8or.git
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
           git clone https://github.com/razterizer/TrainOfThought.git
-
-      # Step 3: Create 3rdparty directories in D:\a\DungGine.
-      - name: Create 3rdparty directories
-        run: |
-          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft
-          New-Item -ItemType Directory -Force -Path $env:GITHUB_WORKSPACE\..\3rdparty\lib
-
-      # Step 4: Download OpenAL Soft to D:\a\DungGine.
-      - name: Download OpenAL Soft
-        shell: pwsh
-        run: curl -L https://github.com/kcat/openal-soft/releases/download/1.24.3/openal-soft-1.24.3-bin.zip -o "$env:GITHUB_WORKSPACE/../openal-soft.zip"
-
-      # Step 5: Unzip OpenAL Soft to D:\a\DungGine.
-      - name: Unzip OpenAL Soft
-        run: |
-          Expand-Archive -Path $env:GITHUB_WORKSPACE\..\openal-soft.zip -DestinationPath $env:GITHUB_WORKSPACE\..
-
-      # Step 6: List contents of source directories to verify files.
-      - name: List contents of OpenAL Soft directories
-        run: |
-          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\openal-soft-1.24.3-bin\include
-          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\openal-soft-1.24.3-bin\libs
-          
-      # Step 7: Copy OpenAL Soft files to 3rdparty directories.
-      - name: Copy OpenAL Soft files
-        run: |
-          # Copy OpenAL Soft headers
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.24.3-bin\include\AL\* -Destination $env:GITHUB_WORKSPACE\..\3rdparty\include\OpenAL_Soft\ -Force
-          # Copy OpenAL32.lib
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\openal-soft-1.24.3-bin\libs\Win64\OpenAL32.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
-
-      # Step 8: Download libsndfile to D:\a\DungGine.
-      - name: Download libsndfile
-        run: curl -L https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2-win64.zip -o $env:GITHUB_WORKSPACE\..\libsndfile.zip
-
-      # Step 9: Unzip libsndfile to D:\a\DungGine.
-      - name: Unzip libsndfile
-        run: |
-          Expand-Archive -Path $env:GITHUB_WORKSPACE\..\libsndfile.zip -DestinationPath $env:GITHUB_WORKSPACE\..
-
-      # Step 10: List contents of source directories to verify files.
-      - name: List contents of libsndfile directories
-        run: |
-          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\include
-          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\lib
-          Get-ChildItem -Recurse $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\bin
-          
-      # Step 11: Copy libsndfile files to 3rdparty directories.
-      - name: Copy libsndfile files
-        run: |
-          # Copy libsndfile headers
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\include\* -Destination $env:GITHUB_WORKSPACE\..\3rdparty\include\ -Force
-          # Copy sndfile.lib
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\lib\sndfile.lib -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
-          # Copy sndfile.dll
-          Copy-Item -Path $env:GITHUB_WORKSPACE\..\libsndfile-1.2.2-win64\bin\sndfile.dll -Destination $env:GITHUB_WORKSPACE\..\3rdparty\lib\ -Force
+          git clone https://github.com/razterizer/3rdparty_OpenAL,git
+          git clone https://github.com/razterizer/3rdparty_libsndfile,git
 
       # Step 12: List contents of 3rdparty includes.
       - name: List 3rdparty/include files
