@@ -26,7 +26,7 @@ jobs:
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
           git clone https://github.com/razterizer/TrainOfThought.git
           git clone https://github.com/razterizer/3rdparty_OpenAL,git
-          git clone https://github.com/razterizer/3rdparty_libsndfile,git
+          git clone https://github.com/razterizer/3rdparty_libsndfile.git
 
       # Step 12: List contents of 3rdparty includes.
       - name: List 3rdparty/include files
