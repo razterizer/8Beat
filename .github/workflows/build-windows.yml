@@ -39,7 +39,7 @@ jobs:
 
   build-demos-with-locked-dependencies:
     runs-on: windows-latest
-    if: false
+    if: true
     
     steps:
       # Step 1: Checkout the repository
