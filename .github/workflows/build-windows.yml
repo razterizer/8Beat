@@ -28,16 +28,6 @@ jobs:
           git clone https://github.com/razterizer/3rdparty_OpenAL.git
           git clone https://github.com/razterizer/3rdparty_libsndfile.git
 
-      # Step 12: List contents of 3rdparty includes.
-      - name: List 3rdparty/include files
-      #  run: ls $env:GITHUB_WORKSPACE\..\3rpdarty\include\OpenAL_Soft
-        run: |
-          ls $env:GITHUB_WORKSPACE
-          ls $env:GITHUB_WORKSPACE/..
-          ls $env:GITHUB_WORKSPACE/../3rdparty/include
-          ls $env:GITHUB_WORKSPACE/../3rdparty/include/OpenAL_Soft
-          ls $env:GITHUB_WORKSPACE/../3rdparty/lib
-
       # Step 13: Change to the correct directory and build
       - name: Run build.bat
         continue-on-error: false  # Ensure errors are not bypassed
