@@ -10,7 +10,7 @@
 #include <iostream>
 #include <cassert>
 
-namespace audio
+namespace beat
 {
 
   void unit_tests()
