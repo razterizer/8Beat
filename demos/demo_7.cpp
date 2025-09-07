@@ -16,8 +16,8 @@ int main(int argc, char** argv)
 {
   t8::StreamKeyboard keyboard;
   
-  audio::AudioSourceHandler src_handler;
-  audio::WaveformGeneration wave_gen;
+  beat::AudioSourceHandler src_handler;
+  beat::WaveformGeneration wave_gen;
   
 #ifdef _MSC_VER
   std::string wk_dir = "../sounds/";
@@ -25,7 +25,7 @@ int main(int argc, char** argv)
   std::string wk_dir = "./sounds/";
 #endif
 
-  audio::ChipTuneEngine chiptune_engine(src_handler, wave_gen);
+  beat::ChipTuneEngine chiptune_engine(src_handler, wave_gen);
   chiptune_engine.load_tune(wk_dir + "chiptune3.ct", true);
   chiptune_engine.set_volume(0.8f);
   chiptune_engine.play_tune(false, true);

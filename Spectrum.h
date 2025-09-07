@@ -11,7 +11,7 @@
 #include <complex>
 
 
-namespace audio
+namespace beat
 {
 
   // FFT Spectrum.

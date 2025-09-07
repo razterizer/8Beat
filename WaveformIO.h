@@ -17,7 +17,7 @@
 #define SUBTYPE_ITEM(sti) sti = SF_FORMAT_##sti
 
 
-namespace audio
+namespace beat
 {
   enum class AudioFileFormatSubType : int
   {

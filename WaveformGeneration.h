@@ -21,7 +21,7 @@
 #define PHASE_FUNC_ARGS float, float
 
 
-namespace audio
+namespace beat
 {
   enum class WaveformType { SINE, SQUARE, TRIANGLE, SAWTOOTH, NOISE };
   enum class FrequencyType { CONSTANT, JET_ENGINE_POWERUP, CHIRP_0, CHIRP_1, CHIRP_2 };

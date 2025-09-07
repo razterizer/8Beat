@@ -10,7 +10,7 @@
 #include <vector>
 
 
-namespace audio
+namespace beat
 {
 
   // The returned data from the waveform generator or file loader.

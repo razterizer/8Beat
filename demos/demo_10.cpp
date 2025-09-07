@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 {
   t8::StreamKeyboard keyboard;
 
-  using namespace audio;
+  using namespace beat;
   AudioSourceHandler src_handler;
   WaveformGeneration wave_gen;
   rnd::srand_time();

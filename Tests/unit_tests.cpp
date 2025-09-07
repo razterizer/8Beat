@@ -12,7 +12,7 @@
 int main(int argc, char** argv)
 {
   std::cout << "### WaveformHelper Tests ###" << std::endl;
-  audio::unit_tests();
+  beat::unit_tests();
   
   return 0;
 }

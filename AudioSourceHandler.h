@@ -25,11 +25,11 @@
 
 
 
-namespace audio
+namespace beat
 {
   enum class PlaybackMode { NONE, SLEEP, STATE_WAIT };
   const short c_amplitude_0 = 32767;
-  AudioLibSwitcher_OpenAL m_audio_lib;
+  audio::AudioLibSwitcher_OpenAL m_audio_lib;
   
   class AudioSourceBase
   {

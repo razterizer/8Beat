@@ -10,7 +10,7 @@
 #include <string>
 #include <optional>
 
-namespace audio
+namespace beat
 {
   class ChipTuneEngine;
   

@@ -19,7 +19,7 @@
 #include <iostream>
 
 
-namespace audio
+namespace beat
 {
   using namespace std::complex_literals;
 

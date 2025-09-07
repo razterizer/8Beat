@@ -11,7 +11,7 @@
 #include "WaveformHelper.h"
 
 
-namespace audio
+namespace beat
 {
   enum class InstrumentType
   {
