@@ -16,8 +16,8 @@ int main(int argc, char** argv)
 {
   t8::StreamKeyboard keyboard;
 
-  audio::AudioSourceHandler src_handler;
-  audio::WaveformGeneration wave_gen;
+  beat::AudioSourceHandler src_handler;
+  beat::WaveformGeneration wave_gen;
   
   auto wave_func = [](float phi, float /*param*/) -> float
   {
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
   
   auto freq = 440.f;
   
-  audio::Waveform wd;
+  beat::Waveform wd;
   
 #if 1
   int sample_rate = 44'100;
@@ -61,12 +61,12 @@ int main(int argc, char** argv)
   int sample_rate = 10'000;
 #endif
 
-  audio::WaveformGenerationParams params;
+  beat::WaveformGenerationParams params;
 
   switch (test)
   {
     case TestType::TEST_SIMPLE:
-      wd = wave_gen.generate_waveform(audio::WaveformType::SINE, duration_s, freq,
+      wd = wave_gen.generate_waveform(beat::WaveformType::SINE, duration_s, freq,
                                       params, sample_rate);
       break;
     case TestType::TEST_WAVE_LAMBDA:
@@ -74,14 +74,14 @@ int main(int argc, char** argv)
                                       params, sample_rate);
       break;
     case TestType::TEST_FREQ_LAMBDA:
-      wd = wave_gen.generate_waveform(audio::WaveformType::TRIANGLE, duration_s, freq,
+      wd = wave_gen.generate_waveform(beat::WaveformType::TRIANGLE, duration_s, freq,
                                       params, sample_rate, false,
                                       freq_func);
       break;
     case TestType::TEST_AMPL_LAMBDA:
-      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
+      wd = wave_gen.generate_waveform(beat::WaveformType::SAWTOOTH, duration_s, freq,
                                       params, sample_rate, false,
-                                      audio::FrequencyType::CONSTANT, ampl_func);
+                                      beat::FrequencyType::CONSTANT, ampl_func);
       break;
     case TestType::TEST_ALL_LAMBDA:
       wd = wave_gen.generate_waveform(wave_func, duration_s, freq,
@@ -89,14 +89,14 @@ int main(int argc, char** argv)
                                       freq_func, ampl_func);
       break;
     case TestType::TEST_ALL_ENUM:
-      wd = wave_gen.generate_waveform(audio::WaveformType::SAWTOOTH, duration_s, freq,
+      wd = wave_gen.generate_waveform(beat::WaveformType::SAWTOOTH, duration_s, freq,
                                       params, sample_rate, false,
-                                      audio::FrequencyType::JET_ENGINE_POWERUP, audio::AmplitudeType::JET_ENGINE_POWERUP);
+                                      beat::FrequencyType::JET_ENGINE_POWERUP, beat::AmplitudeType::JET_ENGINE_POWERUP);
       break;
   }
-  auto wd2 = audio::WaveformHelper::resample(wd, 44'100, audio::FilterType::Butterworth, 2, 1.2f, 1.f);
+  auto wd2 = beat::WaveformHelper::resample(wd, 44'100, beat::FilterType::Butterworth, 2, 1.2f, 1.f);
   auto src = src_handler.create_source_from_waveform(wd2);
-  src->play(audio::PlaybackMode::STATE_WAIT);
+  src->play(beat::PlaybackMode::STATE_WAIT);
   
 // Plot Audio
 
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
   
 #define USE_TIME_INTERVAL
 #ifdef USE_TIME_INTERVAL
-  auto T = audio::WaveformHelper::calc_time_from_num_cycles(wd2, 1);
+  auto T = beat::WaveformHelper::calc_time_from_num_cycles(wd2, 1);
   float start = 0.f; //100*T;
   //float dt = 1.f/wd.sample_rate;
   //float end = 100*dt;
@@ -118,31 +118,31 @@ int main(int argc, char** argv)
   std::optional<int> end = std::nullopt;//400;
 #endif
 
-  auto print_waveform_graph = [](const audio::Waveform& wave, audio::GraphType graph_type,
+  auto print_waveform_graph = [](const beat::Waveform& wave, beat::GraphType graph_type,
                                  int width, int height,
                                  auto start, auto end)
   {
 #ifdef USE_TIME_INTERVAL
-    audio::WaveformHelper::print_waveform_graph_t(wave, graph_type, width, height, start, end);
+    beat::WaveformHelper::print_waveform_graph_t(wave, graph_type, width, height, start, end);
 #else
-    audio::WaveformHelper::print_waveform_graph_idx(wave, graph_type, width, height, start, end);
+    beat::WaveformHelper::print_waveform_graph_idx(wave, graph_type, width, height, start, end);
 #endif
   };
 
   std::cout << "plot thin:\n";
-  print_waveform_graph(wd2, audio::GraphType::PLOT_THIN, width, height, start, end);
+  print_waveform_graph(wd2, beat::GraphType::PLOT_THIN, width, height, start, end);
   std::cout << "plot thick 0:\n";
-  print_waveform_graph(wd2, audio::GraphType::PLOT_THICK0, width, height, start, end);
+  print_waveform_graph(wd2, beat::GraphType::PLOT_THICK0, width, height, start, end);
   std::cout << "plot thick 1:\n";
-  print_waveform_graph(wd2, audio::GraphType::PLOT_THICK1, width, height, start, end);
+  print_waveform_graph(wd2, beat::GraphType::PLOT_THICK1, width, height, start, end);
   std::cout << "plot thick 2:\n";
-  print_waveform_graph(wd2, audio::GraphType::PLOT_THICK2, width, height, start, end);
+  print_waveform_graph(wd2, beat::GraphType::PLOT_THICK2, width, height, start, end);
   std::cout << "plot thick 3:\n";
-  print_waveform_graph(wd2, audio::GraphType::PLOT_THICK3, width, height, start, end);
+  print_waveform_graph(wd2, beat::GraphType::PLOT_THICK3, width, height, start, end);
   std::cout << "filled bottom-up:\n";
-  print_waveform_graph(wd2, audio::GraphType::FILLED_BOTTOM_UP, width, height, start, end);
+  print_waveform_graph(wd2, beat::GraphType::FILLED_BOTTOM_UP, width, height, start, end);
   std::cout << "filled from t-axis:\n";
-  print_waveform_graph(wd2, audio::GraphType::FILLED_FROM_T_AXIS, width, height, start, end);
+  print_waveform_graph(wd2, beat::GraphType::FILLED_FROM_T_AXIS, width, height, start, end);
   
   keyboard.pressAnyKey();
   

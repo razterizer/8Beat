@@ -22,7 +22,7 @@
 #include <atomic>
 
 
-namespace audio
+namespace beat
 {
 
   class ChipTuneEngine : public ChipTuneEngineParser, public EventBroadcaster<ChipTuneEngineListener>

@@ -15,7 +15,7 @@
 #include <sstream>
 
 
-namespace audio
+namespace beat
 {
 
   class ChipTuneEngineParser

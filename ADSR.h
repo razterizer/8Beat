@@ -14,7 +14,7 @@
 #include <string>
 
 
-namespace audio
+namespace beat
 {
 
   enum class ADSRMode { LIN, EXP, LOG };
