@@ -4,11 +4,13 @@ os_name=$(uname)
 
 if [[ $os_name == *"Darwin"* ]]; then
   additional_flags="-I../.. \
-  -I/opt/homebrew/opt/openal-soft/include -I/opt/homebrew/opt/libsndfile/include \
-  -L/opt/homebrew/opt/openal-soft/lib -L/opt/homebrew/opt/libsndfile/lib \
-  -lopenal -lsndfile"
+    -I../../Termin8or/include \
+    -I/opt/homebrew/opt/openal-soft/include -I/opt/homebrew/opt/libsndfile/include \
+    -L/opt/homebrew/opt/openal-soft/lib -L/opt/homebrew/opt/libsndfile/lib \
+    -lopenal -lsndfile"
 else
-  additional_flags="-I../.."
+  additional_flags="-I../.. \
+    -I../../Termin8or/include"
   # #FIXME: Add libsndfile here as well.
   export BUILD_PKG_CONFIG_MODULES='openal'
 fi
