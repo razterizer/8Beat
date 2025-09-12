@@ -436,13 +436,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HFL2Q84SZB;
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = (
+					../Termin8or/include/,
+					../,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SYSTEM_HEADER_SEARCH_PATHS = (
 					"/opt/homebrew/opt/openal-soft/include/",
 					/opt/homebrew/opt/libsndfile/include,
-					../,
 				);
 			};
 			name = Debug;
@@ -453,13 +455,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HFL2Q84SZB;
 				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = (
+					../Termin8or/include/,
+					../,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SYSTEM_HEADER_SEARCH_PATHS = (
 					"/opt/homebrew/opt/openal-soft/include/",
 					/opt/homebrew/opt/libsndfile/include,
-					../,
 				);
 			};
 			name = Release;
