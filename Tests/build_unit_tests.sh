@@ -2,6 +2,7 @@
 
 
 additional_flags="-I../.. \
+  -I../include/8Beat \
   -I../../Core/include"
 
 ../../Core/build.sh unit_tests "$1" "${additional_flags[@]}"
