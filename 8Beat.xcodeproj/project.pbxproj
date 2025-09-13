@@ -464,6 +464,7 @@
 				DEVELOPMENT_TEAM = HFL2Q84SZB;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = (
+					../Core/include,
 					../Termin8or/include/,
 					../,
 				);
@@ -483,6 +484,7 @@
 				DEVELOPMENT_TEAM = HFL2Q84SZB;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = (
+					../Core/include,
 					../Termin8or/include/,
 					../,
 				);
