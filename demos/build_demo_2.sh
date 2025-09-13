@@ -4,6 +4,7 @@ os_name=$(uname)
 
 if [[ $os_name == *"Darwin"* ]]; then
   additional_flags="-I../.. \
+    -I../include/8Beat \
     -I../../Core/include \
     -I../../Termin8or/include \
     -I/opt/homebrew/opt/openal-soft/include -I/opt/homebrew/opt/libsndfile/include \
@@ -11,6 +12,7 @@ if [[ $os_name == *"Darwin"* ]]; then
     -lopenal -lsndfile"
 else
   additional_flags="-I../.. \
+    -I../include/8Beat \
     -I../../Core/include \
     -I../../Termin8or/include"
   # #FIXME: Add libsndfile here as well.

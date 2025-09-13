@@ -5,8 +5,8 @@
 //  Created by Rasmus Anthin on 2024-03-17.
 //
 
-#include "../AudioSourceHandler.h"
-#include "../WaveformHelper.h"
+#include "AudioSourceHandler.h"
+#include "WaveformHelper.h"
 #include <Termin8or/input/Keyboard.h>
 #include <Core/StringHelper.h>
 
