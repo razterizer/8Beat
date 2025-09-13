@@ -5,10 +5,10 @@
 //  Created by Rasmus Anthin on 2024-03-16.
 //
 
-#include "../AudioSourceHandler.h"
-#include "../WaveformGeneration.h"
-#include "../WaveformHelper.h"
-#include "../WaveformIO.h"
+#include "AudioSourceHandler.h"
+#include "WaveformGeneration.h"
+#include "WaveformHelper.h"
+#include "WaveformIO.h"
 #include <Termin8or/input/Keyboard.h>
 #include <filesystem>
 
