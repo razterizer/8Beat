@@ -466,6 +466,7 @@
 				HEADER_SEARCH_PATHS = (
 					../Core/include,
 					../Termin8or/include/,
+					../TrainOfThought/include,
 					../,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -486,6 +487,7 @@
 				HEADER_SEARCH_PATHS = (
 					../Core/include,
 					../Termin8or/include/,
+					../TrainOfThought/include,
 					../,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
