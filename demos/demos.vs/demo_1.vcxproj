@@ -75,10 +75,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(SolutionDir)\..\..\..;$(SolutionDir)\..\..\..\Core\include;$(SolutionDir)\..\..\..\Termin8or\include;$(SolutionDir)\..\..\..\3rdparty_OpenAL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)\..\..\..;$(SolutionDir)\..\..\..\Core\include;$(SolutionDir)\..\..\..\Termin8or\include;$(SolutionDir)\..\..\..\TrainOfThought\include;$(SolutionDir)\..\..\..\3rdparty_OpenAL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(SolutionDir)\..\..\..;$(SolutionDir)\..\..\..\Core\include;$(SolutionDir)\..\..\..\Termin8or\include;$(SolutionDir)\..\..\..\3rdparty_OpenAL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)\..\..\..;$(SolutionDir)\..\..\..\Core\include;$(SolutionDir)\..\..\..\Termin8or\include;$(SolutionDir)\..\..\..\TrainOfThought\include;$(SolutionDir)\..\..\..\3rdparty_OpenAL\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

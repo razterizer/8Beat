@@ -3,7 +3,8 @@
 
 additional_flags="-I../.. \
   -I../include/8Beat \
-  -I../../Core/include"
+  -I../../Core/include \
+  -I../../TrainOfThought/include"
 
 ../../Core/build.sh unit_tests "$1" "${additional_flags[@]}"
 

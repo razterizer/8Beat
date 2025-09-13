@@ -7,12 +7,14 @@ if [[ $os_name == *"Darwin"* ]]; then
     -I../include/8Beat \
     -I../../Core/include \
     -I../../Termin8or/include \
+    -I../../TrainOfThought/include \
     -I/opt/homebrew/opt/openal-soft/include -L/opt/homebrew/opt/openal-soft/lib -lopenal"
 else
   additional_flags="-I../.. \
     -I../include/8Beat \
     -I../../Core/include \
-    -I../../Termin8or/include"
+    -I../../Termin8or/include \
+    -I../../TrainOfThought/include"
   export BUILD_PKG_CONFIG_MODULES='openal'
 fi
 
