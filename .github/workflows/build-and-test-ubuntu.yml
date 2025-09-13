@@ -185,7 +185,7 @@ jobs:
       # Run Clang Static Analyzer on static_analysis.cpp
       - name: Run Clang Static Analyzer
         run: |
-          scan-build clang++ -std=c++20 -c static_analysis.cpp -I..
+          scan-build clang++ -std=c++20 -c static_analysis.cpp -I.. -I../Core/include
 
   generate-loc-badge:
     runs-on: ubuntu-latest
