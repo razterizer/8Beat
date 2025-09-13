@@ -6,7 +6,7 @@
 //
 
 #pragma once
-#include "../WaveformHelper.h"
+#include "WaveformHelper.h"
 #include <iostream>
 #include <cassert>
 
