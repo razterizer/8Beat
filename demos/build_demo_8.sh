@@ -3,18 +3,22 @@
 os_name=$(uname)
 
 if [[ $os_name == *"Darwin"* ]]; then
-  additional_flags="-I../.. \
+  additional_flags="\
     -I../include/8Beat \
     -I../../Core/include \
     -I../../Termin8or/include \
     -I../../TrainOfThought/include \
+    -I../../AudioLibSwitcher/include \
+    -I../../AudioLibSwitcher_OpenAL/include \
     -I/opt/homebrew/opt/openal-soft/include -L/opt/homebrew/opt/openal-soft/lib -lopenal"
 else
-  additional_flags="-I../.. \
+  additional_flags="\
     -I../include/8Beat \
     -I../../Core/include \
     -I../../Termin8or/include \
-    -I../../TrainOfThought/include"
+    -I../../TrainOfThought/include \
+    -I../../AudioLibSwitcher/include \
+    -I../../AudioLibSwitcher_OpenAL/include"
   export BUILD_PKG_CONFIG_MODULES='openal'
 fi
 
