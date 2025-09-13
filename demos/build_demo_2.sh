@@ -8,7 +8,6 @@ if [[ $os_name == *"Darwin"* ]]; then
     -I../../Core/include \
     -I../../Termin8or/include \
     -I../../TrainOfThought/include \
-    -I../../AudioLibSwitcher/include \
     -I../../AudioLibSwitcher_OpenAL/include \
     -I/opt/homebrew/opt/openal-soft/include -I/opt/homebrew/opt/libsndfile/include \
     -L/opt/homebrew/opt/openal-soft/lib -L/opt/homebrew/opt/libsndfile/lib \
@@ -19,7 +18,6 @@ else
     -I../../Core/include \
     -I../../Termin8or/include \
     -I../../TrainOfThought/include \
-    -I../../AudioLibSwitcher/include \
     -I../../AudioLibSwitcher_OpenAL/include"
   # #FIXME: Add libsndfile here as well.
   export BUILD_PKG_CONFIG_MODULES='openal'

@@ -464,10 +464,10 @@
 				DEVELOPMENT_TEAM = HFL2Q84SZB;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = (
-					../Core/include,
+					../Core/include/,
 					../Termin8or/include/,
-					../TrainOfThought/include,
-					../,
+					../TrainOfThought/include/,
+					../AudioLibSwitcher_OpenAL/include/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -485,10 +485,10 @@
 				DEVELOPMENT_TEAM = HFL2Q84SZB;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = (
-					../Core/include,
+					../Core/include/,
 					../Termin8or/include/,
-					../TrainOfThought/include,
-					../,
+					../TrainOfThought/include/,
+					../AudioLibSwitcher_OpenAL/include/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
