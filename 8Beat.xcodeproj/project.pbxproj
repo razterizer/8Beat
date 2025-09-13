@@ -8,9 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		0739D9CB2BA61E5900964E96 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0739D9CA2BA61E5900964E96 /* OpenAL.framework */; };
-		07A763292B5BC85300705D31 /* AudioSourceHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 07A763282B5BC85300705D31 /* AudioSourceHandler.h */; };
-		07A7632A2B5BDE4E00705D31 /* AudioSourceHandler.h in Sources */ = {isa = PBXBuildFile; fileRef = 07A763282B5BC85300705D31 /* AudioSourceHandler.h */; };
-		07A7633B2B5DAA8A00705D31 /* ChipTuneEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */; };
+		07BDBB5A2E755766002ACC96 /* WaveformHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB572E755766002ACC96 /* WaveformHelper.h */; };
+		07BDBB5B2E755766002ACC96 /* Waveform.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB552E755766002ACC96 /* Waveform.h */; };
+		07BDBB5C2E755766002ACC96 /* Synthesizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB542E755766002ACC96 /* Synthesizer.h */; };
+		07BDBB5D2E755766002ACC96 /* Spectrum.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB532E755766002ACC96 /* Spectrum.h */; };
+		07BDBB5E2E755766002ACC96 /* SFX.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB522E755766002ACC96 /* SFX.h */; };
+		07BDBB5F2E755766002ACC96 /* ChipTuneEngineListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB512E755766002ACC96 /* ChipTuneEngineListener.h */; };
+		07BDBB602E755766002ACC96 /* ADSR.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB4E2E755766002ACC96 /* ADSR.h */; };
+		07BDBB612E755766002ACC96 /* ChipTuneEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB502E755766002ACC96 /* ChipTuneEngine.h */; };
+		07BDBB622E755766002ACC96 /* ChipTuneEngineParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB4C2E755766002ACC96 /* ChipTuneEngineParser.h */; };
+		07BDBB632E755766002ACC96 /* AudioSourceHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB4F2E755766002ACC96 /* AudioSourceHandler.h */; };
+		07BDBB642E755766002ACC96 /* WaveformGeneration.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB562E755766002ACC96 /* WaveformGeneration.h */; };
+		07BDBB652E755766002ACC96 /* WaveformIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB582E755766002ACC96 /* WaveformIO.h */; };
 		07FDE98A2CA8D78E00116BA7 /* unit_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07FDE9892CA8D78E00116BA7 /* unit_tests.cpp */; };
 /* End PBXBuildFile section */
 
@@ -19,9 +28,6 @@
 		0709B9BF2C95831C00A43834 /* build-macos.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-macos.yml"; path = ".github/workflows/build-macos.yml"; sourceTree = "<group>"; };
 		0709B9C02C95831C00A43834 /* build-windows.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-windows.yml"; path = ".github/workflows/build-windows.yml"; sourceTree = "<group>"; };
 		0709B9C12C95831C00A43834 /* build-and-test-ubuntu.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-and-test-ubuntu.yml"; path = ".github/workflows/build-and-test-ubuntu.yml"; sourceTree = "<group>"; };
-		071671282B7867B90043E9F2 /* Waveform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Waveform.h; sourceTree = "<group>"; };
-		0716712C2B7FA58F0043E9F2 /* WaveformIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformIO.h; sourceTree = "<group>"; };
-		0716712D2B7FF4DB0043E9F2 /* Spectrum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Spectrum.h; sourceTree = "<group>"; };
 		072AE7FF2D0E73C5004F92D3 /* setup_and_build_demos.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = setup_and_build_demos.bat; sourceTree = SOURCE_ROOT; };
 		072AE8002D0E73D2004F92D3 /* setup_and_build_demos_debian.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_debian.sh; sourceTree = SOURCE_ROOT; };
 		072AE8012D0E73D2004F92D3 /* setup_and_build_demos_macos.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_macos.sh; sourceTree = SOURCE_ROOT; };
@@ -31,7 +37,6 @@
 		0739D9C72BA614D700964E96 /* Cat_Meow_2-Cat_Stevens-2034822903.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Cat_Meow_2-Cat_Stevens-2034822903.wav"; sourceTree = "<group>"; };
 		0739D9C82BA6199300964E96 /* 07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav"; sourceTree = "<group>"; };
 		0739D9CA2BA61E5900964E96 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
-		0739D9E02BA6521800964E96 /* ChipTuneEngineParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineParser.h; sourceTree = "<group>"; };
 		0739D9E22BA7886C00964E96 /* demo_3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_3.cpp; sourceTree = "<group>"; };
 		0739D9E32BA7904100964E96 /* demo_4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_4.cpp; sourceTree = "<group>"; };
 		0739D9E42BA82C4700964E96 /* demo_5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_5.cpp; sourceTree = "<group>"; };
@@ -43,11 +48,8 @@
 		0739DB822BC35B6900964E96 /* lib8-Bit Audio Emulator Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "lib8-Bit Audio Emulator Lib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0739DB832BC35B9600964E96 /* demo_9.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_9.cpp; sourceTree = "<group>"; };
 		0739DB842BCEE98C00964E96 /* demo_10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_10.cpp; sourceTree = "<group>"; };
-		075A33DA2BF8BB85004547CC /* SFX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFX.h; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		076AB05B2C9DD60C00531419 /* run_all_demos.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = run_all_demos.bat; sourceTree = "<group>"; };
-		07880A532B87AAFA00711230 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
-		07880A542B87CB9A00711230 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
 		078F2B872C03E29D00FF60F8 /* build_demo_6.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_6.sh; sourceTree = "<group>"; };
 		078F2B882C03E29D00FF60F8 /* build_demo_5.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_5.sh; sourceTree = "<group>"; };
 		078F2B892C03E29D00FF60F8 /* build_demo_2.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_2.sh; sourceTree = "<group>"; };
@@ -60,11 +62,18 @@
 		078F2B902C03E2B800FF60F8 /* run_all_demos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_all_demos.sh; sourceTree = "<group>"; };
 		078F2B912C03E2D100FF60F8 /* build_demo_1.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_1.sh; sourceTree = "<group>"; };
 		078F2B922C03E2D100FF60F8 /* build_demo_9.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_9.sh; sourceTree = "<group>"; };
-		07A763282B5BC85300705D31 /* AudioSourceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
-		07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngine.h; sourceTree = "<group>"; };
-		07B91EFC2CF24D9C00449D7E /* ChipTuneEngineListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineListener.h; sourceTree = "<group>"; };
-		07BB7BDB2B7794FD002899C9 /* WaveformHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformHelper.h; sourceTree = "<group>"; };
-		07BB7BDC2B779BA0002899C9 /* WaveformGeneration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformGeneration.h; sourceTree = "<group>"; };
+		07BDBB4C2E755766002ACC96 /* ChipTuneEngineParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineParser.h; sourceTree = "<group>"; };
+		07BDBB4E2E755766002ACC96 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
+		07BDBB4F2E755766002ACC96 /* AudioSourceHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
+		07BDBB502E755766002ACC96 /* ChipTuneEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngine.h; sourceTree = "<group>"; };
+		07BDBB512E755766002ACC96 /* ChipTuneEngineListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineListener.h; sourceTree = "<group>"; };
+		07BDBB522E755766002ACC96 /* SFX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFX.h; sourceTree = "<group>"; };
+		07BDBB532E755766002ACC96 /* Spectrum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Spectrum.h; sourceTree = "<group>"; };
+		07BDBB542E755766002ACC96 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
+		07BDBB552E755766002ACC96 /* Waveform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Waveform.h; sourceTree = "<group>"; };
+		07BDBB562E755766002ACC96 /* WaveformGeneration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformGeneration.h; sourceTree = "<group>"; };
+		07BDBB572E755766002ACC96 /* WaveformHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformHelper.h; sourceTree = "<group>"; };
+		07BDBB582E755766002ACC96 /* WaveformIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformIO.h; sourceTree = "<group>"; };
 		07FDE9862CA8D31E00116BA7 /* WaveformHelper_tests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformHelper_tests.h; sourceTree = "<group>"; };
 		07FDE9892CA8D78E00116BA7 /* unit_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = unit_tests.cpp; sourceTree = "<group>"; };
 		07FDE98B2CA8D7E700116BA7 /* build_unit_tests.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_unit_tests.sh; sourceTree = "<group>"; };
@@ -141,14 +150,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0739D9DF2BA651A300964E96 /* ChipTuneEngine_Internals */ = {
-			isa = PBXGroup;
-			children = (
-				0739D9E02BA6521800964E96 /* ChipTuneEngineParser.h */,
-			);
-			path = ChipTuneEngine_Internals;
-			sourceTree = "<group>";
-		};
 		078F2B862C03E27B00FF60F8 /* scripts_linmac */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,24 +176,41 @@
 			children = (
 				0739D9C12BA2434200964E96 /* LICENSE */,
 				0760B6F12B9E3C610032CACD /* README.md */,
+				07BDBB592E755766002ACC96 /* 8Beat */,
 				0739D9C22BA59C8300964E96 /* demos */,
 				0709B9BE2C9582E600A43834 /* workflows */,
-				07880A542B87CB9A00711230 /* Synthesizer.h */,
-				075A33DA2BF8BB85004547CC /* SFX.h */,
-				07880A532B87AAFA00711230 /* ADSR.h */,
-				0716712D2B7FF4DB0043E9F2 /* Spectrum.h */,
-				071671282B7867B90043E9F2 /* Waveform.h */,
-				0716712C2B7FA58F0043E9F2 /* WaveformIO.h */,
-				07BB7BDC2B779BA0002899C9 /* WaveformGeneration.h */,
-				07BB7BDB2B7794FD002899C9 /* WaveformHelper.h */,
-				07A763282B5BC85300705D31 /* AudioSourceHandler.h */,
-				07A7633A2B5DAA8A00705D31 /* ChipTuneEngine.h */,
-				07B91EFC2CF24D9C00449D7E /* ChipTuneEngineListener.h */,
-				0739D9DF2BA651A300964E96 /* ChipTuneEngine_Internals */,
 				07FDE9852CA8D2F200116BA7 /* Tests */,
 				0739D9C92BA61E5900964E96 /* Frameworks */,
 				0739DB822BC35B6900964E96 /* lib8-Bit Audio Emulator Lib.a */,
 			);
+			sourceTree = "<group>";
+		};
+		07BDBB4D2E755766002ACC96 /* ChipTuneEngine_Internals */ = {
+			isa = PBXGroup;
+			children = (
+				07BDBB4C2E755766002ACC96 /* ChipTuneEngineParser.h */,
+			);
+			path = ChipTuneEngine_Internals;
+			sourceTree = "<group>";
+		};
+		07BDBB592E755766002ACC96 /* 8Beat */ = {
+			isa = PBXGroup;
+			children = (
+				07BDBB4D2E755766002ACC96 /* ChipTuneEngine_Internals */,
+				07BDBB4E2E755766002ACC96 /* ADSR.h */,
+				07BDBB4F2E755766002ACC96 /* AudioSourceHandler.h */,
+				07BDBB502E755766002ACC96 /* ChipTuneEngine.h */,
+				07BDBB512E755766002ACC96 /* ChipTuneEngineListener.h */,
+				07BDBB522E755766002ACC96 /* SFX.h */,
+				07BDBB532E755766002ACC96 /* Spectrum.h */,
+				07BDBB542E755766002ACC96 /* Synthesizer.h */,
+				07BDBB552E755766002ACC96 /* Waveform.h */,
+				07BDBB562E755766002ACC96 /* WaveformGeneration.h */,
+				07BDBB572E755766002ACC96 /* WaveformHelper.h */,
+				07BDBB582E755766002ACC96 /* WaveformIO.h */,
+			);
+			name = 8Beat;
+			path = include/8Beat;
 			sourceTree = "<group>";
 		};
 		07FDE9852CA8D2F200116BA7 /* Tests */ = {
@@ -212,8 +230,18 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07A7633B2B5DAA8A00705D31 /* ChipTuneEngine.h in Headers */,
-				07A763292B5BC85300705D31 /* AudioSourceHandler.h in Headers */,
+				07BDBB5A2E755766002ACC96 /* WaveformHelper.h in Headers */,
+				07BDBB5B2E755766002ACC96 /* Waveform.h in Headers */,
+				07BDBB5C2E755766002ACC96 /* Synthesizer.h in Headers */,
+				07BDBB5D2E755766002ACC96 /* Spectrum.h in Headers */,
+				07BDBB5E2E755766002ACC96 /* SFX.h in Headers */,
+				07BDBB5F2E755766002ACC96 /* ChipTuneEngineListener.h in Headers */,
+				07BDBB602E755766002ACC96 /* ADSR.h in Headers */,
+				07BDBB612E755766002ACC96 /* ChipTuneEngine.h in Headers */,
+				07BDBB622E755766002ACC96 /* ChipTuneEngineParser.h in Headers */,
+				07BDBB632E755766002ACC96 /* AudioSourceHandler.h in Headers */,
+				07BDBB642E755766002ACC96 /* WaveformGeneration.h in Headers */,
+				07BDBB652E755766002ACC96 /* WaveformIO.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,7 +323,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07A7632A2B5BDE4E00705D31 /* AudioSourceHandler.h in Sources */,
 				07FDE98A2CA8D78E00116BA7 /* unit_tests.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
