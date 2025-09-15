@@ -468,6 +468,8 @@
 					../Termin8or/include/,
 					../TrainOfThought/include/,
 					../AudioLibSwitcher_OpenAL/include/,
+					../AudioLibSwitcher_applaudio/include/,
+					../applaudio/include/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -489,6 +491,8 @@
 					../Termin8or/include/,
 					../TrainOfThought/include/,
 					../AudioLibSwitcher_OpenAL/include/,
+					../AudioLibSwitcher_applaudio/include/,
+					../applaudio/include/,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
