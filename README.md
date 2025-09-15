@@ -301,3 +301,22 @@ to this (applaudio-based):
 ```xml
 <AdditionalDependencies>ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
 ```
+
+And remove the copying of the OpenAL dll:
+
+```xml
+<PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)\music.ct" "$(TargetDir)" /Y
+xcopy "$(SolutionDir)\..\..\lib\Termin8or\include\Termin8or\title\fonts\*" "$(TargetDir)\fonts\" /Y
+xcopy "$(SolutionDir)..\..\lib\3rdparty_OpenAL\lib\OpenAL32.dll" "$(TargetDir)" /Y</Command>
+    </PostBuildEvent>
+```
+
+so it becomes:
+
+```xml
+<PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)\music.ct" "$(TargetDir)" /Y
+xcopy "$(SolutionDir)\..\..\lib\Termin8or\include\Termin8or\title\fonts\*" "$(TargetDir)\fonts\" /Y
+    </PostBuildEvent>
+```
