@@ -201,3 +201,22 @@ Install **libsndfile** using `brew install libsndfile`. The build script(s) take
 Install **OpenAL Soft** using `sudo apt install libopenal-dev`.
 
 Install **libsndfile** using `sudo apt install libsndfile-dev`.
+
+## AudioLibSwitcher
+
+As my own audio library [`applaudio`](https://github.com/razterizer/applaudio) is becoming more and more stable, you have the option to choose between OpenAL/OpenAL_Soft (GPL-based) and applaudio (MIT). This is nice, because it will allow you to build a release that is entirely MIT-licensed without having to be infected by the GPL-virus.
+
+The `dependencies` file of your application repo can now look like this:
+```
+lib/Core                       https://github.com/razterizer/Core.git                   dbe2f701a255d578308c254839a3641786777658
+lib/Termin8or                  https://github.com/razterizer/Termin8or.git              fb8e4ce8efabe83167192c5d82c4448e6ec8b45f
+lib/8Beat                      https://github.com/razterizer/8Beat                      041761531cdc6721d4aea07da63c0b2a5b7403d7
+lib/AudioLibSwitcher_applaudio https://github.com/razterizer/AudioLibSwitcher_applaudio db2648c00533a8894339095b0e727989e3ae7425
+# lib/AudioLibSwitcher_OpenAL    https://github.com/razterizer/AudioLibSwitcher_OpenAL    811c60c23a446d5f2894e9379c938df19f889c41
+lib/TrainOfThought             https://github.com/razterizer/TrainOfThought             fe8a5f0fd7e492bb1e8dfffac9aef1ee888735da
+lib/applaudio                  https://github.com/razterizer/applaudio                  702d425e551f19717baed605ae7983ceddb1587b
+# lib/3rdparty_OpenAL            https://github.com/razterizer/3rdparty_OpenAL            d8361648d7b505154109f1ba074922555a96e5de                    win
+```
+This way you'll using locked and stable versions of each library. Things relating to OpenAL is now commented out here.
+
+
