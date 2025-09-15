@@ -12,7 +12,12 @@
 #include <Core/Math.h>
 #include <Core/Rand.h>
 #include <Core/Delay.h>
+#define USE_APPLAUDIO
+#ifdef USE_APPLAUDIO
+#include <AudioLibSwitcher/AudioLibSwitcher_applaudio.h>
+#else
 #include <AudioLibSwitcher/AudioLibSwitcher_OpenAL.h>
+#endif
 
 #include <vector>
 #include <string>
@@ -29,7 +34,11 @@ namespace beat
 {
   enum class PlaybackMode { NONE, SLEEP, STATE_WAIT };
   const short c_amplitude_0 = 32767;
+#ifdef USE_APPLAUDIO
+  audio::AudioLibSwitcher_applaudio m_audio_lib;
+#else
   audio::AudioLibSwitcher_OpenAL m_audio_lib;
+#endif
   
   class AudioSourceBase
   {
