@@ -5,7 +5,6 @@
 //  Created by Rasmus Anthin on 2024-03-16.
 //
 
-#define NOMINMAX
 #include "AudioSourceHandler.h"
 #include "WaveformGeneration.h"
 #include "WaveformHelper.h"
