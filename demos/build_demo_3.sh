@@ -8,16 +8,21 @@ if [[ $os_name == *"Darwin"* ]]; then
     -I../../Core/include \
     -I../../Termin8or/include \
     -I../../TrainOfThought/include \
-    -I../../AudioLibSwitcher_OpenAL/include \
-    -I/opt/homebrew/opt/openal-soft/include -L/opt/homebrew/opt/openal-soft/lib -lopenal"
+    -I../../AudioLibSwitcher_applaudio/include \
+    -I../../applaudio/include -framework AudioToolbox -framework CoreAudio -framework CoreFoundation"
+  # -I../../AudioLibSwitcher_OpenAL/include \
+  # -I/opt/homebrew/opt/openal-soft/include -L/opt/homebrew/opt/openal-soft/lib -lopenal"
 else
   additional_flags="\
     -I../include/8Beat \
     -I../../Core/include \
     -I../../Termin8or/include \
     -I../../TrainOfThought/include \
-    -I../../AudioLibSwitcher_OpenAL/include"
-  export BUILD_PKG_CONFIG_MODULES='openal'
+    -I../../AudioLibSwitcher_applaudio/include \
+    -I../../applaudio/include"
+  # -I../../AudioLibSwitcher_OpenAL/include"
+  #export BUILD_PKG_CONFIG_MODULES='openal'
+  export BUILD_PKG_CONFIG_MODULES='alsa'
 fi
 
 ../../Core/build.sh demo_3 "$1" "${additional_flags[@]}"

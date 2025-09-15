@@ -8,19 +8,26 @@ if [[ $os_name == *"Darwin"* ]]; then
     -I../../Core/include \
     -I../../Termin8or/include \
     -I../../TrainOfThought/include \
-    -I../../AudioLibSwitcher_OpenAL/include \
-    -I/opt/homebrew/opt/openal-soft/include -I/opt/homebrew/opt/libsndfile/include \
-    -L/opt/homebrew/opt/openal-soft/lib -L/opt/homebrew/opt/libsndfile/lib \
-    -lopenal -lsndfile"
+    -I../../AudioLibSwitcher_applaudio/include \
+    -I../../applaudio/include -framework AudioToolbox -framework CoreAudio -framework CoreFoundation \
+    -I/opt/homebrew/opt/libsndfile/include \
+    -L/opt/homebrew/opt/libsndfile/lib \
+    -lsndfile"
+  # -I../../AudioLibSwitcher_OpenAL/include \
+  # -I/opt/homebrew/opt/openal-soft/include -I/opt/homebrew/opt/libsndfile/include \
+  # -L/opt/homebrew/opt/openal-soft/lib -L/opt/homebrew/opt/libsndfile/lib \
+  # -lopenal -lsndfile"
 else
   additional_flags="\
     -I../include/8Beat \
     -I../../Core/include \
     -I../../Termin8or/include \
     -I../../TrainOfThought/include \
-    -I../../AudioLibSwitcher_OpenAL/include"
+    -I../../AudioLibSwitcher_applaudio/include \
+    -I../../applaudio/include"
   # #FIXME: Add libsndfile here as well.
-  export BUILD_PKG_CONFIG_MODULES='openal'
+  #export BUILD_PKG_CONFIG_MODULES='openal'
+  export BUILD_PKG_CONFIG_MODULES='alsa'
 fi
 
 ../../Core/build.sh demo_2 "$1" "${additional_flags[@]}"
