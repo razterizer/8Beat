@@ -75,10 +75,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>$(SolutionDir)\..\..\..\Core\include;$(SolutionDir)\..\..\..\Termin8or\include;$(SolutionDir)\..\..\..\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_applaudio\include;$(SolutionDir)\..\..\..\applaudio\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)\..\..\..\include\8Beat;$(SolutionDir)\..\..\..\Core\include;$(SolutionDir)\..\..\..\Termin8or\include;$(SolutionDir)\..\..\..\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_applaudio\include;$(SolutionDir)\..\..\..\applaudio\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(SolutionDir)\..\..\..\Core\include;$(SolutionDir)\..\..\..\Termin8or\include;$(SolutionDir)\..\..\..\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_applaudio\include;$(SolutionDir)\..\..\..\applaudio\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(SolutionDir)\..\..\..\include\8Beat;$(SolutionDir)\..\..\..\Core\include;$(SolutionDir)\..\..\..\Termin8or\include;$(SolutionDir)\..\..\..\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_applaudio\include;$(SolutionDir)\..\..\..\applaudio\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,7 +121,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories></AdditionalLibraryDirectories>
-      <AdditionalDependencies>openal32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ole32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command></Command>
@@ -144,7 +144,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories></AdditionalLibraryDirectories>
-      <AdditionalDependencies>openal32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ole32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command></Command>
