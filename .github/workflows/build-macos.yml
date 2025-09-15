@@ -23,11 +23,14 @@ jobs:
           cd ..
           git clone https://github.com/razterizer/Core.git
           git clone https://github.com/razterizer/Termin8or.git
-          git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
+          # git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
+          git clone https://github.com/razterizer/AudioLibSwitcher_applaudio.git --recurse-submodules
+          git clone https://github.com/razterizer/applaudio.git
           git clone https://github.com/razterizer/TrainOfThought.git
 
       # Step 3: Install OpenAL
       - name: Install OpenAL
+        if: false
         run: brew install openal-soft
         
       # Step 4: Install libsndfile
@@ -67,6 +70,7 @@ jobs:
           
       # Step 3: Install OpenAL
       - name: Install OpenAL
+        if: false
         run: brew install openal-soft
         
       # Step 4: Install libsndfile
