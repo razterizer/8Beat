@@ -277,6 +277,27 @@ cp ../../lib/Termin8or/include/Termin8or/title/fonts/* bin/fonts/
 cp music.ct bin/
 ```
 
+Then finally for the Windows build you need to change the external include paths from this (OpenAL-based):
 
+```xml
+<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\Termin8or\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_OpenAL\include;$(SolutionDir)\..\..\lib\3rdparty_OpenAL\include</ExternalIncludePath>
+```
 
+to this (applaudio-based)
 
+```xml
+<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\Termin8or\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_applaudio\include;$(SolutionDir)\..\..\lib\applaudio\include</ExternalIncludePath>
+```
+
+You also need to change the linkage from this (OpenAL-based):
+
+```xml
+<AdditionalDependencies>openal32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+<AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib\3rdparty_OpenAL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+```
+
+to this (applaudio-based):
+
+```xml
+<AdditionalDependencies>ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+```
