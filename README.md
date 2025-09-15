@@ -50,6 +50,13 @@ Hi.
 Generally speaking, as long as OpenAL Soft is unmodified and distributed as a shared library, you can use it in any project you wish. Unless your code is also (L)GPL, that's typically the easiest way to deal with LGPL libraries. Otherwise, if OpenAL Soft itself is static-linked into a binary, then any distribution must also offer the source or object files of the binary so a user can relink with another version of OpenAL Soft.
 ```
 
+### applaudio
+
+[`applaudio`](https://github.com/razterizer/applaudio) is an MIT option to OpenAL. It doesn't have nearly as many features as OpenAL has, but it has enough to be useful for simple terminal-based games and such. More features and also possibly more backends will be added in the future. It implements the [`IAudioLibSwitcher`](https://github.com/razterizer/AudioLibSwitcher) interface which makes it easy to switch out OpenAL to applaudio as long as you're fine with that subset of features of that interface. The excellent thing with an MIT-based audio library is that we/you now finally can build releases and post on the github project pages where appropriate.
+
+Applaudio needs more testing and probably a bit more development to mature, but I think this is a great start.
+Also, applaudio is header-only (except for the backends: ALSA and CoreAudio. WASAPI uses ole32.lib, and you don't need to worry about that one as it is a system lib).
+
 ## Definitions
 
 We'll often use the term `waveform` as meaning an audio signal here.
@@ -150,49 +157,69 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 # Getting Started
 
-This header-only library depends on the following header-only libraries:
+This header-only library depends on the following set of header-only libraries if you intend to use it with OpenAL Soft:
 * [`Core`](https://github.com/razterizer/Core)
 * [`TrainOfThrought`](https://github.com/razterizer/TrainOfThought)
 * [`AudioLibSwitcher_OpenAL`](https://github.com/razterizer/AudioLibSwitcher_OpenAL)
 * Windows: [`3rdparty_OpenAL`](https://github.com/razterizer/3rdparty_OpenAL)
 * Windows: [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) (only necessary for `WaveformIO.h`)
 
-and uses the header-only library [`Termin8or`](https://github.com/razterizer/Termin8or) for the demos.
+or this set of header-only libraries if you intend to use it with applaudio (now by default):
+* [`Core`](https://github.com/razterizer/Core)
+* [`TrainOfThrought`](https://github.com/razterizer/TrainOfThought)
+* [`AudioLibSwitcher_applaudio`](https://github.com/razterizer/AudioLibSwitcher_applaudio)
+* [`applaudio`](https://github.com/razterizer/applaudio)
+* Windows: [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) (only necessary for `WaveformIO.h`)
 
-These libs are expected to be located in checkout dirs with the same names and next to each other. Like this:
+and uses the header-only library [`Termin8or`](https://github.com/razterizer/Termin8or) only for the demos in either case.
+
+These libs are expected to be located in checkout dirs with the same names and next to each other. Like this for OpenAL Soft:
 ```xml
 <my_source_code_dir>/lib/Core/
 <my_source_code_dir>/lib/TrainOfThought/              ; Used by `WaveformHelper.h`.
-<my_source_code_dir>/lib/AudioLibSwitcher_OpenAL/     ; Needed for now, but in the future you will be able to choose.
+<my_source_code_dir>/lib/AudioLibSwitcher_OpenAL/     ; Allows you to choose between applaudio and OpenAL Soft. Minimal common API.
 <my_source_code_dir>/lib/3rdparty_OpenAL/             ; Windows only. The OpenAL-Soft libs/dlls necessary for the **Windows** build.
 <my_source_code_dir>/lib/3rdparty_libsndfile/         ; Windows only. The libsndfile libs/dlls necessary for `WaveformIO.h` to work on windows.
 <my_source_code_dir>/lib/Termin8or/                   ; Only for the demos.
 <my_source_code_dir>/lib/8Beat/
 ```
-where `<source>` is where you normally put your git repos and `<lib>` is recommended to be "`lib`" but can be named something different or left out all-together. However, the following programs requires them to be located in a sub-folder called "`lib`" or else these programs will not build:
+or like this for applaudio:
+```xml
+<my_source_code_dir>/lib/Core/
+<my_source_code_dir>/lib/TrainOfThought/              ; Used by `WaveformHelper.h`.
+<my_source_code_dir>/lib/AudioLibSwitcher_applaudio/  ; Allows you to choose between applaudio and OpenAL Soft. Minimal common API.
+<my_source_code_dir>/lib/applaudio/                   ; Header-only audio library. No libs/dlls except for the ones from the backends.
+<my_source_code_dir>/lib/3rdparty_libsndfile/         ; Windows only. The libsndfile libs/dlls necessary for `WaveformIO.h` to work on windows.
+<my_source_code_dir>/lib/Termin8or/                   ; Only for the demos.
+<my_source_code_dir>/lib/8Beat/
+```
+where `<my_source_code_dir>` is where you normally put your git repos and `<lib>` is recommended to be "`lib`" but can be named something different or left out all-together. However, the following programs requires them to be located in a sub-folder called "`lib`" or else these programs will not build (unless you change the header search paths for the xcode/vcxproj projects):
 * [`Pilot_Episode`](https://github.com/razterizer/Pilot_Episode)
 * [`Christmas_Demo`](https://github.com/razterizer/Christmas_Demo)
+* [`Asciiroids`](https://github.com/razterizer/Asciiroids)
 
-The header only libs use relative include paths (which is mayhaps a bit suboptimal), but I'll see if I can find a better solution for this in the future.
-
-There are currently ten demos under the `demos` folder that you can build and run under linux / macos.
-First cd to folder `demos`. To build `demo_1` type `./build_demo_1.sh`. Then run by typing `./bin/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh` or `build_all_demos.bat`.
+There are currently ten demos under the `demos` folder that you can build and run under debian-based / macos / windows.
+First cd to folder `demos`. To build `demo_1` type `./build_demo_1.sh`. Then run by typing `./bin/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh` (debian-based / macos) or `build_all_demos.bat` (windows).
 
 An easier way to get started is to use any of the scripts `setup_and_build_demos_debian.sh`, `setup_and_build_demos_macos.sh` or `setup_and_build_demos.bat`. If you use these, you can then skip the section below. These scripts automatically clones the repos necessary for your platform.
 
 ## 3rd-party Libraries
 
-You'll need [`OpenAL Soft`](https://www.openal-soft.org) for all demos and [`sndfile`](https://github.com/libsndfile/libsndfile) for some of the demos.
+You'll need [`OpenAL Soft`](https://www.openal-soft.org) or [`applaudio`](https://github.com/razterizer/applaudio) for all demos and [`sndfile`](https://github.com/libsndfile/libsndfile) for some of the demos.
 
-However, the libs and dlls from these are mirrored in [`3rdparty_OpenAL`](https://github.com/razterizer/3rdparty_OpenAL) and [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) respectively and `8Beat` expects the folder structure used in these repos, so the most easy way to get started is to use any of the `setup_and_build_demos` scripts in the root folder. See the `Getting Started` section for the folder layout that is expected by `8Beat`.
+However, the libs and dlls from these are mirrored in [`3rdparty_OpenAL`](https://github.com/razterizer/3rdparty_OpenAL) and [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) respectively (nothing like this necessary for using applaudio) and `8Beat` expects the folder structure used in these repos, so the most easy way to get started is to use any of the `setup_and_build_demos` scripts in the root folder. See the `Getting Started` section for the folder layout that is expected by `8Beat`.
 
 ### Windows:
 
 On Windows no installation of **OpenAL Soft** or **libsndfile** is necessary. Only the `3rdparty_OpenAL` (and optionally `3rdparty_libsndfile`) repos are necessary. See above.
 
+If you use applaudio (by default now) you don't even need any `3rdparty_whatever` repo. See section `AudioLibSwitcher` below for more info. on how to switch between OpenAL and applaudio.
+
 ### MacOS:
 
 Install **OpenAL Soft** using `brew install openal-soft`. The build script(s) takes care of the rest (adjust script if paths differ).
+
+If using applaudio instead of OpenAL Soft, then no installation is required.
 
 Install **libsndfile** using `brew install libsndfile`. The build script(s) takes care of the rest (adjust script if paths differ).
 
@@ -200,11 +227,23 @@ Install **libsndfile** using `brew install libsndfile`. The build script(s) take
 
 Install **OpenAL Soft** using `sudo apt install libopenal-dev`.
 
+If using applaudio instead of OpenAL Soft, then no installation is required.
+
 Install **libsndfile** using `sudo apt install libsndfile-dev`.
 
-## AudioLibSwitcher
+## AudioLibSwitcher : Switching from OpenAL Soft to applaudio for your program
+
+This documentation here can be found in [`AudiLibSwitcher`](https://github.com/razterizer/AudioLibSwitcher) as well.
+
+This section describes how to change your application code to work with either `applaudio` or `OpenAL Soft`.
 
 As my own audio library [`applaudio`](https://github.com/razterizer/applaudio) is becoming more and more stable, you have the option to choose between OpenAL/OpenAL_Soft (GPL-based) and applaudio (MIT). This is nice, because it will allow you to build a release that is entirely MIT-licensed without having to be infected by the GPL-virus.
+
+### 8Beat
+
+To make 8Beat work with applaudio then make sure that the define `USE_APPLAUDIO` is defined in `AudioSourceHandler.h` in the 8Beat repo. If you want to use OpenAL Soft instead, then undefine it by commenting out the define.
+
+### Dependencies
 
 The `dependencies` file of your application repo can now look like this:
 ```
@@ -219,6 +258,8 @@ lib/applaudio                  https://github.com/razterizer/applaudio          
 ```
 This way you'll using locked and stable versions of each library. Things relating to `OpenAL` is now commented out here.
 
+### XCode Project
+
 On Mac in the XCode project you can now choose `OpenAL` if you still want to use that:
 <img width="1089" height="441" alt="image" src="https://github.com/user-attachments/assets/7f62fc4a-8575-440b-8a47-e2163543c1a1" />
 
@@ -230,7 +271,9 @@ In your XCode project you may have the following search paths. For example:
 
 If using `OpenAL` then you can keep `../lib/AudioLibSwitcher_OpenAL/include/` and `/opt/homebrew/opt/openal-soft/include/`, but if you use `applaudio` you can just keep `../lib/AudioLibSwitcher_applaudio/include/` and `../lib/applaudio/include/` instead.
 
-Then your build script for MacOS (CoreAudio) and Linux (ALSA) would be something like:
+### Build Script
+
+Then your build script for MacOS (CoreAudio) and Linux (here Debian-based) (ALSA) would be something like:
 ```bash
 #!/bin/bash
 
@@ -276,6 +319,8 @@ cp ../../lib/Termin8or/include/Termin8or/title/fonts/* bin/fonts/
 
 cp music.ct bin/
 ```
+
+### Windows vcxproj Changes
 
 Then finally for the Windows build you need to change the external include paths from this (OpenAL-based):
 
