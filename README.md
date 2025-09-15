@@ -217,8 +217,20 @@ lib/TrainOfThought             https://github.com/razterizer/TrainOfThought     
 lib/applaudio                  https://github.com/razterizer/applaudio                  702d425e551f19717baed605ae7983ceddb1587b
 # lib/3rdparty_OpenAL            https://github.com/razterizer/3rdparty_OpenAL            d8361648d7b505154109f1ba074922555a96e5de                    win
 ```
-This way you'll using locked and stable versions of each library. Things relating to OpenAL is now commented out here.
+This way you'll using locked and stable versions of each library. Things relating to `OpenAL` is now commented out here.
 
-On Mac in the XCode project you can now choose between OpenAL if you still want to use that, or AudioToolbox:
-<img width="931" height="266" alt="image" src="https://github.com/user-attachments/assets/a9535de2-d4f3-4df3-a09e-33ec12a91d8e" />
+On Mac in the XCode project you can now choose `OpenAL` if you still want to use that:
+<img width="1089" height="441" alt="image" src="https://github.com/user-attachments/assets/7f62fc4a-8575-440b-8a47-e2163543c1a1" />
+
+or use `AudioToolbox`, `CoreAudio` and `CoreFoundation` if you want to use `applaudio` instead:
+<img width="1074" height="409" alt="image" src="https://github.com/user-attachments/assets/b409d98d-dded-477c-88a9-58b789b4501e" />
+
+In your XCode project you may have the following search paths. For example:
+<img width="935" height="343" alt="image" src="https://github.com/user-attachments/assets/92b9bcae-4164-4312-ae38-a9c645e2b423" />
+
+If using `OpenAL` then you can keep `../lib/AudioLibSwitcher_OpenAL/include/` and `/opt/homebrew/opt/openal-soft/include/`, but if you use `applaudio` you can just keep `../lib/AudioLibSwitcher_applaudio/include/` and `../lib/applaudio/include/` instead.
+
+
+
+
 
