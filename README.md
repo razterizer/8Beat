@@ -219,4 +219,6 @@ lib/applaudio                  https://github.com/razterizer/applaudio          
 ```
 This way you'll using locked and stable versions of each library. Things relating to OpenAL is now commented out here.
 
+On Mac in the XCode project you can now choose between OpenAL if you still want to use that, or AudioToolbox:
+<img width="931" height="266" alt="image" src="https://github.com/user-attachments/assets/a9535de2-d4f3-4df3-a09e-33ec12a91d8e" />
 
