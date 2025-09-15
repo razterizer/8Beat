@@ -101,7 +101,7 @@ namespace beat
     
     void detach()
     {
-      m_audio_lib.detach_source(m_sourceID);
+      m_audio_lib.detach_buffer_from_source(m_sourceID);
     }
   };
   
