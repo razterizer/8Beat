@@ -134,7 +134,7 @@ namespace beat
         m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
       }
       
-      m_audio_lib.set_buffer_data_mono_16(m_bufferID, m_buffer_i, wave.sample_rate);
+      m_audio_lib.set_buffer_data_16s(m_bufferID, m_buffer_i, 1, wave.sample_rate);
       
       // Attach buffer to source
       m_audio_lib.attach_buffer_to_source(m_sourceID, m_bufferID);
@@ -191,7 +191,7 @@ namespace beat
       m_audio_lib.destroy_buffer(m_bufferID);
       m_bufferID = m_audio_lib.create_buffer();
       
-      m_audio_lib.set_buffer_data_mono_16(m_bufferID, m_buffer_i, m_sample_rate);
+      m_audio_lib.set_buffer_data_16s(m_bufferID, m_buffer_i, 1, m_sample_rate);
     }
     
     void update_buffer(const Waveform& wave)
@@ -211,7 +211,7 @@ namespace beat
       m_audio_lib.destroy_buffer(m_bufferID);
       m_bufferID = m_audio_lib.create_buffer();
       
-      m_audio_lib.set_buffer_data_mono_16(m_bufferID, m_buffer_i, m_sample_rate);
+      m_audio_lib.set_buffer_data_16s(m_bufferID, m_buffer_i, 1, m_sample_rate);
     }
     
   private:
