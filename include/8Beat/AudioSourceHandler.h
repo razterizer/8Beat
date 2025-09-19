@@ -15,8 +15,12 @@
 #define USE_APPLAUDIO
 #ifdef USE_APPLAUDIO
 #include <AudioLibSwitcher/AudioLibSwitcher_applaudio.h>
+#define SET_BUFFER_DATA m_audio_lib.set_buffer_data_32f
+#define SAMPLE_TYPE float
 #else
 #include <AudioLibSwitcher/AudioLibSwitcher_OpenAL.h>
+#define SET_BUFFER_DATA m_audio_lib.set_buffer_data_16s
+#define SAMPLE_TYPE short
 #endif
 
 #include <vector>
@@ -125,6 +129,9 @@ namespace beat
       m_duration_s = wave.duration;
       
       // Load buffer data
+#ifdef USE_APPLAUDIO
+      m_buffer_i = wave.buffer;
+#else
       m_buffer_i.resize(wave.buffer.size());
       int N = static_cast<int>(wave.buffer.size());
       for (int i = 0; i < N; ++i)
@@ -133,8 +140,9 @@ namespace beat
         m_buffer_i[i] = std::max<short>(-c_amplitude_0, m_buffer_i[i]);
         m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
       }
+#endif
       
-      m_audio_lib.set_buffer_data_16s(m_bufferID, m_buffer_i, 1, wave.sample_rate);
+      SET_BUFFER_DATA(m_bufferID, m_buffer_i, 1, wave.sample_rate);
       
       // Attach buffer to source
       m_audio_lib.attach_buffer_to_source(m_sourceID, m_bufferID);
@@ -146,7 +154,7 @@ namespace beat
     }
     
   private:
-    std::vector<short> m_buffer_i;
+    std::vector<SAMPLE_TYPE> m_buffer_i;
   };
   
   struct AudioStreamListener
@@ -181,9 +189,13 @@ namespace beat
       for (int i = 0; i < num_stream_samples; ++i)
       {
         t = i * dt;
+#ifdef USE_APPLAUDIO
+        m_buffer_i[i] = m_listener->on_get_sample(t);
+#else
         m_buffer_i[i] = static_cast<short>(c_amplitude_0 * m_listener->on_get_sample(t));
         m_buffer_i[i] = std::max<short>(-c_amplitude_0, m_buffer_i[i]);
         m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
+#endif
       }
       
       m_duration_s = t;
@@ -191,7 +203,7 @@ namespace beat
       m_audio_lib.destroy_buffer(m_bufferID);
       m_bufferID = m_audio_lib.create_buffer();
       
-      m_audio_lib.set_buffer_data_16s(m_bufferID, m_buffer_i, 1, m_sample_rate);
+      SET_BUFFER_DATA(m_bufferID, m_buffer_i, 1, m_sample_rate);
     }
     
     void update_buffer(const Waveform& wave)
@@ -199,25 +211,29 @@ namespace beat
       auto Ns = static_cast<int>(wave.buffer.size());
       m_buffer_i.resize(Ns);
       
+#ifdef USE_APPLAUDIO
+      m_buffer_i = wave.buffer;
+#else
       for (int i = 0; i < Ns; ++i)
       {
         m_buffer_i[i] = static_cast<short>(c_amplitude_0 * wave.buffer[i]);
         m_buffer_i[i] = std::max<short>(-c_amplitude_0, m_buffer_i[i]);
         m_buffer_i[i] = std::min<short>(+c_amplitude_0, m_buffer_i[i]);
       }
+#endif
       
       m_duration_s = wave.duration;
       
       m_audio_lib.destroy_buffer(m_bufferID);
       m_bufferID = m_audio_lib.create_buffer();
       
-      m_audio_lib.set_buffer_data_16s(m_bufferID, m_buffer_i, 1, m_sample_rate);
+      SET_BUFFER_DATA(m_bufferID, m_buffer_i, 1, m_sample_rate);
     }
     
   private:
     AudioStreamListener* m_listener = nullptr;
     int m_sample_rate = 44100;
-    std::vector<short> m_buffer_i;
+    std::vector<SAMPLE_TYPE> m_buffer_i;
   };
   
   
