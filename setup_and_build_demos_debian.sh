@@ -23,7 +23,7 @@ fi
 
 cd "${REPO_DIR}/${BUILD_DIR}"
 
-./build_all_demos.sh
+./build_all_demos_applaudio.sh
 
 while true; do
     # Ask the user
