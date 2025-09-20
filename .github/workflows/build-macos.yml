@@ -23,7 +23,7 @@ jobs:
           cd ..
           git clone https://github.com/razterizer/Core.git
           git clone https://github.com/razterizer/Termin8or.git
-          # git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
+          git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
           git clone https://github.com/razterizer/AudioLibSwitcher_applaudio.git --recurse-submodules
           git clone https://github.com/razterizer/applaudio.git
           git clone https://github.com/razterizer/TrainOfThought.git
@@ -108,20 +108,4 @@ jobs:
           ./build_demo_8_applaudio.sh
           ./build_demo_9_applaudio.sh
           ./build_demo_10_applaudio.sh
-        continue-on-error: false # Ensure errors are not bypassed
-        
-      # Step 6: Change to the correct directory and build
-      - name: Build project (OpenAL)
-        run: |
-          cd demos
-          ./build_demo_1_openal.sh
-          # ./build_demo_2_openal.sh
-          ./build_demo_3_openal.sh
-          ./build_demo_4_openal.sh
-          ./build_demo_5_openal.sh
-          ./build_demo_6_openal.sh
-          ./build_demo_7_openal.sh
-          ./build_demo_8_openal.sh
-          ./build_demo_9_openal.sh
-          ./build_demo_10_openal.sh
         continue-on-error: false # Ensure errors are not bypassed
