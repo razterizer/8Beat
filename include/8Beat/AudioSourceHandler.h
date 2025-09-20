@@ -12,7 +12,7 @@
 #include <Core/Math.h>
 #include <Core/Rand.h>
 #include <Core/Delay.h>
-#define USE_APPLAUDIO
+//#define USE_APPLAUDIO // To be set via the compiler flag -DUSE_APPLAUDIO instead.
 #ifdef USE_APPLAUDIO
 #include <AudioLibSwitcher/AudioLibSwitcher_applaudio.h>
 #define SET_BUFFER_DATA m_audio_lib.set_buffer_data_32f
