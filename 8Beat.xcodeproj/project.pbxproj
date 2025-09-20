@@ -50,18 +50,29 @@
 		0739DB842BCEE98C00964E96 /* demo_10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_10.cpp; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		076AB05B2C9DD60C00531419 /* run_all_demos.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = run_all_demos.bat; sourceTree = "<group>"; };
-		078F2B872C03E29D00FF60F8 /* build_demo_6.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_6.sh; sourceTree = "<group>"; };
-		078F2B882C03E29D00FF60F8 /* build_demo_5.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_5.sh; sourceTree = "<group>"; };
-		078F2B892C03E29D00FF60F8 /* build_demo_2.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_2.sh; sourceTree = "<group>"; };
-		078F2B8A2C03E29D00FF60F8 /* build_demo_8.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_8.sh; sourceTree = "<group>"; };
-		078F2B8B2C03E29D00FF60F8 /* build_demo_3.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_3.sh; sourceTree = "<group>"; };
-		078F2B8C2C03E29D00FF60F8 /* build_demo_7.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_7.sh; sourceTree = "<group>"; };
-		078F2B8D2C03E29D00FF60F8 /* build_demo_4.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_4.sh; sourceTree = "<group>"; };
-		078F2B8E2C03E2A900FF60F8 /* build_demo_10.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_10.sh; sourceTree = "<group>"; };
-		078F2B8F2C03E2B800FF60F8 /* build_all_demos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_all_demos.sh; sourceTree = "<group>"; };
 		078F2B902C03E2B800FF60F8 /* run_all_demos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_all_demos.sh; sourceTree = "<group>"; };
-		078F2B912C03E2D100FF60F8 /* build_demo_1.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_1.sh; sourceTree = "<group>"; };
-		078F2B922C03E2D100FF60F8 /* build_demo_9.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_demo_9.sh; sourceTree = "<group>"; };
+		07980B642E7DD6C7007A0EB4 /* build_demo_1_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_applaudio.sh; sourceTree = "<group>"; };
+		07980B652E7DD6C7007A0EB4 /* build_demo_1_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_openal.sh; sourceTree = "<group>"; };
+		07980B6F2E7E980C007A0EB4 /* build_demo_2_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_2_applaudio.sh; sourceTree = "<group>"; };
+		07980B702E7E980C007A0EB4 /* build_demo_3_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_3_applaudio.sh; sourceTree = "<group>"; };
+		07980B712E7E980C007A0EB4 /* build_demo_4_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_4_applaudio.sh; sourceTree = "<group>"; };
+		07980B722E7E980C007A0EB4 /* build_demo_5_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_5_applaudio.sh; sourceTree = "<group>"; };
+		07980B732E7E980C007A0EB4 /* build_demo_6_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_6_applaudio.sh; sourceTree = "<group>"; };
+		07980B742E7E980C007A0EB4 /* build_demo_7_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_7_applaudio.sh; sourceTree = "<group>"; };
+		07980B752E7E980C007A0EB4 /* build_demo_8_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_8_applaudio.sh; sourceTree = "<group>"; };
+		07980B762E7E980C007A0EB4 /* build_demo_9_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_9_applaudio.sh; sourceTree = "<group>"; };
+		07980B772E7E980C007A0EB4 /* build_demo_10_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_10_applaudio.sh; sourceTree = "<group>"; };
+		07980B782E7E981F007A0EB4 /* build_demo_2_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_2_openal.sh; sourceTree = "<group>"; };
+		07980B792E7E981F007A0EB4 /* build_demo_3_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_3_openal.sh; sourceTree = "<group>"; };
+		07980B7A2E7E981F007A0EB4 /* build_demo_4_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_4_openal.sh; sourceTree = "<group>"; };
+		07980B7B2E7E981F007A0EB4 /* build_demo_5_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_5_openal.sh; sourceTree = "<group>"; };
+		07980B7C2E7E981F007A0EB4 /* build_demo_6_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_6_openal.sh; sourceTree = "<group>"; };
+		07980B7D2E7E981F007A0EB4 /* build_demo_7_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_7_openal.sh; sourceTree = "<group>"; };
+		07980B7E2E7E981F007A0EB4 /* build_demo_8_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_8_openal.sh; sourceTree = "<group>"; };
+		07980B7F2E7E981F007A0EB4 /* build_demo_9_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_9_openal.sh; sourceTree = "<group>"; };
+		07980B802E7E981F007A0EB4 /* build_demo_10_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_10_openal.sh; sourceTree = "<group>"; };
+		07980B812E7F6577007A0EB4 /* build_all_demos_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_all_demos_applaudio.sh; sourceTree = "<group>"; };
+		07980B822E7F663B007A0EB4 /* build_all_demos_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_all_demos_openal.sh; sourceTree = "<group>"; };
 		07BDBB4C2E755766002ACC96 /* ChipTuneEngineParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineParser.h; sourceTree = "<group>"; };
 		07BDBB4E2E755766002ACC96 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07BDBB4F2E755766002ACC96 /* AudioSourceHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
@@ -155,17 +166,28 @@
 			children = (
 				072AE8002D0E73D2004F92D3 /* setup_and_build_demos_debian.sh */,
 				072AE8012D0E73D2004F92D3 /* setup_and_build_demos_macos.sh */,
-				078F2B912C03E2D100FF60F8 /* build_demo_1.sh */,
-				078F2B892C03E29D00FF60F8 /* build_demo_2.sh */,
-				078F2B8B2C03E29D00FF60F8 /* build_demo_3.sh */,
-				078F2B8D2C03E29D00FF60F8 /* build_demo_4.sh */,
-				078F2B882C03E29D00FF60F8 /* build_demo_5.sh */,
-				078F2B872C03E29D00FF60F8 /* build_demo_6.sh */,
-				078F2B8C2C03E29D00FF60F8 /* build_demo_7.sh */,
-				078F2B8A2C03E29D00FF60F8 /* build_demo_8.sh */,
-				078F2B922C03E2D100FF60F8 /* build_demo_9.sh */,
-				078F2B8E2C03E2A900FF60F8 /* build_demo_10.sh */,
-				078F2B8F2C03E2B800FF60F8 /* build_all_demos.sh */,
+				07980B642E7DD6C7007A0EB4 /* build_demo_1_applaudio.sh */,
+				07980B6F2E7E980C007A0EB4 /* build_demo_2_applaudio.sh */,
+				07980B702E7E980C007A0EB4 /* build_demo_3_applaudio.sh */,
+				07980B712E7E980C007A0EB4 /* build_demo_4_applaudio.sh */,
+				07980B722E7E980C007A0EB4 /* build_demo_5_applaudio.sh */,
+				07980B732E7E980C007A0EB4 /* build_demo_6_applaudio.sh */,
+				07980B742E7E980C007A0EB4 /* build_demo_7_applaudio.sh */,
+				07980B752E7E980C007A0EB4 /* build_demo_8_applaudio.sh */,
+				07980B762E7E980C007A0EB4 /* build_demo_9_applaudio.sh */,
+				07980B772E7E980C007A0EB4 /* build_demo_10_applaudio.sh */,
+				07980B652E7DD6C7007A0EB4 /* build_demo_1_openal.sh */,
+				07980B782E7E981F007A0EB4 /* build_demo_2_openal.sh */,
+				07980B792E7E981F007A0EB4 /* build_demo_3_openal.sh */,
+				07980B7A2E7E981F007A0EB4 /* build_demo_4_openal.sh */,
+				07980B7B2E7E981F007A0EB4 /* build_demo_5_openal.sh */,
+				07980B7C2E7E981F007A0EB4 /* build_demo_6_openal.sh */,
+				07980B7D2E7E981F007A0EB4 /* build_demo_7_openal.sh */,
+				07980B7E2E7E981F007A0EB4 /* build_demo_8_openal.sh */,
+				07980B7F2E7E981F007A0EB4 /* build_demo_9_openal.sh */,
+				07980B802E7E981F007A0EB4 /* build_demo_10_openal.sh */,
+				07980B812E7F6577007A0EB4 /* build_all_demos_applaudio.sh */,
+				07980B822E7F663B007A0EB4 /* build_all_demos_openal.sh */,
 				078F2B902C03E2B800FF60F8 /* run_all_demos.sh */,
 			);
 			name = scripts_linmac;
