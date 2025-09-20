@@ -63,7 +63,7 @@ jobs:
       # Step 6: Change to the correct directory and build
       - name: Build project (OpenAL)
         run: |
-          # cd demos
+          cd demos
           ./build_demo_1_openal.sh
           # ./build_demo_2_openal.sh
           ./build_demo_3_openal.sh
@@ -125,7 +125,7 @@ jobs:
       # Step 6: Change to the correct directory and build
       - name: Build project (OpenAL)
         run: |
-          # cd demos
+          cd demos
           ./build_demo_1_openal.sh
           # ./build_demo_2_openal.sh
           ./build_demo_3_openal.sh
