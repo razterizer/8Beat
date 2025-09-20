@@ -1,0 +1,10 @@
+./build_demo_1_openal.sh
+./build_demo_2_openal.sh
+./build_demo_3_openal.sh
+./build_demo_4_openal.sh
+./build_demo_5_openal.sh
+./build_demo_6_openal.sh
+./build_demo_7_openal.sh
+./build_demo_8_openal.sh
+./build_demo_9_openal.sh
+./build_demo_10_openal.sh
