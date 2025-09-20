@@ -3,7 +3,7 @@
 REPO_DIR="8Beat"
 BUILD_DIR="demos"
 
-sudo apt install libopenal-dev
+# sudo apt install libopenal-dev
 
 sudo apt install libsndfile-dev
 
