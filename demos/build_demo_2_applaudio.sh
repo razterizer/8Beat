@@ -21,8 +21,7 @@ else
     -I../../TrainOfThought/include \
     -I../../AudioLibSwitcher_applaudio/include \
     -I../../applaudio/include -DUSE_APPLAUDIO"
-  # #FIXME: Add libsndfile here as well.
-  export BUILD_PKG_CONFIG_MODULES='alsa'
+  export BUILD_PKG_CONFIG_MODULES='alsa sndfile'
 fi
 
 ../../Core/build.sh demo_2 "$1" "${additional_flags[@]}"

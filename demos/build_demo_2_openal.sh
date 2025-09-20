@@ -21,8 +21,7 @@ else
     -I../../Termin8or/include \
     -I../../TrainOfThought/include \
     -I../../AudioLibSwitcher_OpenAL/include"
-  # #FIXME: Add libsndfile here as well.
-  export BUILD_PKG_CONFIG_MODULES='openal'
+  export BUILD_PKG_CONFIG_MODULES='openal sndfile'
 fi
 
 ../../Core/build.sh demo_2 "$1" "${additional_flags[@]}"
