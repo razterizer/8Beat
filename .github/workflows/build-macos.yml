@@ -43,7 +43,7 @@ jobs:
         run: |
           cd demos
           ./build_demo_1_applaudio.sh
-          # ./build_demo_2_applaudio.sh
+          ./build_demo_2_applaudio.sh
           ./build_demo_3_applaudio.sh
           ./build_demo_4_applaudio.sh
           ./build_demo_5_applaudio.sh
@@ -59,7 +59,7 @@ jobs:
         run: |
           cd demos
           ./build_demo_1_openal.sh
-          # ./build_demo_2_openal.sh
+          ./build_demo_2_openal.sh
           ./build_demo_3_openal.sh
           ./build_demo_4_openal.sh
           ./build_demo_5_openal.sh
@@ -99,7 +99,7 @@ jobs:
         run: |
           cd demos
           ./build_demo_1_applaudio.sh
-          # ./build_demo_2_applaudio.sh
+          ./build_demo_2_applaudio.sh
           ./build_demo_3_applaudio.sh
           ./build_demo_4_applaudio.sh
           ./build_demo_5_applaudio.sh
