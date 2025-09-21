@@ -240,9 +240,9 @@ namespace beat
   class AudioSourceHandler
   {
   public:
-    AudioSourceHandler()
+    AudioSourceHandler(bool enable_audio = true)
     {
-      m_audio_lib.init();
+      m_audio_lib.init(enable_audio);
     }
     
     ~AudioSourceHandler()
