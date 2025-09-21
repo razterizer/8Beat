@@ -286,7 +286,7 @@ if [[ $os_name == *"Darwin"* ]]; then
     -I../../lib/8Beat/include \
     -I../../lib/TrainOfThought/include \
     -I../../lib/AudioLibSwitcher_applaudio/include \
-    -I../../lib/applaudio/include -framework AudioToolbox -framework CoreAudio -framework CoreFoundation"
+    -I../../lib/applaudio/include -framework AudioToolbox -framework CoreAudio -framework CoreFoundation -DUSE_APPLAUDIO"
   # -I../../lib/AudioLibSwitcher_OpenAL/include \
   # -I/opt/homebrew/opt/openal-soft/include -L/opt/homebrew/opt/openal-soft/lib -lopenal"
 else
@@ -296,7 +296,7 @@ else
     -I../../lib/8Beat/include \
     -I../../lib/TrainOfThought/include \
     -I../../lib/AudioLibSwitcher_applaudio/include \
-    -I../../lib/applaudio/include"
+    -I../../lib/applaudio/include -DUSE_APPLAUDIO"
   # -I../../lib/AudioLibSwitcher_OpenAL/include"
   #export BUILD_PKG_CONFIG_MODULES='openal'
   export BUILD_PKG_CONFIG_MODULES='alsa'
@@ -319,6 +319,10 @@ cp ../../lib/Termin8or/include/Termin8or/title/fonts/* bin/fonts/
 
 cp music.ct bin/
 ```
+
+For MacOS, the important bits above are those concerning `AudioLibSwitcher_applaudio`, `applaudio`, `-framework AudioToolbox`, `-framework CoreAudio`, `-framework CoreFoundation` and `-DUSE_APPLAUDIO`.
+
+For Linux, the important bits above are those concerning `AudioLibSwitcher_applaudio`, `applaudio`, `-DUSE_APPLAUDIO` and `export BUILD_PKG_CONFIG_MODULES='alsa'`.
 
 ### Windows vcxproj Changes
 
@@ -364,4 +368,10 @@ so it becomes:
       <Command>xcopy "$(SolutionDir)\music.ct" "$(TargetDir)" /Y
 xcopy "$(SolutionDir)\..\..\lib\Termin8or\include\Termin8or\title\fonts\*" "$(TargetDir)\fonts\" /Y
     </PostBuildEvent>
+```
+
+Also to signal to the `8Beat/AudioSourceHandler.h` that you want to use the applaudio lib rather than OpenAL lib, then you need to add the `USE_APPLAUDIO` define:
+
+```xml
+<PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;NOMINMAX;USE_APPLAUDIO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 ```
