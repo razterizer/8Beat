@@ -271,6 +271,10 @@ In your XCode project you may have the following search paths. For example:
 
 If using `OpenAL` then you can keep `../lib/AudioLibSwitcher_OpenAL/include/` and `/opt/homebrew/opt/openal-soft/include/`, but if you use `applaudio` you can just keep `../lib/AudioLibSwitcher_applaudio/include/` and `../lib/applaudio/include/` instead.
 
+You also need to define `USE_APPLAUDIO` for both the `Release` and the `Debug` targets. Like this:
+<img width="620" height="129" alt="image" src="https://github.com/user-attachments/assets/78df78b6-1952-434a-8303-d2defceeb08f" />
+
+
 ### Build Script
 
 Then your build script for MacOS (CoreAudio) and Linux (here Debian-based) (ALSA) would be something like:
