@@ -5,6 +5,8 @@ BUILD_DIR="demos"
 
 # sudo apt install libopenal-dev
 
+sudo apt install libasound2-dev pkg-config
+
 sudo apt install libsndfile-dev
 
 cd ..
