@@ -258,6 +258,11 @@ lib/applaudio                  https://github.com/razterizer/applaudio          
 ```
 This way you'll using locked and stable versions of each library. Things relating to `OpenAL` is now commented out here.
 
+So, key takeaways here are:
+
+* `OpenAL` (`OpenAL_Soft`) : Use https://github.com/razterizer/AudioLibSwitcher_OpenAL and https://github.com/razterizer/3rdparty_OpenAL.
+* `applaudio : Use  `https://github.com/razterizer/AudioLibSwitcher_applaudio` and `https://github.com/razterizer/applaudio`.
+
 ### XCode Project
 
 On Mac in the XCode project you can now choose `OpenAL` if you still want to use that:
