@@ -241,7 +241,7 @@ As my own audio library [`applaudio`](https://github.com/razterizer/applaudio) i
 
 ### 8Beat
 
-To make 8Beat work with applaudio then make sure that the define `USE_APPLAUDIO` is defined in `AudioSourceHandler.h` in the 8Beat repo. If you want to use OpenAL Soft instead, then undefine it by commenting out the define.
+To make 8Beat work with applaudio then make sure that the define `USE_APPLAUDIO` is defined. You could define it in `AudioSourceHandler.h` in the 8Beat repo, but the more proper way to do it is to define it as a compiler flag, like e.g. `-DUSE_APPLAUDIO`. If you want to use OpenAL Soft instead, then just undefine it. In either case, you must ensure that the proper dependencies are available when building. For further information about that, see the section below.
 
 ### Dependencies
 
