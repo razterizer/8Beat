@@ -261,7 +261,7 @@ This way you'll using locked and stable versions of each library. Things relatin
 So, key takeaways here are:
 
 * `OpenAL` (`OpenAL_Soft`) : Use https://github.com/razterizer/AudioLibSwitcher_OpenAL and https://github.com/razterizer/3rdparty_OpenAL.
-* `applaudio : Use  `https://github.com/razterizer/AudioLibSwitcher_applaudio` and `https://github.com/razterizer/applaudio`.
+* `applaudio` : Use  https://github.com/razterizer/AudioLibSwitcher_applaudio and https://github.com/razterizer/applaudio.
 
 ### XCode Project
 
