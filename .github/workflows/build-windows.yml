@@ -37,7 +37,7 @@ jobs:
           cd demos
           pwd
           dir
-          .\build_all_demos.bat
+          .\build_all_demos_applaudio.bat
 
   build-demos-with-locked-dependencies:
     runs-on: windows-latest
