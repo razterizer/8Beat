@@ -3,7 +3,7 @@
 REPO_DIR="8Beat"
 BUILD_DIR="demos"
 
-# brew install openal-soft
+brew install openal-soft
 
 brew install libsndfile
 
