@@ -36,7 +36,7 @@ set /p response=Do you want to run the program? (yes/no):
 REM Process the response
 if /i "%response%"=="yes" (
     echo Running the program...
-    call run_all_demos_applaudio.bat
+    call run_all_demos.bat
     goto end
 ) else if /i "%response%"=="no" (
     echo Alright. Have a nice day!
