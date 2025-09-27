@@ -52,7 +52,7 @@ jobs:
       - name: Fetch dependencies
         run: |
           cd $env:GITHUB_WORKSPACE\..
-          .\8Beat\fetch-dependencies.py .\8Beat\dependencies -y
+          .\8Beat\fetch-dependencies.py .\8Beat\dependencies_applaudio -y
       
       # Step 3: Change to the correct directory and build
       - name: Build

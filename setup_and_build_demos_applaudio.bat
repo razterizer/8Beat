@@ -21,7 +21,7 @@ REM Reset color and continue with the script
 color 07
 
 REM Run the dependency fetch script
-python "%REPO_DIR%\fetch-dependencies.py" "%REPO_DIR%\dependencies"
+python "%REPO_DIR%\fetch-dependencies.py" "%REPO_DIR%\dependencies_applaudio"
 
 REM Navigate to the appropriate directory
 cd "%REPO_DIR%\%BUILD_DIR%"
