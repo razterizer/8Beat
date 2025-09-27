@@ -35,7 +35,7 @@ while true; do
     case "$response" in
         yes|y|Y|YES|Yes)
             echo "Running the program..."
-            ./run_all_demos.sh
+            ./run_all_demos_applaudio.sh
             break
             ;;
         no|n|N|NO|No)
