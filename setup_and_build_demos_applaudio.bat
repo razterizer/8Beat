@@ -27,7 +27,7 @@ REM Navigate to the appropriate directory
 cd "%REPO_DIR%\%BUILD_DIR%"
 
 REM Run the build script
-call build_all_demos.bat
+call build_all_demos_applaudio.bat
 
 :askUser
 REM Ask the user if they want to run the program
@@ -36,7 +36,7 @@ set /p response=Do you want to run the program? (yes/no):
 REM Process the response
 if /i "%response%"=="yes" (
     echo Running the program...
-    call run_all_demos.bat
+    call run_all_demos_applaudio.bat
     goto end
 ) else if /i "%response%"=="no" (
     echo Alright. Have a nice day!
