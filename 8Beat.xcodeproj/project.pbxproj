@@ -24,7 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0709B9B62C957C7C00A43834 /* build_all_demos.bat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build_all_demos.bat; sourceTree = "<group>"; };
+		0709B9B62C957C7C00A43834 /* build_all_demos_applaudio.bat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build_all_demos_applaudio.bat; sourceTree = "<group>"; };
 		0709B9BF2C95831C00A43834 /* build-macos.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-macos.yml"; path = ".github/workflows/build-macos.yml"; sourceTree = "<group>"; };
 		0709B9C02C95831C00A43834 /* build-windows.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-windows.yml"; path = ".github/workflows/build-windows.yml"; sourceTree = "<group>"; };
 		0709B9C12C95831C00A43834 /* build-and-test-ubuntu.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-and-test-ubuntu.yml"; path = ".github/workflows/build-and-test-ubuntu.yml"; sourceTree = "<group>"; };
@@ -46,8 +46,8 @@
 		0739DB832BC35B9600964E96 /* demo_9.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_9.cpp; sourceTree = "<group>"; };
 		0739DB842BCEE98C00964E96 /* demo_10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_10.cpp; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		076AB05B2C9DD60C00531419 /* run_all_demos.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = run_all_demos.bat; sourceTree = "<group>"; };
-		078F2B902C03E2B800FF60F8 /* run_all_demos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_all_demos.sh; sourceTree = "<group>"; };
+		076AB05B2C9DD60C00531419 /* run_all_demos_applaudio.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = run_all_demos_applaudio.bat; sourceTree = "<group>"; };
+		078F2B902C03E2B800FF60F8 /* run_all_demos_applaudio.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_all_demos_applaudio.sh; sourceTree = "<group>"; };
 		07980B642E7DD6C7007A0EB4 /* build_demo_1_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_applaudio.sh; sourceTree = "<group>"; };
 		07980B652E7DD6C7007A0EB4 /* build_demo_1_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_openal.sh; sourceTree = "<group>"; };
 		07980B6F2E7E980C007A0EB4 /* build_demo_2_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_2_applaudio.sh; sourceTree = "<group>"; };
@@ -106,8 +106,8 @@
 			isa = PBXGroup;
 			children = (
 				07980C312E87D2D9007A0EB4 /* setup_and_build_demos_applaudio.bat */,
-				076AB05B2C9DD60C00531419 /* run_all_demos.bat */,
-				0709B9B62C957C7C00A43834 /* build_all_demos.bat */,
+				076AB05B2C9DD60C00531419 /* run_all_demos_applaudio.bat */,
+				0709B9B62C957C7C00A43834 /* build_all_demos_applaudio.bat */,
 			);
 			name = scripts_windows;
 			sourceTree = "<group>";
@@ -188,7 +188,7 @@
 				07980B802E7E981F007A0EB4 /* build_demo_10_openal.sh */,
 				07980B812E7F6577007A0EB4 /* build_all_demos_applaudio.sh */,
 				07980B822E7F663B007A0EB4 /* build_all_demos_openal.sh */,
-				078F2B902C03E2B800FF60F8 /* run_all_demos.sh */,
+				078F2B902C03E2B800FF60F8 /* run_all_demos_applaudio.sh */,
 			);
 			name = scripts_linmac;
 			sourceTree = "<group>";
