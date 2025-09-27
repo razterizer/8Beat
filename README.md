@@ -201,13 +201,13 @@ where `<my_source_code_dir>` is where you normally put your git repos and `<lib>
 There are currently ten demos under the `demos` folder that you can build and run under debian-based / macos / windows.
 First cd to folder `demos`. To build `demo_1` type `./build_demo_1.sh`. Then run by typing `./bin/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh` (debian-based / macos) or `build_all_demos.bat` (windows).
 
-An easier way to get started is to use any of the scripts `setup_and_build_demos_debian.sh`, `setup_and_build_demos_macos.sh` or `setup_and_build_demos.bat`. If you use these, you can then skip the section below. These scripts automatically clones the repos necessary for your platform.
+An easier way to get started is to use any of the scripts `setup_and_build_demos_applaudio_debian.sh`, `setup_and_build_demos_applaudio_macos.sh` or `setup_and_build_demos_applaudio.bat`. If you use these, you can then skip the section below. These scripts automatically clones the repos necessary for your platform.
 
 ## 3rd-party Libraries
 
 You'll need [`OpenAL Soft`](https://www.openal-soft.org) or [`applaudio`](https://github.com/razterizer/applaudio) for all demos and [`sndfile`](https://github.com/libsndfile/libsndfile) for some of the demos.
 
-However, the libs and dlls from these are mirrored in [`3rdparty_OpenAL`](https://github.com/razterizer/3rdparty_OpenAL) and [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) respectively (nothing like this necessary for using applaudio) and `8Beat` expects the folder structure used in these repos, so the most easy way to get started is to use any of the `setup_and_build_demos` scripts in the root folder. See the `Getting Started` section for the folder layout that is expected by `8Beat`.
+However, the libs and dlls from these are mirrored in [`3rdparty_OpenAL`](https://github.com/razterizer/3rdparty_OpenAL) and [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) respectively (nothing like this necessary for using applaudio) and `8Beat` expects the folder structure used in these repos, so the most easy way to get started is to use any of the `setup_and_build_demos_applaudio` scripts in the root folder. See the `Getting Started` section for the folder layout that is expected by `8Beat`.
 
 ### Windows:
 
