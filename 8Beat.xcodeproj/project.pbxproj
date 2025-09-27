@@ -46,8 +46,8 @@
 		0739DB832BC35B9600964E96 /* demo_9.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_9.cpp; sourceTree = "<group>"; };
 		0739DB842BCEE98C00964E96 /* demo_10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_10.cpp; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		076AB05B2C9DD60C00531419 /* run_all_demos_applaudio.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = run_all_demos_applaudio.bat; sourceTree = "<group>"; };
-		078F2B902C03E2B800FF60F8 /* run_all_demos_applaudio.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_all_demos_applaudio.sh; sourceTree = "<group>"; };
+		076AB05B2C9DD60C00531419 /* run_all_demos.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = run_all_demos.bat; sourceTree = "<group>"; };
+		078F2B902C03E2B800FF60F8 /* run_all_demos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_all_demos.sh; sourceTree = "<group>"; };
 		07980B642E7DD6C7007A0EB4 /* build_demo_1_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_applaudio.sh; sourceTree = "<group>"; };
 		07980B652E7DD6C7007A0EB4 /* build_demo_1_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_openal.sh; sourceTree = "<group>"; };
 		07980B6F2E7E980C007A0EB4 /* build_demo_2_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_2_applaudio.sh; sourceTree = "<group>"; };
@@ -73,6 +73,14 @@
 		07980C312E87D2D9007A0EB4 /* setup_and_build_demos_applaudio.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = setup_and_build_demos_applaudio.bat; sourceTree = SOURCE_ROOT; };
 		07980C322E87D305007A0EB4 /* setup_and_build_demos_applaudio_debian.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_applaudio_debian.sh; sourceTree = SOURCE_ROOT; };
 		07980C332E87D305007A0EB4 /* setup_and_build_demos_applaudio_macos.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_applaudio_macos.sh; sourceTree = SOURCE_ROOT; };
+		07980C342E87D7D5007A0EB4 /* dependencies */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies; sourceTree = SOURCE_ROOT; };
+		07980C352E87D7D5007A0EB4 /* dependencies_applaudio */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies_applaudio; sourceTree = SOURCE_ROOT; };
+		07980C362E87D7D5007A0EB4 /* dependencies_openal */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies_openal; sourceTree = SOURCE_ROOT; };
+		07980C372E87D7F8007A0EB4 /* dependencies */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies; sourceTree = SOURCE_ROOT; };
+		07980C382E87D7F8007A0EB4 /* dependencies_applaudio */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies_applaudio; sourceTree = SOURCE_ROOT; };
+		07980C392E87D7F8007A0EB4 /* dependencies_openal */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies_openal; sourceTree = SOURCE_ROOT; };
+		07980C3A2E87D851007A0EB4 /* setup_and_build_demos_openal_debian.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_openal_debian.sh; sourceTree = SOURCE_ROOT; };
+		07980C3B2E87D851007A0EB4 /* setup_and_build_demos_openal_macos.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_openal_macos.sh; sourceTree = SOURCE_ROOT; };
 		07BDBB4C2E755766002ACC96 /* ChipTuneEngineParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineParser.h; sourceTree = "<group>"; };
 		07BDBB4E2E755766002ACC96 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
 		07BDBB4F2E755766002ACC96 /* AudioSourceHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
@@ -105,8 +113,11 @@
 		0709B9B52C957C6800A43834 /* scripts_windows */ = {
 			isa = PBXGroup;
 			children = (
+				07980C342E87D7D5007A0EB4 /* dependencies */,
+				07980C352E87D7D5007A0EB4 /* dependencies_applaudio */,
+				07980C362E87D7D5007A0EB4 /* dependencies_openal */,
 				07980C312E87D2D9007A0EB4 /* setup_and_build_demos_applaudio.bat */,
-				076AB05B2C9DD60C00531419 /* run_all_demos_applaudio.bat */,
+				076AB05B2C9DD60C00531419 /* run_all_demos.bat */,
 				0709B9B62C957C7C00A43834 /* build_all_demos_applaudio.bat */,
 			);
 			name = scripts_windows;
@@ -164,8 +175,13 @@
 		078F2B862C03E27B00FF60F8 /* scripts_linmac */ = {
 			isa = PBXGroup;
 			children = (
+				07980C372E87D7F8007A0EB4 /* dependencies */,
+				07980C382E87D7F8007A0EB4 /* dependencies_applaudio */,
+				07980C392E87D7F8007A0EB4 /* dependencies_openal */,
 				07980C322E87D305007A0EB4 /* setup_and_build_demos_applaudio_debian.sh */,
 				07980C332E87D305007A0EB4 /* setup_and_build_demos_applaudio_macos.sh */,
+				07980C3A2E87D851007A0EB4 /* setup_and_build_demos_openal_debian.sh */,
+				07980C3B2E87D851007A0EB4 /* setup_and_build_demos_openal_macos.sh */,
 				07980B642E7DD6C7007A0EB4 /* build_demo_1_applaudio.sh */,
 				07980B6F2E7E980C007A0EB4 /* build_demo_2_applaudio.sh */,
 				07980B702E7E980C007A0EB4 /* build_demo_3_applaudio.sh */,
@@ -188,7 +204,7 @@
 				07980B802E7E981F007A0EB4 /* build_demo_10_openal.sh */,
 				07980B812E7F6577007A0EB4 /* build_all_demos_applaudio.sh */,
 				07980B822E7F663B007A0EB4 /* build_all_demos_openal.sh */,
-				078F2B902C03E2B800FF60F8 /* run_all_demos_applaudio.sh */,
+				078F2B902C03E2B800FF60F8 /* run_all_demos.sh */,
 			);
 			name = scripts_linmac;
 			sourceTree = "<group>";
