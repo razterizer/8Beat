@@ -25,7 +25,7 @@ fi
 
 cd "${REPO_DIR}/${BUILD_DIR}"
 
-./build_all_demos_applaudio.sh
+./build_all_demos_openal.sh
 
 while true; do
     # Ask the user
