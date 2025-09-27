@@ -23,7 +23,7 @@ if [[ "$CURRENT_NAME" != "$REQUIRED_NAME" ]]; then
   # exit 1
 fi
 
-./"${REPO_DIR}"/fetch-dependencies.py "${REPO_DIR}"/dependencies
+./"${REPO_DIR}"/fetch-dependencies.py "${REPO_DIR}"/dependencies_applaudio
 
 cd "${REPO_DIR}/${BUILD_DIR}"
 
