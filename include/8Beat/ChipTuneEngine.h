@@ -276,11 +276,11 @@ namespace beat
     }
     
     // Play the loaded tune in a separate thread
-    void play_tune_async(bool interrupt_unfinished_note = true)
+    void play_tune_async(bool interrupt_unfinished_note = true, bool verbose = false)
     {
       // Use std::thread and std::atomic_flag to safely start and stop the thread
       m_stop_audio_thread = false;
-      m_audio_thread = std::thread([this, interrupt_unfinished_note] { play_tune(interrupt_unfinished_note); });
+      m_audio_thread = std::thread([this, interrupt_unfinished_note, verbose] { play_tune(interrupt_unfinished_note, verbose); });
     
       // Detach the audio thread, allowing it to run independently
       m_audio_thread.detach();
