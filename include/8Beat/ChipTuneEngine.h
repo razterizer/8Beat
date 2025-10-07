@@ -230,6 +230,8 @@ namespace beat
           m_curr_volume = it_v->second;
         
         // The Melody.
+        if (verbose)
+          std::cout << "Playing melody:" << std::endl;
         bool is_separator = m_voices[0].notes[note_idx].get()->separator;
         for (const auto& voice : m_voices)
         {
