@@ -92,11 +92,6 @@ namespace beat
       m_audio_lib.pause_source(m_sourceID);
     }
     
-    void resume()
-    {
-      m_audio_lib.resume_source(m_sourceID);
-    }
-    
     void stop()
     {
       m_audio_lib.stop_source(m_sourceID);
