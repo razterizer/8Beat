@@ -131,7 +131,18 @@ namespace beat
   class AudioSource : public AudioSourceBase
   {
   public:
+    AudioSource() = default;
     AudioSource(const Waveform& wave_mono)
+    {
+      update_buffer(wave_mono);
+    }
+    
+    AudioSource(const Waveform& wave_stereo_left, const Waveform& wave_stereo_right)
+    {
+      update_buffer(wave_stereo_left, wave_stereo_right);
+    }
+    
+    bool update_buffer(const Waveform& wave_mono)
     {
       num_channels = 1;
       // Set source parameters (adjust as needed)
@@ -148,6 +159,10 @@ namespace beat
       for (int i = 0; i < N; ++i)
         m_buffer_i[i] = float_to_short(wave_mono.buffer[i]);
 #endif
+
+      m_audio_lib.destroy_buffer(m_bufferID);
+      //if (m_bufferID == 0)
+      m_bufferID = m_audio_lib.create_buffer();
       
       SET_BUFFER_DATA(m_bufferID, m_buffer_i, num_channels, wave_mono.sample_rate);
       
@@ -158,9 +173,10 @@ namespace beat
       auto error_msg = m_audio_lib.check_error();
       if (!error_msg.empty())
         std::cerr << "Error creating audio source: " << error_msg << std::endl;
+      return true;
     }
     
-    AudioSource(const Waveform& wave_stereo_left, const Waveform& wave_stereo_right)
+    bool update_buffer(const Waveform& wave_stereo_left, const Waveform& wave_stereo_right)
     {
       num_channels = 2;
       // Set source parameters (adjust as needed)
@@ -186,6 +202,10 @@ namespace beat
         m_buffer_i[num_channels * i + 1] = float_to_short(stlutils::try_get(wave_stereo_right.buffer, i, 0.f));
       }
 #endif
+
+      m_audio_lib.destroy_buffer(m_bufferID);
+      //if (m_bufferID == 0)
+      m_bufferID = m_audio_lib.create_buffer();
       
       SET_BUFFER_DATA(m_bufferID, m_buffer_i, num_channels, common_sample_rate);
       
@@ -196,6 +216,7 @@ namespace beat
       auto error_msg = m_audio_lib.check_error();
       if (!error_msg.empty())
         std::cerr << "Error creating audio source: " << error_msg << std::endl;
+      return true;
     }
     
   private:
@@ -215,7 +236,6 @@ namespace beat
   class AudioStreamSource : public AudioSourceBase
   {
   public:
-    AudioStreamSource() = default;
     AudioStreamSource(AudioStreamListener* listener, int sample_rate)
       : m_listener(listener)
       , m_sample_rate(sample_rate)
@@ -289,73 +309,6 @@ namespace beat
       return true;
     }
     
-    void update_buffer(const Waveform& wave_mono)
-    {
-      m_duration_s = wave_mono.duration;
-      
-#ifdef USE_APPLAUDIO
-      m_buffer_i = wave_mono.buffer;
-#else
-      auto Ns = static_cast<int>(wave_mono.buffer.size());
-      m_buffer_i.resize(Ns, 0);
-      for (int i = 0; i < Ns; ++i)
-        m_buffer_i[i] = float_to_short(wave_mono.buffer[i]);
-#endif
-      
-      m_audio_lib.destroy_buffer(m_bufferID);
-      //if (m_bufferID == 0)
-      m_bufferID = m_audio_lib.create_buffer();
-      
-      // #FIXME: Set m_sample_rate doesn't work well with the listener-based function which relies on the constructor sample_rate.
-      assert(m_sample_rate == wave_mono.sample_rate);
-      
-      SET_BUFFER_DATA(m_bufferID, m_buffer_i, 1, m_sample_rate);
-      
-      m_audio_lib.attach_buffer_to_source(m_sourceID, m_bufferID);
-    }
-    
-    void update_buffer(const Waveform& wave_stereo_left, const Waveform& wave_stereo_right, std::optional<float> pan = std::nullopt)
-    {
-      m_duration_s = std::max(wave_stereo_left.duration, wave_stereo_right.duration);
-      auto Ns = std::max(stlutils::sizeI(wave_stereo_left.buffer), stlutils::sizeI(wave_stereo_right.buffer));
-      int common_sample_rate = std::max(wave_stereo_left.sample_rate, wave_stereo_right.sample_rate);
-      
-      // #FIXME: Perhaps break out panning as a more low-level operation via AudioSourceBase function?
-      auto pan_L = 1.f;
-      auto pan_R = 1.f;
-      if (pan.has_value())
-      {
-        pan_L = 1.f - pan.value();
-        pan_R = pan.value();
-      }
-#ifdef USE_APPLAUDIO
-      m_buffer_i.resize(num_channels * Ns, 0.f);
-      for (int i = 0; i < Ns; ++i)
-      {
-        m_buffer_i[num_channels * i + 0] = stlutils::try_get(wave_stereo_left.buffer, i, 0.f) * pan_L;
-        m_buffer_i[num_channels * i + 1] = stlutils::try_get(wave_stereo_right.buffer, i, 0.f) * pan_R;
-      }
-#else
-      m_buffer_i.resize(num_channels * Ns, 0);
-      for (int i = 0; i < Ns; ++i)
-      {
-        m_buffer_i[num_channels * i + 0] = float_to_short(stlutils::try_get(wave_stereo_left.buffer, i, 0.f) * pan_L);
-        m_buffer_i[num_channels * i + 1] = float_to_short(stlutils::try_get(wave_stereo_right.buffer, i, 0.f) * pan_R);
-      }
-#endif
-            
-      m_audio_lib.destroy_buffer(m_bufferID);
-      //if (m_bufferID == 0)
-      m_bufferID = m_audio_lib.create_buffer();
-      
-      // #FIXME: Set m_sample_rate doesn't work well with the listener-based function which relies on the constructor sample_rate.
-      assert(m_sample_rate == common_sample_rate);
-      
-      SET_BUFFER_DATA(m_bufferID, m_buffer_i, 1, m_sample_rate);
-      
-      m_audio_lib.attach_buffer_to_source(m_sourceID, m_bufferID);
-    }
-    
     void reset_time()
     {
       t = 0.f;
@@ -385,6 +338,11 @@ namespace beat
       m_audio_lib.finish();
     }
     
+    AudioSource* create_source()
+    {
+      return m_sources.emplace_back(std::make_unique<AudioSource>()).get();
+    }
+    
     // Function to create a sound source with programmatically created buffer
     AudioSource* create_source_from_waveform(const Waveform& wave_mono)
     {
@@ -401,11 +359,6 @@ namespace beat
     {
       return m_stream_sources.emplace_back(
         std::make_unique<AudioStreamSource>(listener, sample_rate)).get();
-    }
-    
-    AudioStreamSource* create_stream_source()
-    {
-      return m_stream_sources.emplace_back(std::make_unique<AudioStreamSource>()).get();
     }
     
     void remove_source(AudioSource* source)

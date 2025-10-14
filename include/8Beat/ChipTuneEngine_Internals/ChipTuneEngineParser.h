@@ -180,7 +180,7 @@ namespace beat
     };
     struct Voice
     {
-      AudioStreamSource* src = nullptr;
+      AudioSource* src = nullptr;
       std::vector<std::unique_ptr<Note>> notes;
     };
     class Goto
@@ -1336,7 +1336,7 @@ namespace beat
     void init_voice_sources()
     {
       for (auto& voice : m_voices)
-        voice.src = m_audio_handler.create_stream_source();
+        voice.src = m_audio_handler.create_source();
     }
     
   };
