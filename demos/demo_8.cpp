@@ -37,8 +37,8 @@ int main(int argc, char** argv)
   Test test_sample_gen;
   auto* stream_src_0 = src_handler.create_stream_source(&test_sample_gen, 44100);
   
-  auto* stream_src_1 = src_handler.create_stream_source();
-  auto* stream_src_2 = src_handler.create_stream_source();
+  auto* stream_src_1 = src_handler.create_source();
+  auto* stream_src_2 = src_handler.create_source();
   auto wave_sine = wave_gen.generate_waveform(beat::WaveformType::SINE, 3.f, 440.f);
   auto wave_square = wave_gen.generate_waveform(beat::WaveformType::SQUARE, 3.f, 360.f);
   auto wave_triangle = wave_gen.generate_waveform(beat::WaveformType::TRIANGLE, 3.f, 1298.f);
