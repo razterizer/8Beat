@@ -309,7 +309,7 @@ namespace beat
       , m_sample_rate(sample_rate)
     {}
     
-    bool update_buffer(int num_stream_samples, int requested_channels = 1, std::optional<float> pan = std::nullopt)
+    bool update_buffer(int num_stream_samples, int requested_channels = 1)
     {
       if (m_listener == nullptr)
         return false;
@@ -340,24 +340,16 @@ namespace beat
       }
       else if (num_channels == 2)
       {
-        // #FIXME: Perhaps break out panning as a more low-level operation via AudioSourceBase function?
-        auto pan_L = 1.f;
-        auto pan_R = 1.f;
-        if (pan.has_value())
-        {
-          pan_L = 1.f - pan.value();
-          pan_R = pan.value();
-        }
         for (int i = 0; i < num_stream_samples; ++i)
         {
           t = t_prev + i * dt;
           auto s = m_listener->on_get_sample_stereo(t);
 #ifdef USE_APPLAUDIO
-          m_buffer_i[num_channels * i + 0] = s.first * pan_L;
-          m_buffer_i[num_channels * i + 1] = s.second * pan_R;
+          m_buffer_i[num_channels * i + 0] = s.first;
+          m_buffer_i[num_channels * i + 1] = s.second;
 #else
-          m_buffer_i[num_channels * i + 0] = float_to_short(s.first * pan_L);
-          m_buffer_i[num_channels * i + 1] = float_to_short(s.second * pan_R);
+          m_buffer_i[num_channels * i + 0] = float_to_short(s.first);
+          m_buffer_i[num_channels * i + 1] = float_to_short(s.second);
 #endif
         }
       }
