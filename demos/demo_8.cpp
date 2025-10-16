@@ -37,8 +37,8 @@ int main(int argc, char** argv)
   Test test_sample_gen;
   auto* stream_src_0 = src_handler.create_stream_source(&test_sample_gen, 44100);
   
-  auto* stream_src_1 = src_handler.create_source();
-  auto* stream_src_2 = src_handler.create_source();
+  auto* src_1 = src_handler.create_source();
+  auto* src_2 = src_handler.create_source();
   auto wave_sine = wave_gen.generate_waveform(beat::WaveformType::SINE, 3.f, 440.f);
   auto wave_square = wave_gen.generate_waveform(beat::WaveformType::SQUARE, 3.f, 360.f);
   auto wave_triangle = wave_gen.generate_waveform(beat::WaveformType::TRIANGLE, 3.f, 1298.f);
@@ -68,29 +68,29 @@ int main(int argc, char** argv)
 
   std::cout << "Buffer-based AudioStreamSource" << std::endl;
   std::cout << "  Setting volumes" << std::endl;
-  stream_src_1->set_volume(0.2f);
-  stream_src_2->set_volume(0.2f);
+  src_1->set_volume(0.2f);
+  src_2->set_volume(0.2f);
   
   std::cout << "  Setting buffers: source 1 <- wave_sine, source 2 <- wave_square" << std::endl;
-  stream_src_1->update_buffer(wave_sine);
-  stream_src_2->update_buffer(wave_square);
+  src_1->update_buffer(wave_sine);
+  src_2->update_buffer(wave_square);
   std::cout << "  Playing buffers concurrently with common sleep" << std::endl;
-  stream_src_1->play(beat::PlaybackMode::NONE);
-  stream_src_2->play(beat::PlaybackMode::NONE);
+  src_1->play(beat::PlaybackMode::NONE);
+  src_2->play(beat::PlaybackMode::NONE);
   Delay::sleep(3*1e6);
   
   std::cout << "  Stopping source 1" << std::endl;
-  stream_src_1->stop();
+  src_1->stop();
   std::cout << "  Updating buffer 2: source 2 <- wave_triangle" << std::endl;
-  stream_src_2->update_buffer(wave_triangle);
+  src_2->update_buffer(wave_triangle);
   std::cout << "  Playing buffers concurrently with common sleep" << std::endl;
-  stream_src_1->play(beat::PlaybackMode::NONE);
-  stream_src_2->play(beat::PlaybackMode::NONE);
+  src_1->play(beat::PlaybackMode::NONE);
+  src_2->play(beat::PlaybackMode::NONE);
   Delay::sleep(3*1e6);
   
   src_handler.remove_source(stream_src_0);
-  src_handler.remove_source(stream_src_1);
-  src_handler.remove_source(stream_src_2);
+  src_handler.remove_source(src_1);
+  src_handler.remove_source(src_2);
   
   keyboard.pressAnyKey();
   
