@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0739D9CB2BA61E5900964E96 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0739D9CA2BA61E5900964E96 /* OpenAL.framework */; };
+		0774AC1D2EA15FE100A6AA4A /* LinAlg.h in Headers */ = {isa = PBXBuildFile; fileRef = 0774AC1C2EA15FDB00A6AA4A /* LinAlg.h */; };
 		07BDBB5A2E755766002ACC96 /* WaveformHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB572E755766002ACC96 /* WaveformHelper.h */; };
 		07BDBB5B2E755766002ACC96 /* Waveform.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB552E755766002ACC96 /* Waveform.h */; };
 		07BDBB5C2E755766002ACC96 /* Synthesizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB542E755766002ACC96 /* Synthesizer.h */; };
@@ -47,6 +48,7 @@
 		0739DB842BCEE98C00964E96 /* demo_10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_10.cpp; sourceTree = "<group>"; };
 		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		076AB05B2C9DD60C00531419 /* run_all_demos.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = run_all_demos.bat; sourceTree = "<group>"; };
+		0774AC1C2EA15FDB00A6AA4A /* LinAlg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinAlg.h; sourceTree = "<group>"; };
 		078F2B902C03E2B800FF60F8 /* run_all_demos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_all_demos.sh; sourceTree = "<group>"; };
 		07980B642E7DD6C7007A0EB4 /* build_demo_1_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_applaudio.sh; sourceTree = "<group>"; };
 		07980B652E7DD6C7007A0EB4 /* build_demo_1_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_openal.sh; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				07BDBB562E755766002ACC96 /* WaveformGeneration.h */,
 				07BDBB572E755766002ACC96 /* WaveformHelper.h */,
 				07BDBB582E755766002ACC96 /* WaveformIO.h */,
+				0774AC1C2EA15FDB00A6AA4A /* LinAlg.h */,
 			);
 			name = 8Beat;
 			path = include/8Beat;
@@ -270,6 +273,7 @@
 				07BDBB5D2E755766002ACC96 /* Spectrum.h in Headers */,
 				07BDBB5E2E755766002ACC96 /* SFX.h in Headers */,
 				07BDBB5F2E755766002ACC96 /* ChipTuneEngineListener.h in Headers */,
+				0774AC1D2EA15FE100A6AA4A /* LinAlg.h in Headers */,
 				07BDBB602E755766002ACC96 /* ADSR.h in Headers */,
 				07BDBB612E755766002ACC96 /* ChipTuneEngine.h in Headers */,
 				07BDBB622E755766002ACC96 /* ChipTuneEngineParser.h in Headers */,
