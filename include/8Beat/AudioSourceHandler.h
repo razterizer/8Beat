@@ -66,6 +66,8 @@ namespace beat
     {
       m_sourceID = m_audio_lib.create_source();
       m_bufferID = m_audio_lib.create_buffer();
+      // Set source parameters (adjust as needed)
+      m_audio_lib.set_source_standard_params(m_sourceID);
     }
     virtual ~AudioSourceBase()
     {
@@ -126,6 +128,9 @@ namespace beat
     {
       m_audio_lib.detach_buffer_from_source(m_sourceID);
     }
+    
+    unsigned int source_id() const { return m_sourceID; }
+    unsigned int buffer_id() const { return m_bufferID; }
   };
   
   class AudioSource : public AudioSourceBase
@@ -145,8 +150,7 @@ namespace beat
     bool update_buffer(const Waveform& wave_mono)
     {
       num_channels = 1;
-      // Set source parameters (adjust as needed)
-      m_audio_lib.set_source_standard_params(m_sourceID);
+      m_audio_lib.stop_source(m_sourceID);
       
       m_duration_s = wave_mono.duration;
       
@@ -160,9 +164,10 @@ namespace beat
         m_buffer_i[i] = float_to_short(wave_mono.buffer[i]);
 #endif
 
-      m_audio_lib.destroy_buffer(m_bufferID);
+      m_audio_lib.detach_buffer_from_source(m_sourceID);
+      //m_audio_lib.destroy_buffer(m_bufferID);
       //if (m_bufferID == 0)
-      m_bufferID = m_audio_lib.create_buffer();
+      //m_bufferID = m_audio_lib.create_buffer();
       
       SET_BUFFER_DATA(m_bufferID, m_buffer_i, num_channels, wave_mono.sample_rate);
       
@@ -179,8 +184,7 @@ namespace beat
     bool update_buffer(const Waveform& wave_stereo_left, const Waveform& wave_stereo_right)
     {
       num_channels = 2;
-      // Set source parameters (adjust as needed)
-      m_audio_lib.set_source_standard_params(m_sourceID);
+      m_audio_lib.stop_source(m_sourceID);
       
       m_duration_s = std::max(wave_stereo_left.duration, wave_stereo_right.duration);
       auto N = std::max(stlutils::sizeI(wave_stereo_left.buffer), stlutils::sizeI(wave_stereo_right.buffer));
@@ -203,9 +207,10 @@ namespace beat
       }
 #endif
 
-      m_audio_lib.destroy_buffer(m_bufferID);
+      m_audio_lib.detach_buffer_from_source(m_sourceID);
+      //m_audio_lib.destroy_buffer(m_bufferID);
       //if (m_bufferID == 0)
-      m_bufferID = m_audio_lib.create_buffer();
+      //m_bufferID = m_audio_lib.create_buffer();
       
       SET_BUFFER_DATA(m_bufferID, m_buffer_i, num_channels, common_sample_rate);
       
@@ -296,9 +301,10 @@ namespace beat
       
       t = t_prev + m_duration_s;
       
-      m_audio_lib.destroy_buffer(m_bufferID);
+      m_audio_lib.detach_buffer_from_source(m_sourceID);
+      //m_audio_lib.destroy_buffer(m_bufferID);
       //if (m_bufferID == 0)
-      m_bufferID = m_audio_lib.create_buffer();
+      //m_bufferID = m_audio_lib.create_buffer();
       
       SET_BUFFER_DATA(m_bufferID, m_buffer_i, num_channels, m_sample_rate);
       
