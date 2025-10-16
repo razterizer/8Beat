@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Waveform.h"
+#include "LinAlg.h"
 
 #include <Core/Math.h>
 #include <Core/Rand.h>
