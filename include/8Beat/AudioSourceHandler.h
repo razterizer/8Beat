@@ -131,6 +131,59 @@ namespace beat
     
     unsigned int source_id() const { return m_sourceID; }
     unsigned int buffer_id() const { return m_bufferID; }
+    
+    void enable_3d_audio(bool enable)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      m_audio_lib.enable_source_3d_audio(m_sourceID, enable);
+    }
+
+    // std::array<float, 9> is a row-major 3x3 matrix.
+    bool set_3d_state_channel(int channel,
+                              const std::array<float, 9>& rot_mtx,
+                              const std::array<float, 3>& pos_world,
+                              const std::array<float, 3>& vel_world)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_3d_state_channel(m_sourceID, channel, rot_mtx, pos_world, vel_world);
+    }
+
+    bool set_speed_of_sound(float speed_of_sound)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_speed_of_sound(m_sourceID, speed_of_sound);
+    }
+    
+    std::optional<float> get_speed_of_sound()
+    {
+      return m_audio_lib.get_source_speed_of_sound(m_sourceID);
+    }
+
+    bool set_attenuation_min_distance(float min_dist)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_attenuation_min_distance(m_sourceID, min_dist);
+    }
+    bool set_attenuation_max_distance(float max_dist)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_attenuation_max_distance(m_sourceID, max_dist);
+    }
+    bool set_attenuation_constant_falloff(unsigned int src_id, float const_falloff)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_attenuation_constant_falloff(m_sourceID, const_falloff);
+    }
+    bool set_attenuation_linear_falloff(unsigned int src_id, float lin_falloff)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_attenuation_linear_falloff(m_sourceID, lin_falloff);
+    }
+    bool set_attenuation_quadratic_falloff(unsigned int src_id, float sq_falloff)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_attenuation_quadratic_falloff(m_sourceID, sq_falloff);
+    }
   };
   
   class AudioSource : public AudioSourceBase
@@ -417,6 +470,16 @@ namespace beat
         // Handle error: Source not found
         std::cerr << "Error: Source not found for removal." << std::endl;
       }
+    }
+    
+        // std::array<float, 9> is a row-major 3x3 matrix.
+    bool set_listener_3d_state_channel(int channel,
+                                       const std::array<float, 9>& rot_mtx,
+                                       const std::array<float, 3>& pos_world,
+                                       const std::array<float, 3>& vel_world)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_listener_3d_state_channel(channel, rot_mtx, pos_world, vel_world);
     }
     
     // ///////////////////////////////////
