@@ -50,21 +50,18 @@ int main(int argc, char** argv)
   stream_src_0->update_buffer(num_tot_samples, 1);
   stream_src_0->play(beat::PlaybackMode::STATE_WAIT);
   
-#if 0 // Kinda works, but chunk transitions are still glitchy.
-  // #NOTE: The panning scheme here (t) doesn't work on OpenAL for some reason.
   std::cout << "Listener-based AudioStreamSource : stereo" << std::endl;
   stream_src_0->set_volume(0.2f);
+  stream_src_0->update_buffer(num_tot_samples, 2);
+  stream_src_0->play(beat::PlaybackMode::NONE);
   float t = 0.f;
   int num_iters = 10; //1'000;
-  int num_samples_per_iter = num_tot_samples / num_iters;
   for (int i = 0; i < num_iters; ++i)
   {
     t = static_cast<float>(i)/num_iters;
-    stream_src_0->update_buffer(num_samples_per_iter, 2, t);
-    stream_src_0->play(beat::PlaybackMode::STATE_WAIT);
-    //stream_src_0->stop(); // Important! Need to rewind the buffer until the next playback.
+    stream_src_0->set_panning(t);
+    Delay::sleep(stream_src_0->get_duration_s()/num_iters*1e6);
   }
-#endif
 
   std::cout << "Buffer-based AudioStreamSource" << std::endl;
   std::cout << "  Setting volumes" << std::endl;
