@@ -132,6 +132,11 @@ namespace beat
     unsigned int source_id() const { return m_sourceID; }
     unsigned int buffer_id() const { return m_bufferID; }
     
+    void set_panning(std::optional<float> pan)
+    {
+      m_audio_lib.set_source_panning(m_sourceID, pan);
+    }
+    
     void enable_3d_audio(bool enable)
     {
       m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
