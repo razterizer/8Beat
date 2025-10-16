@@ -189,6 +189,11 @@ namespace beat
       m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
       return m_audio_lib.set_source_attenuation_quadratic_falloff(m_sourceID, sq_falloff);
     }
+    
+    float get_duration_s() const
+    {
+      return m_duration_s;
+    }
   };
   
   class AudioSource : public AudioSourceBase
