@@ -145,12 +145,12 @@ namespace beat
     }
 
     bool set_3d_state_channel(int channel,
-                              const la::Mtx3& rot_mtx,
-                              const la::Vec3& pos_world,
-                              const la::Vec3& vel_world)
+                              const std::array<float, 9>& rot_mtx,
+                              const std::array<float, 3>& pos_world,
+                              const std::array<float, 3>& vel_world)
     {
       m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
-      return m_audio_lib.set_source_3d_state_channel(m_sourceID, channel, rot_mtx.get_arr(), pos_world.get_arr(), vel_world.get_arr());
+      return m_audio_lib.set_source_3d_state_channel(m_sourceID, channel, rot_mtx, pos_world, vel_world);
     }
 
     bool set_speed_of_sound(float speed_of_sound)
@@ -475,12 +475,12 @@ namespace beat
     }
     
     bool set_listener_3d_state_channel(int channel,
-                                       const la::Mtx3& rot_mtx,
-                                       const la::Vec3& pos_world,
-                                       const la::Vec3& vel_world)
+                                       const std::array<float, 9>& rot_mtx,
+                                       const std::array<float, 3>& pos_world,
+                                       const std::array<float, 3>& vel_world)
     {
       m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
-      return m_audio_lib.set_listener_3d_state_channel(channel, rot_mtx.get_arr(), pos_world.get_arr(), vel_world.get_arr());
+      return m_audio_lib.set_listener_3d_state_channel(channel, rot_mtx, pos_world, vel_world);
     }
     
     // ///////////////////////////////////
