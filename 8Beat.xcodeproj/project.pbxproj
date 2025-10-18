@@ -1,0 +1,564 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0739D9CB2BA61E5900964E96 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0739D9CA2BA61E5900964E96 /* OpenAL.framework */; };
+		07BDBB5A2E755766002ACC96 /* WaveformHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB572E755766002ACC96 /* WaveformHelper.h */; };
+		07BDBB5B2E755766002ACC96 /* Waveform.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB552E755766002ACC96 /* Waveform.h */; };
+		07BDBB5C2E755766002ACC96 /* Synthesizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB542E755766002ACC96 /* Synthesizer.h */; };
+		07BDBB5D2E755766002ACC96 /* Spectrum.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB532E755766002ACC96 /* Spectrum.h */; };
+		07BDBB5E2E755766002ACC96 /* SFX.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB522E755766002ACC96 /* SFX.h */; };
+		07BDBB5F2E755766002ACC96 /* ChipTuneEngineListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB512E755766002ACC96 /* ChipTuneEngineListener.h */; };
+		07BDBB602E755766002ACC96 /* ADSR.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB4E2E755766002ACC96 /* ADSR.h */; };
+		07BDBB612E755766002ACC96 /* ChipTuneEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB502E755766002ACC96 /* ChipTuneEngine.h */; };
+		07BDBB622E755766002ACC96 /* ChipTuneEngineParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB4C2E755766002ACC96 /* ChipTuneEngineParser.h */; };
+		07BDBB632E755766002ACC96 /* AudioSourceHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB4F2E755766002ACC96 /* AudioSourceHandler.h */; };
+		07BDBB642E755766002ACC96 /* WaveformGeneration.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB562E755766002ACC96 /* WaveformGeneration.h */; };
+		07BDBB652E755766002ACC96 /* WaveformIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 07BDBB582E755766002ACC96 /* WaveformIO.h */; };
+		07FDE98A2CA8D78E00116BA7 /* unit_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07FDE9892CA8D78E00116BA7 /* unit_tests.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0709B9B62C957C7C00A43834 /* build_all_demos_applaudio.bat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build_all_demos_applaudio.bat; sourceTree = "<group>"; };
+		0709B9BF2C95831C00A43834 /* build-macos.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-macos.yml"; path = ".github/workflows/build-macos.yml"; sourceTree = "<group>"; };
+		0709B9C02C95831C00A43834 /* build-windows.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-windows.yml"; path = ".github/workflows/build-windows.yml"; sourceTree = "<group>"; };
+		0709B9C12C95831C00A43834 /* build-and-test-ubuntu.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-and-test-ubuntu.yml"; path = ".github/workflows/build-and-test-ubuntu.yml"; sourceTree = "<group>"; };
+		0739D9C12BA2434200964E96 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		0739D9C32BA59D0200964E96 /* demo_1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_1.cpp; sourceTree = "<group>"; };
+		0739D9C42BA6111D00964E96 /* demo_2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_2.cpp; sourceTree = "<group>"; };
+		0739D9C72BA614D700964E96 /* Cat_Meow_2-Cat_Stevens-2034822903.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Cat_Meow_2-Cat_Stevens-2034822903.wav"; sourceTree = "<group>"; };
+		0739D9C82BA6199300964E96 /* 07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav"; sourceTree = "<group>"; };
+		0739D9CA2BA61E5900964E96 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		0739D9E22BA7886C00964E96 /* demo_3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_3.cpp; sourceTree = "<group>"; };
+		0739D9E32BA7904100964E96 /* demo_4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_4.cpp; sourceTree = "<group>"; };
+		0739D9E42BA82C4700964E96 /* demo_5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_5.cpp; sourceTree = "<group>"; };
+		0739D9E52BA82EBF00964E96 /* demo_6.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_6.cpp; sourceTree = "<group>"; };
+		0739D9E62BA8C5B100964E96 /* demo_7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_7.cpp; sourceTree = "<group>"; };
+		0739D9E72BA8EAA600964E96 /* attribution.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = attribution.txt; sourceTree = "<group>"; };
+		0739D9E82BA8EAB300964E96 /* chiptune3.ct */ = {isa = PBXFileReference; lastKnownFileType = text; path = chiptune3.ct; sourceTree = "<group>"; };
+		0739D9E92BA8ED8100964E96 /* demo_8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_8.cpp; sourceTree = "<group>"; };
+		0739DB822BC35B6900964E96 /* lib8-Bit Audio Emulator Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "lib8-Bit Audio Emulator Lib.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0739DB832BC35B9600964E96 /* demo_9.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_9.cpp; sourceTree = "<group>"; };
+		0739DB842BCEE98C00964E96 /* demo_10.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_10.cpp; sourceTree = "<group>"; };
+		0760B6F12B9E3C610032CACD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		076AB05B2C9DD60C00531419 /* run_all_demos.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = run_all_demos.bat; sourceTree = "<group>"; };
+		078F2B902C03E2B800FF60F8 /* run_all_demos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_all_demos.sh; sourceTree = "<group>"; };
+		07980B642E7DD6C7007A0EB4 /* build_demo_1_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_applaudio.sh; sourceTree = "<group>"; };
+		07980B652E7DD6C7007A0EB4 /* build_demo_1_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_1_openal.sh; sourceTree = "<group>"; };
+		07980B6F2E7E980C007A0EB4 /* build_demo_2_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_2_applaudio.sh; sourceTree = "<group>"; };
+		07980B702E7E980C007A0EB4 /* build_demo_3_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_3_applaudio.sh; sourceTree = "<group>"; };
+		07980B712E7E980C007A0EB4 /* build_demo_4_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_4_applaudio.sh; sourceTree = "<group>"; };
+		07980B722E7E980C007A0EB4 /* build_demo_5_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_5_applaudio.sh; sourceTree = "<group>"; };
+		07980B732E7E980C007A0EB4 /* build_demo_6_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_6_applaudio.sh; sourceTree = "<group>"; };
+		07980B742E7E980C007A0EB4 /* build_demo_7_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_7_applaudio.sh; sourceTree = "<group>"; };
+		07980B752E7E980C007A0EB4 /* build_demo_8_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_8_applaudio.sh; sourceTree = "<group>"; };
+		07980B762E7E980C007A0EB4 /* build_demo_9_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_9_applaudio.sh; sourceTree = "<group>"; };
+		07980B772E7E980C007A0EB4 /* build_demo_10_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_10_applaudio.sh; sourceTree = "<group>"; };
+		07980B782E7E981F007A0EB4 /* build_demo_2_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_2_openal.sh; sourceTree = "<group>"; };
+		07980B792E7E981F007A0EB4 /* build_demo_3_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_3_openal.sh; sourceTree = "<group>"; };
+		07980B7A2E7E981F007A0EB4 /* build_demo_4_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_4_openal.sh; sourceTree = "<group>"; };
+		07980B7B2E7E981F007A0EB4 /* build_demo_5_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_5_openal.sh; sourceTree = "<group>"; };
+		07980B7C2E7E981F007A0EB4 /* build_demo_6_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_6_openal.sh; sourceTree = "<group>"; };
+		07980B7D2E7E981F007A0EB4 /* build_demo_7_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_7_openal.sh; sourceTree = "<group>"; };
+		07980B7E2E7E981F007A0EB4 /* build_demo_8_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_8_openal.sh; sourceTree = "<group>"; };
+		07980B7F2E7E981F007A0EB4 /* build_demo_9_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_9_openal.sh; sourceTree = "<group>"; };
+		07980B802E7E981F007A0EB4 /* build_demo_10_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_demo_10_openal.sh; sourceTree = "<group>"; };
+		07980B812E7F6577007A0EB4 /* build_all_demos_applaudio.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_all_demos_applaudio.sh; sourceTree = "<group>"; };
+		07980B822E7F663B007A0EB4 /* build_all_demos_openal.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_all_demos_openal.sh; sourceTree = "<group>"; };
+		07980C312E87D2D9007A0EB4 /* setup_and_build_demos_applaudio.bat */ = {isa = PBXFileReference; lastKnownFileType = text; path = setup_and_build_demos_applaudio.bat; sourceTree = SOURCE_ROOT; };
+		07980C322E87D305007A0EB4 /* setup_and_build_demos_applaudio_debian.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_applaudio_debian.sh; sourceTree = SOURCE_ROOT; };
+		07980C332E87D305007A0EB4 /* setup_and_build_demos_applaudio_macos.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_applaudio_macos.sh; sourceTree = SOURCE_ROOT; };
+		07980C342E87D7D5007A0EB4 /* dependencies_applaudio */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies_applaudio; sourceTree = SOURCE_ROOT; };
+		07980C362E87D7D5007A0EB4 /* dependencies_openal */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies_openal; sourceTree = SOURCE_ROOT; };
+		07980C392E87D7F8007A0EB4 /* dependencies_openal */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies_openal; sourceTree = SOURCE_ROOT; };
+		07980C3A2E87D851007A0EB4 /* setup_and_build_demos_openal_debian.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_openal_debian.sh; sourceTree = SOURCE_ROOT; };
+		07980C3B2E87D851007A0EB4 /* setup_and_build_demos_openal_macos.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = setup_and_build_demos_openal_macos.sh; sourceTree = SOURCE_ROOT; };
+		07980C3C2E87FE95007A0EB4 /* dependencies_applaudio */ = {isa = PBXFileReference; lastKnownFileType = text; path = dependencies_applaudio; sourceTree = SOURCE_ROOT; };
+		07BDBB4C2E755766002ACC96 /* ChipTuneEngineParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineParser.h; sourceTree = "<group>"; };
+		07BDBB4E2E755766002ACC96 /* ADSR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSR.h; sourceTree = "<group>"; };
+		07BDBB4F2E755766002ACC96 /* AudioSourceHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSourceHandler.h; sourceTree = "<group>"; };
+		07BDBB502E755766002ACC96 /* ChipTuneEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngine.h; sourceTree = "<group>"; };
+		07BDBB512E755766002ACC96 /* ChipTuneEngineListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChipTuneEngineListener.h; sourceTree = "<group>"; };
+		07BDBB522E755766002ACC96 /* SFX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFX.h; sourceTree = "<group>"; };
+		07BDBB532E755766002ACC96 /* Spectrum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Spectrum.h; sourceTree = "<group>"; };
+		07BDBB542E755766002ACC96 /* Synthesizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synthesizer.h; sourceTree = "<group>"; };
+		07BDBB552E755766002ACC96 /* Waveform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Waveform.h; sourceTree = "<group>"; };
+		07BDBB562E755766002ACC96 /* WaveformGeneration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformGeneration.h; sourceTree = "<group>"; };
+		07BDBB572E755766002ACC96 /* WaveformHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformHelper.h; sourceTree = "<group>"; };
+		07BDBB582E755766002ACC96 /* WaveformIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformIO.h; sourceTree = "<group>"; };
+		07FDE9862CA8D31E00116BA7 /* WaveformHelper_tests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaveformHelper_tests.h; sourceTree = "<group>"; };
+		07FDE9892CA8D78E00116BA7 /* unit_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = unit_tests.cpp; sourceTree = "<group>"; };
+		07FDE98B2CA8D7E700116BA7 /* build_unit_tests.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_unit_tests.sh; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		07A763192B5B225500705D31 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0739D9CB2BA61E5900964E96 /* OpenAL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0709B9B52C957C6800A43834 /* scripts_windows */ = {
+			isa = PBXGroup;
+			children = (
+				07980C342E87D7D5007A0EB4 /* dependencies_applaudio */,
+				07980C362E87D7D5007A0EB4 /* dependencies_openal */,
+				07980C312E87D2D9007A0EB4 /* setup_and_build_demos_applaudio.bat */,
+				076AB05B2C9DD60C00531419 /* run_all_demos.bat */,
+				0709B9B62C957C7C00A43834 /* build_all_demos_applaudio.bat */,
+			);
+			name = scripts_windows;
+			sourceTree = "<group>";
+		};
+		0709B9BE2C9582E600A43834 /* workflows */ = {
+			isa = PBXGroup;
+			children = (
+				0709B9BF2C95831C00A43834 /* build-macos.yml */,
+				0709B9C12C95831C00A43834 /* build-and-test-ubuntu.yml */,
+				0709B9C02C95831C00A43834 /* build-windows.yml */,
+			);
+			name = workflows;
+			sourceTree = "<group>";
+		};
+		0739D9C22BA59C8300964E96 /* demos */ = {
+			isa = PBXGroup;
+			children = (
+				0709B9B52C957C6800A43834 /* scripts_windows */,
+				078F2B862C03E27B00FF60F8 /* scripts_linmac */,
+				0739D9C62BA6148E00964E96 /* sounds */,
+				0739D9C32BA59D0200964E96 /* demo_1.cpp */,
+				0739D9C42BA6111D00964E96 /* demo_2.cpp */,
+				0739D9E22BA7886C00964E96 /* demo_3.cpp */,
+				0739D9E32BA7904100964E96 /* demo_4.cpp */,
+				0739D9E42BA82C4700964E96 /* demo_5.cpp */,
+				0739D9E52BA82EBF00964E96 /* demo_6.cpp */,
+				0739D9E62BA8C5B100964E96 /* demo_7.cpp */,
+				0739D9E92BA8ED8100964E96 /* demo_8.cpp */,
+				0739DB832BC35B9600964E96 /* demo_9.cpp */,
+				0739DB842BCEE98C00964E96 /* demo_10.cpp */,
+			);
+			path = demos;
+			sourceTree = "<group>";
+		};
+		0739D9C62BA6148E00964E96 /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				0739D9E82BA8EAB300964E96 /* chiptune3.ct */,
+				0739D9E72BA8EAA600964E96 /* attribution.txt */,
+				0739D9C82BA6199300964E96 /* 07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav */,
+				0739D9C72BA614D700964E96 /* Cat_Meow_2-Cat_Stevens-2034822903.wav */,
+			);
+			path = sounds;
+			sourceTree = "<group>";
+		};
+		0739D9C92BA61E5900964E96 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0739D9CA2BA61E5900964E96 /* OpenAL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		078F2B862C03E27B00FF60F8 /* scripts_linmac */ = {
+			isa = PBXGroup;
+			children = (
+				07980C3C2E87FE95007A0EB4 /* dependencies_applaudio */,
+				07980C392E87D7F8007A0EB4 /* dependencies_openal */,
+				07980C322E87D305007A0EB4 /* setup_and_build_demos_applaudio_debian.sh */,
+				07980C332E87D305007A0EB4 /* setup_and_build_demos_applaudio_macos.sh */,
+				07980C3A2E87D851007A0EB4 /* setup_and_build_demos_openal_debian.sh */,
+				07980C3B2E87D851007A0EB4 /* setup_and_build_demos_openal_macos.sh */,
+				07980B642E7DD6C7007A0EB4 /* build_demo_1_applaudio.sh */,
+				07980B6F2E7E980C007A0EB4 /* build_demo_2_applaudio.sh */,
+				07980B702E7E980C007A0EB4 /* build_demo_3_applaudio.sh */,
+				07980B712E7E980C007A0EB4 /* build_demo_4_applaudio.sh */,
+				07980B722E7E980C007A0EB4 /* build_demo_5_applaudio.sh */,
+				07980B732E7E980C007A0EB4 /* build_demo_6_applaudio.sh */,
+				07980B742E7E980C007A0EB4 /* build_demo_7_applaudio.sh */,
+				07980B752E7E980C007A0EB4 /* build_demo_8_applaudio.sh */,
+				07980B762E7E980C007A0EB4 /* build_demo_9_applaudio.sh */,
+				07980B772E7E980C007A0EB4 /* build_demo_10_applaudio.sh */,
+				07980B652E7DD6C7007A0EB4 /* build_demo_1_openal.sh */,
+				07980B782E7E981F007A0EB4 /* build_demo_2_openal.sh */,
+				07980B792E7E981F007A0EB4 /* build_demo_3_openal.sh */,
+				07980B7A2E7E981F007A0EB4 /* build_demo_4_openal.sh */,
+				07980B7B2E7E981F007A0EB4 /* build_demo_5_openal.sh */,
+				07980B7C2E7E981F007A0EB4 /* build_demo_6_openal.sh */,
+				07980B7D2E7E981F007A0EB4 /* build_demo_7_openal.sh */,
+				07980B7E2E7E981F007A0EB4 /* build_demo_8_openal.sh */,
+				07980B7F2E7E981F007A0EB4 /* build_demo_9_openal.sh */,
+				07980B802E7E981F007A0EB4 /* build_demo_10_openal.sh */,
+				07980B812E7F6577007A0EB4 /* build_all_demos_applaudio.sh */,
+				07980B822E7F663B007A0EB4 /* build_all_demos_openal.sh */,
+				078F2B902C03E2B800FF60F8 /* run_all_demos.sh */,
+			);
+			name = scripts_linmac;
+			sourceTree = "<group>";
+		};
+		07A763122B5B225500705D31 = {
+			isa = PBXGroup;
+			children = (
+				0739D9C12BA2434200964E96 /* LICENSE */,
+				0760B6F12B9E3C610032CACD /* README.md */,
+				07BDBB592E755766002ACC96 /* 8Beat */,
+				0739D9C22BA59C8300964E96 /* demos */,
+				0709B9BE2C9582E600A43834 /* workflows */,
+				07FDE9852CA8D2F200116BA7 /* Tests */,
+				0739D9C92BA61E5900964E96 /* Frameworks */,
+				0739DB822BC35B6900964E96 /* lib8-Bit Audio Emulator Lib.a */,
+			);
+			sourceTree = "<group>";
+		};
+		07BDBB4D2E755766002ACC96 /* ChipTuneEngine_Internals */ = {
+			isa = PBXGroup;
+			children = (
+				07BDBB4C2E755766002ACC96 /* ChipTuneEngineParser.h */,
+			);
+			path = ChipTuneEngine_Internals;
+			sourceTree = "<group>";
+		};
+		07BDBB592E755766002ACC96 /* 8Beat */ = {
+			isa = PBXGroup;
+			children = (
+				07BDBB4D2E755766002ACC96 /* ChipTuneEngine_Internals */,
+				07BDBB4E2E755766002ACC96 /* ADSR.h */,
+				07BDBB4F2E755766002ACC96 /* AudioSourceHandler.h */,
+				07BDBB502E755766002ACC96 /* ChipTuneEngine.h */,
+				07BDBB512E755766002ACC96 /* ChipTuneEngineListener.h */,
+				07BDBB522E755766002ACC96 /* SFX.h */,
+				07BDBB532E755766002ACC96 /* Spectrum.h */,
+				07BDBB542E755766002ACC96 /* Synthesizer.h */,
+				07BDBB552E755766002ACC96 /* Waveform.h */,
+				07BDBB562E755766002ACC96 /* WaveformGeneration.h */,
+				07BDBB572E755766002ACC96 /* WaveformHelper.h */,
+				07BDBB582E755766002ACC96 /* WaveformIO.h */,
+			);
+			name = 8Beat;
+			path = include/8Beat;
+			sourceTree = "<group>";
+		};
+		07FDE9852CA8D2F200116BA7 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				07FDE98B2CA8D7E700116BA7 /* build_unit_tests.sh */,
+				07FDE9892CA8D78E00116BA7 /* unit_tests.cpp */,
+				07FDE9862CA8D31E00116BA7 /* WaveformHelper_tests.h */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		07A763172B5B225500705D31 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				07BDBB5A2E755766002ACC96 /* WaveformHelper.h in Headers */,
+				07BDBB5B2E755766002ACC96 /* Waveform.h in Headers */,
+				07BDBB5C2E755766002ACC96 /* Synthesizer.h in Headers */,
+				07BDBB5D2E755766002ACC96 /* Spectrum.h in Headers */,
+				07BDBB5E2E755766002ACC96 /* SFX.h in Headers */,
+				07BDBB5F2E755766002ACC96 /* ChipTuneEngineListener.h in Headers */,
+				07BDBB602E755766002ACC96 /* ADSR.h in Headers */,
+				07BDBB612E755766002ACC96 /* ChipTuneEngine.h in Headers */,
+				07BDBB622E755766002ACC96 /* ChipTuneEngineParser.h in Headers */,
+				07BDBB632E755766002ACC96 /* AudioSourceHandler.h in Headers */,
+				07BDBB642E755766002ACC96 /* WaveformGeneration.h in Headers */,
+				07BDBB652E755766002ACC96 /* WaveformIO.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		07A7631A2B5B225500705D31 /* 8-Bit Audio Emulator Lib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07A7631F2B5B225500705D31 /* Build configuration list for PBXNativeTarget "8-Bit Audio Emulator Lib" */;
+			buildPhases = (
+				07A763172B5B225500705D31 /* Headers */,
+				07A763182B5B225500705D31 /* Sources */,
+				07A763192B5B225500705D31 /* Frameworks */,
+				07A7632F2B5C0B7C00705D31 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "8-Bit Audio Emulator Lib";
+			productName = "8-Bit Audio Emulator Lib";
+			productReference = 0739DB822BC35B6900964E96 /* lib8-Bit Audio Emulator Lib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		07A763132B5B225500705D31 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					07A7631A2B5B225500705D31 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = 07A763162B5B225500705D31 /* Build configuration list for PBXProject "8Beat" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 07A763122B5B225500705D31;
+			productRefGroup = 07A763122B5B225500705D31;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				07A7631A2B5B225500705D31 /* 8-Bit Audio Emulator Lib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		07A7632F2B5C0B7C00705D31 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#!/bin/bash\n\nlib_name=\"${EXECUTABLE_NAME}\"\n#lib_name=\"lib8-Bit Audio Emulator Lib.a\"\n\ndst_dir=\"${PROJECT_DIR}/build/${CONFIGURATION}\"\nsrc_dir=\"${BUILT_PRODUCTS_DIR}\"\n\necho \"Copying static library: ${lib_name}\"\necho \"Source directory: ${src_dir}\"\necho \"Destination directory: ${dst_dir}\"\n\n# Create the entire path if it doesn't exist\nmkdir -p \"${dst_dir}\"\n\n# Copy the built static library to the destination directory\ncp \"${src_dir}/${lib_name}\" \"${dst_dir}\"\n\necho \"Copy completed.\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		07A763182B5B225500705D31 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				07FDE98A2CA8D78E00116BA7 /* unit_tests.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		07A7631D2B5B225500705D31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/opt/libsndfile/lib;
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/opt/libsndfile/lib;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					"/opt/homebrew/opt/openal-soft/include/",
+					/opt/homebrew/opt/libsndfile/include,
+				);
+			};
+			name = Debug;
+		};
+		07A7631E2B5B225500705D31 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = /opt/homebrew/opt/libsndfile/lib;
+				LIBRARY_SEARCH_PATHS = /opt/homebrew/opt/libsndfile/lib;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					"/opt/homebrew/opt/openal-soft/include/",
+					/opt/homebrew/opt/libsndfile/include,
+				);
+			};
+			name = Release;
+		};
+		07A763202B5B225500705D31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HFL2Q84SZB;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					../Core/include/,
+					../Termin8or/include/,
+					../TrainOfThought/include/,
+					../AudioLibSwitcher_OpenAL/include/,
+					../AudioLibSwitcher_applaudio/include/,
+					../applaudio/include/,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					"/opt/homebrew/opt/openal-soft/include/",
+					/opt/homebrew/opt/libsndfile/include,
+				);
+			};
+			name = Debug;
+		};
+		07A763212B5B225500705D31 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HFL2Q84SZB;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					../Core/include/,
+					../Termin8or/include/,
+					../TrainOfThought/include/,
+					../AudioLibSwitcher_OpenAL/include/,
+					../AudioLibSwitcher_applaudio/include/,
+					../applaudio/include/,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					"/opt/homebrew/opt/openal-soft/include/",
+					/opt/homebrew/opt/libsndfile/include,
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		07A763162B5B225500705D31 /* Build configuration list for PBXProject "8Beat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07A7631D2B5B225500705D31 /* Debug */,
+				07A7631E2B5B225500705D31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		07A7631F2B5B225500705D31 /* Build configuration list for PBXNativeTarget "8-Bit Audio Emulator Lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07A763202B5B225500705D31 /* Debug */,
+				07A763212B5B225500705D31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 07A763132B5B225500705D31 /* Project object */;
+}
