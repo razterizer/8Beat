@@ -189,6 +189,36 @@ namespace beat
       return m_audio_lib.set_source_attenuation_quadratic_falloff(m_sourceID, sq_falloff);
     }
     
+    // directivity_alpha = 0 : Omni.
+    // directivity_alpha = 1 : Fully Directional.
+    // [0, 1].
+    bool set_source_directivity_alpha(float directivity_alpha)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_directivity_alpha(m_sourceID, directivity_alpha);
+    }
+    
+    // [1, 8]. 8 = sharpest.
+    bool set_source_directivity_sharpness(float directivity_sharpness)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_directivity_sharpness(m_sourceID, directivity_sharpness);
+    }
+    
+    // 0 = Cardioid, 1 = SuperCardioid, 2 = HalfRectifiedDipole, 3 = Dipole.
+    bool set_source_directivity_type(int directivity_type)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_directivity_type(m_sourceID, directivity_type);
+    }
+    
+    // [0.f, 1.f]. 0 = Silence, 1 = No Attenuation.
+    bool set_source_rear_attenuation(float rear_attenuation)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_source_rear_attenuation(m_sourceID, rear_attenuation);
+    }
+    
     float get_duration_s() const
     {
       return m_duration_s;
@@ -480,6 +510,13 @@ namespace beat
     {
       m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
       return m_audio_lib.set_listener_3d_state_channel(channel, rot_mtx, pos_world, vel_world);
+    }
+    
+    // [0.f, 1.f]. 0 = Silence, 1 = No Attenuation.
+    bool set_listener_rear_attenuation(float rear_attenuation)
+    {
+      m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
+      return m_audio_lib.set_listener_rear_attenuation(rear_attenuation);
     }
     
     // ///////////////////////////////////
