@@ -173,17 +173,17 @@ namespace beat
       m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
       return m_audio_lib.set_source_attenuation_max_distance(m_sourceID, max_dist);
     }
-    bool set_attenuation_constant_falloff(unsigned int src_id, float const_falloff)
+    bool set_attenuation_constant_falloff(float const_falloff)
     {
       m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
       return m_audio_lib.set_source_attenuation_constant_falloff(m_sourceID, const_falloff);
     }
-    bool set_attenuation_linear_falloff(unsigned int src_id, float lin_falloff)
+    bool set_attenuation_linear_falloff(float lin_falloff)
     {
       m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
       return m_audio_lib.set_source_attenuation_linear_falloff(m_sourceID, lin_falloff);
     }
-    bool set_attenuation_quadratic_falloff(unsigned int src_id, float sq_falloff)
+    bool set_attenuation_quadratic_falloff(float sq_falloff)
     {
       m_audio_lib.init_3d_scene(); // Make sure the 3d scene is initialized.
       return m_audio_lib.set_source_attenuation_quadratic_falloff(m_sourceID, sq_falloff);
