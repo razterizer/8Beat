@@ -96,7 +96,11 @@ namespace beat
     
     bool is_playing() const
     {
-      return m_audio_lib.is_source_playing(m_sourceID);
+      auto ret = m_audio_lib.is_source_playing(m_sourceID);
+      assert(ret.has_value());
+      if (!ret.has_value())
+        return false;
+      return ret.value();
     }
     
     void pause()
