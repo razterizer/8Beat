@@ -244,6 +244,32 @@ namespace beat
       return reverb;
     }
     
+    static std::vector<Waveform> reverb_fast(const std::vector<Waveform>& wave_channels, const std::vector<Waveform>& kernel_channels)
+    {
+      auto num_channels_w = stlutils::sizeI(wave_channels);
+      auto num_channels_k = stlutils::sizeI(kernel_channels);
+      auto num_channels_r = std::max(num_channels_w, num_channels_k);
+      std::vector<Waveform> reverb_channels(num_channels_r);
+      
+      if (num_channels_w == num_channels_k)
+      {
+        for (int ch = 0; ch < num_channels_r; ++ch)
+          reverb_channels[ch] = reverb_fast(wave_channels[ch], kernel_channels[ch]);
+      }
+      else if (num_channels_w == 1 && num_channels_k == 2)
+      {
+        for (int ch = 0; ch < num_channels_r; ++ch)
+          reverb_channels[ch] = reverb_fast(wave_channels[0], kernel_channels[ch]);
+      }
+      else if (num_channels_w == 2 && num_channels_k == 1)
+      {
+        for (int ch = 0; ch < num_channels_r; ++ch)
+          reverb_channels[ch] = reverb_fast(wave_channels[ch], kernel_channels[0]);
+      }
+      
+      return reverb_channels;
+    }
+    
     static float complex2real(const std::complex<float>& input, Complex2Real filter)
     {
       switch (filter)
