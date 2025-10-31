@@ -437,16 +437,27 @@ namespace beat
       return m_sources.emplace_back(std::make_unique<AudioSource>()).get();
     }
     
-    // Function to create a sound source with programmatically created buffer
+    // Function to create a sound source with programmatically created buffer.
     AudioSource* create_source_from_waveform(const Waveform& wave_mono)
     {
       return m_sources.emplace_back(std::make_unique<AudioSource>(wave_mono)).get();
     }
     
-    // Function to create a sound source with programmatically created buffer
+    // Function to create a sound source with programmatically created buffer.
     AudioSource* create_source_from_waveform(const Waveform& wave_stereo_left, const Waveform& wave_stereo_right)
     {
       return m_sources.emplace_back(std::make_unique<AudioSource>(wave_stereo_left, wave_stereo_right)).get();
+    }
+    
+    // Function to create a sound source with programmatically created buffer.
+    AudioSource* create_source_from_waveform(const std::vector<Waveform>& wave_channels)
+    {
+      auto num_channels = wave_channels.size();
+      if (num_channels == 1)
+        return m_sources.emplace_back(std::make_unique<AudioSource>(wave_channels[0])).get();
+      if (num_channels == 2)
+        return m_sources.emplace_back(std::make_unique<AudioSource>(wave_channels[0], wave_channels[1])).get();
+      return nullptr;
     }
     
     AudioStreamSource* create_stream_source(AudioStreamListener* listener, int sample_rate)

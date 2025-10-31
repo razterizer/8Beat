@@ -50,10 +50,10 @@ namespace beat
   class WaveformIO
   {
   public:
-    static std::optional<Waveform> load(const std::string& filepath,
+    static std::vector<Waveform> load(const std::string& filepath,
       int verbosity = 1)
     {
-      Waveform wd;
+      std::vector<Waveform> wd_channels;
       
       SF_INFO sf_info;
       sf_info.format = 0; // #NOTE: Specify for format raw.
@@ -74,46 +74,55 @@ namespace beat
           std::cout << "Successfully loaded WaveForm from file: \"" << filepath << "\".\n";
       }
       
-      wd.sample_rate = sf_info.samplerate;
-      wd.duration = static_cast<float>(sf_info.frames) / wd.sample_rate;
-      //std::cout << "Fs: " << wd.sample_rate << std::endl;
-      //std::cout << "duration: " << wd.duration << std::endl;
-      //std::cout << "channels: " << sf_info.channels << std::endl;
+      wd_channels.resize(sf_info.channels);
+      
+      for (auto& wd : wd_channels)
+      {
+        wd.sample_rate = sf_info.samplerate;
+        wd.duration = static_cast<float>(sf_info.frames) / wd.sample_rate;
+        wd.buffer.resize(sf_info.frames);
+      }
       
       const size_t input_buf_size = sf_info.channels * sf_info.frames;
       std::vector<float> buffer_in(input_buf_size);
-      wd.buffer.resize(sf_info.frames);
       
-      // #FIXME: Fix proper stereo-support in the future.
       sf_read_float(file, buffer_in.data(), static_cast<sf_count_t>(input_buf_size));
-      for (int64_t f_idx = 0; f_idx < sf_info.frames; ++f_idx)
+      for (int ch = 0; ch < sf_info.channels; ++ch)
       {
-        wd.buffer[f_idx] = 0;
-        for (int c_idx = 0; c_idx < sf_info.channels; c_idx++)
-            wd.buffer[f_idx] += buffer_in[f_idx*sf_info.channels + c_idx];
-        wd.buffer[f_idx] /= sf_info.channels;
+        auto& wd = wd_channels[ch];
+        for (int64_t f_idx = 0; f_idx < sf_info.frames; ++f_idx)
+          wd.buffer[f_idx] = buffer_in[f_idx*sf_info.channels + ch];
+        
+        // Normalize to amplitude max 1 if amplitude > 1.
+        WaveformHelper::normalize_over(wd);
       }
-      // Normalize to amplitude max 1 if amplitude > 1.
-      WaveformHelper::normalize_over(wd);
       
       if (verbosity >= 2)
         std::cout << "Channel mixing complete!\n";
       
       sf_close(file);
       
-      return wd;
+      return wd_channels;
     }
     
-    static bool save(const Waveform& wd, const std::string& filepath,
+    static bool save(const std::vector<Waveform>& wd_channels, const std::string& filepath,
                      AudioFileFormatSubType subtype,
                      int verbosity = 1)
     {
       SF_INFO sf_info;
       
-      sf_info.samplerate = wd.sample_rate;
-      sf_info.frames = static_cast<sf_count_t>(wd.buffer.size());
-      sf_info.channels = 1;  // Use 1 for mono, update for stereo support.
+      int sample_rate = INT_MAX;
+      size_t buffer_size = wd_channels.back().buffer.size();
+      for (const auto& wd : wd_channels)
+      {
+        math::minimize(sample_rate, wd.sample_rate);
+        math::minimize(buffer_size, wd.buffer.size());
+      }
       
+      sf_info.samplerate = sample_rate;
+      sf_info.frames = static_cast<sf_count_t>(buffer_size);
+      sf_info.channels = static_cast<int>(wd_channels.size());
+    
       auto filepath2 = filepath;
       auto idx = filepath2.rfind('.');
       if (idx == std::string::npos)
@@ -278,39 +287,31 @@ namespace beat
         return false;
       }
       
-      sf_info.samplerate = wd.sample_rate;
-      sf_info.frames = static_cast<sf_count_t>(wd.buffer.size());
-      sf_info.channels = 1;  // Use 1 for mono, update for stereo support.
-      
-      //std::cout << "sf_info.channels: " << sf_info.channels << std::endl;
-      //std::cout << "sf_info.frames: " << sf_info.channels << std::endl;
-      //std::cout << "wd.buffer.size(): " << wd.buffer.size() << std::endl;
-      
       sf_count_t written_frames = 0;
       switch (subtype)
       {
         case AudioFileFormatSubType::PCM_S8:
-          written_frames = write_PCM<int8_t>(file, wd);
+          written_frames = write_PCM<int8_t>(file, wd_channels);
           break;
         case AudioFileFormatSubType::PCM_16:
         case AudioFileFormatSubType::FLOAT:
-          written_frames = write_PCM_float(file, wd);
+          written_frames = write_PCM_float(file, wd_channels);
           break;
         case AudioFileFormatSubType::DOUBLE:
-          written_frames = write_PCM_double(file, wd);
+          written_frames = write_PCM_double(file, wd_channels);
           break;
         case AudioFileFormatSubType::PCM_24:
         case AudioFileFormatSubType::PCM_32:
-          written_frames = write_PCM<int32_t>(file, wd);
+          written_frames = write_PCM<int32_t>(file, wd_channels);
           break;
         case AudioFileFormatSubType::PCM_U8:
-          written_frames = write_PCM<uint8_t>(file, wd);
+          written_frames = write_PCM<uint8_t>(file, wd_channels);
           break;
         case AudioFileFormatSubType::ULAW:
-          written_frames = write_ULAW(file, wd);
+          written_frames = write_ULAW(file, wd_channels);
           break;
         case AudioFileFormatSubType::ALAW:
-          written_frames = write_ALAW(file, wd);
+          written_frames = write_ALAW(file, wd_channels);
           break;
         case AudioFileFormatSubType::IMA_ADPCM:
         case AudioFileFormatSubType::MS_ADPCM:
@@ -338,8 +339,10 @@ namespace beat
       
       sf_close(file);
       
-      if (written_frames != sf_info.frames)
+      if (written_frames != buffer_size * wd_channels.size())
       {
+        std::cout << written_frames << std::endl;
+        std::cout << sf_info.frames << std::endl;
         if (verbosity >= 1)
           std::cerr << "ERROR: Failed to write the expected number of frames to file: \"" << filepath2 << "\"\n";
         return false;
@@ -468,18 +471,27 @@ namespace beat
     }
     
     template <typename T>
-    static sf_count_t write_PCM(SNDFILE* file, const Waveform& wd)
+    static sf_count_t write_PCM(SNDFILE* file, const std::vector<Waveform>& wd_channels)
     {
+      int num_channels = stlutils::sizeI(wd_channels);
+      int buffer_size = stlutils::sizeI(wd_channels.back().buffer);
+      for (const auto& wd : wd_channels)
+        math::minimize(buffer_size, stlutils::sizeI(wd.buffer));
+    
       // Convert float data to the specified bit depth
-      std::vector<T> buffer(wd.buffer.size());
+      std::vector<T> buffer(buffer_size * num_channels);
       const auto min_val = static_cast<float>(std::numeric_limits<T>::min());
       const auto max_val = static_cast<float>(std::numeric_limits<T>::max());
       const float scale_factor = max_val;
       
-      for (size_t i = 0; i < wd.buffer.size(); ++i)
+      for (int ch = 0; ch < num_channels; ++ch)
       {
-        auto scaled_value = wd.buffer[i] * scale_factor;
-        buffer[i] = static_cast<T>(std::max(min_val, std::min(max_val, scaled_value)));
+        auto& wd = wd_channels[ch];
+        for (size_t i = 0; i < buffer_size; ++i)
+        {
+          auto scaled_value = wd.buffer[i] * scale_factor;
+          buffer[i*num_channels + ch] = static_cast<T>(std::clamp(scaled_value, min_val, max_val));
+        }
       }
       
       // Write data to file
@@ -492,17 +504,44 @@ namespace beat
       return written_frames;
     }
     
-    static sf_count_t write_PCM_float(SNDFILE* file, const Waveform& wd)
+    static sf_count_t write_PCM_float(SNDFILE* file, const std::vector<Waveform>& wd_channels)
     {
+      int num_channels = stlutils::sizeI(wd_channels);
+      int buffer_size = stlutils::sizeI(wd_channels.back().buffer);
+      for (const auto& wd : wd_channels)
+        math::minimize(buffer_size, stlutils::sizeI(wd.buffer));
+        
+      std::vector<float> buffer(buffer_size * num_channels);
+    
       // Write float data to file
-      sf_count_t written_frames = sf_write_float(file, wd.buffer.data(), wd.buffer.size());
+      for (int ch = 0; ch < num_channels; ++ch)
+      {
+        auto& wd = wd_channels[ch];
+        for (size_t i = 0; i < buffer_size; ++i)
+          buffer[i*num_channels + ch] = wd.buffer[i];
+      }
+      
+      sf_count_t written_frames = sf_write_float(file, buffer.data(), buffer.size());
       return written_frames;
     }
     
-    static sf_count_t write_PCM_double(SNDFILE* file, const Waveform& wd)
+    static sf_count_t write_PCM_double(SNDFILE* file, const std::vector<Waveform>& wd_channels)
     {
       // Convert float data to double
-      std::vector<double> buffer_double(wd.buffer.begin(), wd.buffer.end());
+      int num_channels = stlutils::sizeI(wd_channels);
+      int buffer_size = stlutils::sizeI(wd_channels.back().buffer);
+      for (const auto& wd : wd_channels)
+        math::minimize(buffer_size, stlutils::sizeI(wd.buffer));
+        
+      std::vector<double> buffer_double(buffer_size * num_channels);
+    
+      // Write float data to file
+      for (int ch = 0; ch < num_channels; ++ch)
+      {
+        auto& wd = wd_channels[ch];
+        for (size_t i = 0; i < buffer_size; ++i)
+          buffer_double[i*num_channels + ch] = static_cast<double>(wd.buffer[i]);
+      }
       
       // Write double data to file
       sf_count_t written_frames = sf_write_double(file, buffer_double.data(), buffer_double.size());
@@ -583,15 +622,22 @@ namespace beat
       return static_cast<uint8_t>(sign | ((exponent & 0x0F) << 4) | mantissa);
     }
     
-    static sf_count_t write_ULAW(SNDFILE* file, const Waveform& wd)
+    static sf_count_t write_ULAW(SNDFILE* file, const std::vector<Waveform>& wd_channels)
     {
-      // Convert float data to μ-law encoded integers
-      std::vector<uint8_t> buffer_ulaw(wd.buffer.size());
+      int num_channels = stlutils::sizeI(wd_channels);
+      int buffer_size = stlutils::sizeI(wd_channels.back().buffer);
+      for (const auto& wd : wd_channels)
+        math::minimize(buffer_size, stlutils::sizeI(wd.buffer));
+    
+      // Convert float data to μ-law encoded integers.
+      std::vector<uint8_t> buffer_ulaw(buffer_size * num_channels);
       
-      for (size_t i = 0; i < wd.buffer.size(); ++i)
+      // Convert float value to μ-law.
+      for (int ch = 0; ch < num_channels; ++ch)
       {
-        // Convert float value to μ-law
-        buffer_ulaw[i] = linear_to_ulaw(wd.buffer[i]);
+        auto& wd = wd_channels[ch];
+        for (size_t i = 0; i < buffer_size; ++i)
+          buffer_ulaw[i*num_channels + ch] = linear_to_ulaw(wd.buffer[i]);
       }
       
       // Write μ-law data to file
@@ -600,15 +646,22 @@ namespace beat
       return written_frames;
     }
     
-    static sf_count_t write_ALAW(SNDFILE* file, const Waveform& wd)
+    static sf_count_t write_ALAW(SNDFILE* file, const std::vector<Waveform>& wd_channels)
     {
-      // Convert float data to A-law encoded integers
-      std::vector<uint8_t> buffer_alaw(wd.buffer.size());
+      int num_channels = stlutils::sizeI(wd_channels);
+      int buffer_size = stlutils::sizeI(wd_channels.back().buffer);
+      for (const auto& wd : wd_channels)
+        math::minimize(buffer_size, stlutils::sizeI(wd.buffer));
+    
+      // Convert float data to A-law encoded integers.
+      std::vector<uint8_t> buffer_alaw(buffer_size * num_channels);
       
-      for (size_t i = 0; i < wd.buffer.size(); ++i)
+      // Convert float value to A-law.
+      for (int ch = 0; ch < num_channels; ++ch)
       {
-        // Convert float value to A-law
-        buffer_alaw[i] = linear_to_alaw(wd.buffer[i]);
+        auto& wd = wd_channels[ch];
+        for (size_t i = 0; i < buffer_size; ++i)
+          buffer_alaw[i*num_channels + ch] = linear_to_alaw(wd.buffer[i]);
       }
       
       // Write A-law data to file
