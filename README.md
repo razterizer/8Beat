@@ -65,7 +65,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 8Beat is a header-only library that contains the following header files:
 
-* `Waveform.h` <br/> contains the struct `Waveform` that contains an audio buffer, and variables `frequency`, `sample_rate` and `duration`. This struct is very central as it holds the PCM audio waveform representation itself.
+* `Waveform.h` <br/> contains the struct `Waveform` that contains an audio buffer, and variables `frequency`, `sample_rate` and `duration`. This struct is very central as it holds the PCM audio waveform representation itself. This holds one mono-sound audio buffer so if you want stereo, then you need to form a `std::vector` of these. Use `WaveformHelper::apply_channelwise()` to apply binary operations over stereo / mono waveform-vectors or any combination of these.
 
 * `WaveformIO.h` <br/> contains class `WaveformIO` that has two static public functions: `load()` and `save()`. These functions rely on the [`sndfile`](https://github.com/libsndfile/libsndfile) library which allows you to import and export a `Waveform` object to many different types and formats.
 * `WaveformGeneration.h` <br/> contains class `WaveformGeneration` with a single public function `generate_waveform()`.
@@ -107,6 +107,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
   * `ring_modulation()` multiplies two waveforms.
   * `reverb()` does reverb between a waveform and an impulse response waveform of an environment (response sound from a dirac pulse-like "trigger" sound) to create a reverb effect.
   * `reverb_fast()` same as `reverb()` but is very fast because it uses the fast Fourier transform.
+  * `apply_channelwise()` allows for binary operations such as `reverb_fast()` but using any combination of mono / stereo for the operands / arguments. Each channel is represented by a per `Waveform` element in a `std::vector<Waveform>`.
   * `complex2real()` lets you choose if you want the real part, imag part or absolute value of both from a given complex value.
   * `fft()` this is the fast Fourier transform using the Cooley-Tukey algorithm.
   * `ifft()` this is the fast inverse Fourier transform using a variant of the Cooley-Tukey algorithm.
