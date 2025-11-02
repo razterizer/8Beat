@@ -48,7 +48,7 @@ int main(int argc, char** argv)
       if (!wd_rev.empty())
       {
         std::cout << "Reverb kernel (channels): "<< wd_rev.size() << std::endl;
-        auto wd_cat_in_air_raid_shelter = beat::WaveformHelper::reverb_fast(wd_cat, wd_rev);
+        auto wd_cat_in_air_raid_shelter = beat::WaveformHelper::apply_channelwise(beat::WaveformHelper::reverb_fast, wd_cat, wd_rev);
         auto src_cat_in_air_raid_shelter = src_handler.create_source_from_waveform(wd_cat_in_air_raid_shelter);
         std::cout << "Cat in Air Raid Shelter (channels): " << wd_cat_in_air_raid_shelter.size() << std::endl;
         std::cout << "Cat in Air Raid Shelter (samples): " << wd_cat_in_air_raid_shelter[0].buffer.size() << std::endl;

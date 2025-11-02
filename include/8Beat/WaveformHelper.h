@@ -22,6 +22,13 @@
 namespace beat
 {
   using namespace std::complex_literals;
+  
+  template <typename F>
+  concept WaveformBinaryFunc =
+    requires(F f, const Waveform& a, const Waveform& b)
+    {
+      { f(a, b) } -> std::same_as<beat::Waveform>;
+    };
 
   enum class FilterType { NONE, Butterworth, ChebyshevTypeI, ChebyshevTypeII };
   enum class FilterOpType { NONE, LowPass, HighPass, BandPass, BandStop };
@@ -244,30 +251,31 @@ namespace beat
       return reverb;
     }
     
-    static std::vector<Waveform> reverb_fast(const std::vector<Waveform>& wave_channels, const std::vector<Waveform>& kernel_channels)
+    template <WaveformBinaryFunc Lambda>
+    static std::vector<Waveform> apply_channelwise(Lambda&& binary_arg_func, const std::vector<Waveform>& wave_A_channels, const std::vector<Waveform>& wave_B_channels)
     {
-      auto num_channels_w = stlutils::sizeI(wave_channels);
-      auto num_channels_k = stlutils::sizeI(kernel_channels);
-      auto num_channels_r = std::max(num_channels_w, num_channels_k);
-      std::vector<Waveform> reverb_channels(num_channels_r);
+      auto num_channels_wA = stlutils::sizeI(wave_A_channels);
+      auto num_channels_wB = stlutils::sizeI(wave_B_channels);
+      auto num_channels_wR = std::max(num_channels_wA, num_channels_wB);
+      std::vector<Waveform> wave_R_channels(num_channels_wR);
       
-      if (num_channels_w == num_channels_k)
+      if (num_channels_wA == num_channels_wB)
       {
-        for (int ch = 0; ch < num_channels_r; ++ch)
-          reverb_channels[ch] = reverb_fast(wave_channels[ch], kernel_channels[ch]);
+        for (int ch = 0; ch < num_channels_wR; ++ch)
+          wave_R_channels[ch] = binary_arg_func(wave_A_channels[ch], wave_B_channels[ch]);
       }
-      else if (num_channels_w == 1 && num_channels_k == 2)
+      else if (num_channels_wA == 1 && num_channels_wB == 2)
       {
-        for (int ch = 0; ch < num_channels_r; ++ch)
-          reverb_channels[ch] = reverb_fast(wave_channels[0], kernel_channels[ch]);
+        for (int ch = 0; ch < num_channels_wR; ++ch)
+          wave_R_channels[ch] = binary_arg_func(wave_A_channels[0], wave_B_channels[ch]);
       }
-      else if (num_channels_w == 2 && num_channels_k == 1)
+      else if (num_channels_wA == 2 && num_channels_wB == 1)
       {
-        for (int ch = 0; ch < num_channels_r; ++ch)
-          reverb_channels[ch] = reverb_fast(wave_channels[ch], kernel_channels[0]);
+        for (int ch = 0; ch < num_channels_wR; ++ch)
+          wave_R_channels[ch] = binary_arg_func(wave_A_channels[ch], wave_B_channels[0]);
       }
       
-      return reverb_channels;
+      return wave_R_channels;
     }
     
     static float complex2real(const std::complex<float>& input, Complex2Real filter)
