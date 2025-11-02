@@ -27,7 +27,7 @@ namespace beat
   concept WaveformBinaryFunc =
     requires(F f, const Waveform& a, const Waveform& b)
     {
-      { f(a, b) } -> std::same_as<beat::Waveform>;
+      { f(a, b) } -> std::same_as<Waveform>;
     };
 
   enum class FilterType { NONE, Butterworth, ChebyshevTypeI, ChebyshevTypeII };
