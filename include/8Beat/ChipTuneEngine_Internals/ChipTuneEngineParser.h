@@ -293,7 +293,7 @@ namespace beat
             iss >> m_curr_time_step_ms;
             m_time_step_ms[num_notes_parsed] = m_curr_time_step_ms;
           }
-          else if (command == "gain")
+          else if (command == "GAIN")
           {
             iss >> m_curr_gain;
             m_gain[num_notes_parsed] = m_curr_gain;
