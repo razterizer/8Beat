@@ -330,6 +330,13 @@ namespace beat
       m_ext_gain = gain;
     }
     
+    void set_volume_slider(float vol01)
+    {
+      float vol_dB = -60.f + 60.f * vol01;
+      float gain = std::pow(10.f, vol_dB/20.f);
+      m_ext_gain = gain;
+    }
+    
     // #WARNING: Super-slow!!!
     void set_reverb_ir(const Waveform* ir)
     {
