@@ -118,6 +118,16 @@ namespace beat
       m_audio_lib.set_source_gain(m_sourceID, gain);
     }
     
+    void set_volume_dB(float vol_dB)
+    {
+      m_audio_lib.set_source_volume_dB(m_sourceID, vol_dB);
+    }
+    
+    void set_volume_slider(float vol01)
+    {
+      m_audio_lib.set_source_volume_slider(m_sourceID, vol01);
+    }
+    
     void set_pitch(float pitch)
     {
       m_audio_lib.set_source_pitch(m_sourceID, pitch);
