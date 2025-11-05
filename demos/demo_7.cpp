@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 
   beat::ChipTuneEngine chiptune_engine(src_handler, wave_gen);
   chiptune_engine.load_tune(wk_dir + "chiptune3.ct", true);
-  chiptune_engine.set_volume(0.8f);
+  chiptune_engine.set_gain(0.8f);
   chiptune_engine.play_tune(false, false);
   
   keyboard.pressAnyKey();

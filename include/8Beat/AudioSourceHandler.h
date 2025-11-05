@@ -113,9 +113,9 @@ namespace beat
       m_audio_lib.stop_source(m_sourceID);
     }
     
-    void set_volume(float volume)
+    void set_gain(float gain)
     {
-      m_audio_lib.set_source_volume(m_sourceID, volume);
+      m_audio_lib.set_source_gain(m_sourceID, gain);
     }
     
     void set_pitch(float pitch)

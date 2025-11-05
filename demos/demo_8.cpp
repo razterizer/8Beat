@@ -46,12 +46,12 @@ int main(int argc, char** argv)
   int num_tot_samples = 100'000; // ~2s
   
   std::cout << "Listener-based AudioStreamSource : mono" << std::endl;
-  stream_src_0->set_volume(0.2f);
+  stream_src_0->set_gain(0.2f);
   stream_src_0->update_buffer(num_tot_samples, 1);
   stream_src_0->play(beat::PlaybackMode::STATE_WAIT);
   
   std::cout << "Listener-based AudioStreamSource : stereo" << std::endl;
-  stream_src_0->set_volume(0.2f);
+  stream_src_0->set_gain(0.2f);
   stream_src_0->update_buffer(num_tot_samples, 2);
   stream_src_0->play(beat::PlaybackMode::NONE);
   float t = 0.f;
@@ -64,9 +64,9 @@ int main(int argc, char** argv)
   }
 
   std::cout << "Buffer-based AudioStreamSource" << std::endl;
-  std::cout << "  Setting volumes" << std::endl;
-  src_1->set_volume(0.2f);
-  src_2->set_volume(0.2f);
+  std::cout << "  Setting gains" << std::endl;
+  src_1->set_gain(0.2f);
+  src_2->set_gain(0.2f);
   
   std::cout << "  Setting buffers: source 1 <- wave_sine, source 2 <- wave_square" << std::endl;
   src_1->update_buffer(wave_sine);

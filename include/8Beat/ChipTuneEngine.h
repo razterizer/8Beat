@@ -47,11 +47,11 @@ namespace beat
         return std::find_if(m_labels.begin(), m_labels.end(), [&label](const auto& lp) { return lp.second->label == label; });
       };
       
-      auto f_reset_volume = [this](int goto_note_idx)
+      auto f_reset_gain = [this](int goto_note_idx)
       {
-        for (const auto& vol_pair : m_volume)
+        for (const auto& vol_pair : m_gain)
           if (vol_pair.first <= goto_note_idx)
-            m_curr_volume = vol_pair.second;
+            m_curr_gain = vol_pair.second;
       };
       auto f_reset_speed = [this](int goto_note_idx)
       {
@@ -62,9 +62,9 @@ namespace beat
       
       if (auto it_ts = m_time_step_ms.find(0); it_ts != m_time_step_ms.end())
         m_curr_time_step_ms = it_ts->second;
-      m_curr_volume = 1.f;
-      if (auto it_v = m_volume.find(0); it_v != m_volume.end())
-        m_curr_volume = it_v->second;
+      m_curr_gain = 1.f;
+      if (auto it_v = m_gain.find(0); it_v != m_gain.end())
+        m_curr_gain = it_v->second;
         
       Delay::sleep(static_cast<int>(1e6f)); // Warm-up. #FIXME: Find a better, more robust solution.
       // ### Loop over voices ###
@@ -118,7 +118,7 @@ namespace beat
             {
               m_al_fine = true;
               note_idx = it->first - 1;
-              f_reset_volume(note_idx);
+              f_reset_gain(note_idx);
               f_reset_speed(note_idx);
               continue;
             }
@@ -129,7 +129,7 @@ namespace beat
             {
               m_al_coda = true;
               note_idx = it->first - 1;
-              f_reset_volume(note_idx);
+              f_reset_gain(note_idx);
               f_reset_speed(note_idx);
               continue;
             }
@@ -142,7 +142,7 @@ namespace beat
             if (it_l != m_labels.end())
             {
               note_idx = it_l->first - 1;
-              f_reset_volume(note_idx);
+              f_reset_gain(note_idx);
               f_reset_speed(note_idx);
               continue;
             }
@@ -225,9 +225,9 @@ namespace beat
           }
         }
       
-        // Volume.
-        if (auto it_v = m_volume.find(note_idx); it_v != m_volume.end())
-          m_curr_volume = it_v->second;
+        // gain.
+        if (auto it_v = m_gain.find(note_idx); it_v != m_gain.end())
+          m_curr_gain = it_v->second;
         
         // The Melody.
         if (verbose)
@@ -249,7 +249,7 @@ namespace beat
               }
               else
                 voice.src->update_buffer(note->wave);
-              voice.src->set_volume(m_ext_volume * m_curr_volume * note->volume);
+              voice.src->set_gain(m_ext_gain * m_curr_gain * note->gain);
               voice.src->play(PlaybackMode::NONE);
             }
           }
@@ -325,9 +325,9 @@ namespace beat
       m_pause = false;
     }
     
-    void set_volume(float vol)
+    void set_gain(float vol)
     {
-      m_ext_volume = vol;
+      m_ext_gain = vol;
     }
     
     // #WARNING: Super-slow!!!
@@ -346,7 +346,7 @@ namespace beat
     std::atomic<bool> m_stop_audio_thread = false;
     std::atomic<bool> m_pause = false;
     std::atomic<bool> m_enable_print_notes = false;
-    std::atomic<float> m_ext_volume = 1.f;
+    std::atomic<float> m_ext_gain = 1.f;
     std::atomic<Waveform const *> m_ir_sound = nullptr;
     std::atomic<bool> m_use_reverb = false;
   };

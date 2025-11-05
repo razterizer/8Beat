@@ -30,7 +30,7 @@ int main(int argc, char** argv)
   // Mysterious fade-in behaviour. #FIXME: Investigate!
   auto wd_sine = wave_gen.generate_waveform(beat::WaveformType::SINE, 3.f, 460.f);
   auto src_sine = src_handler.create_source_from_waveform(wd_sine);
-  src_sine->set_volume(0.8f);
+  src_sine->set_gain(0.8f);
   src_sine->play(true);
   beat::WaveformHelper::print_waveform_graph_idx(wd_sine, beat::GraphType::PLOT_THICK0, 150, 20, 0, std::nullopt);
 #endif
@@ -60,7 +60,7 @@ int main(int argc, char** argv)
     synth_waves.emplace_back(wd_synth);
     auto* src_synth = src_handler.create_source_from_waveform(wd_synth);
     synth_sources.emplace_back(src_synth);
-    src_synth->set_volume(0.8f);
+    src_synth->set_gain(0.8f);
   }
   for (int i = 0; i < static_cast<int>(beat::InstrumentType::NUM_ITEMS); ++i)
   {

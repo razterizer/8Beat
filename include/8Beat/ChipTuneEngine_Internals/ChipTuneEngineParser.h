@@ -35,8 +35,8 @@ namespace beat
       m_time_step_ms.clear();
       m_curr_time_step_ms = 100;
     
-      m_volume.clear();
-      m_curr_volume = 1.f;
+      m_gain.clear();
+      m_curr_gain = 1.f;
     
       m_labels.clear(); // note_idx -> Label (label, id)
       m_gotos.clear(); // note_idx -> Goto (from_label, to_label, count)
@@ -123,7 +123,7 @@ namespace beat
       int instrument_lib_idx = -1;
       int adsr_idx = -1;
       int flt_idx = -1;
-      float volume = 1.f;
+      float gain = 1.f;
       static Note create_pause()
       {
         Note n;
@@ -147,7 +147,7 @@ namespace beat
       std::string name;
       int adsr_idx = -1;
       int flt_idx = -1;
-      float volume = 1.f;
+      float gain = 1.f;
     };
     struct InstrumentBasic : InstrumentBase
     {
@@ -234,8 +234,8 @@ namespace beat
     std::map<int, float> m_time_step_ms;
     float m_curr_time_step_ms = 100;
     
-    std::map<int, float> m_volume;
-    float m_curr_volume = 1.f;
+    std::map<int, float> m_gain;
+    float m_curr_gain = 1.f;
     
     std::map<int, std::unique_ptr<Label>> m_labels; // note_idx -> Label (label, id)
     std::map<int, std::unique_ptr<Goto>> m_gotos; // note_idx -> Goto (from_label, to_label, count)
@@ -264,7 +264,7 @@ namespace beat
         return std::find_if(m_gotos.begin(), m_gotos.end(), [&from_label](const auto& gp) { return gp.second->from_label == from_label; }) != m_gotos.end();
       };
       
-      m_volume[0] = 1.f;
+      m_gain[0] = 1.f;
     
       std::istringstream iss(line);
       if (!line.empty())
@@ -293,10 +293,10 @@ namespace beat
             iss >> m_curr_time_step_ms;
             m_time_step_ms[num_notes_parsed] = m_curr_time_step_ms;
           }
-          else if (command == "VOLUME")
+          else if (command == "gain")
           {
-            iss >> m_curr_volume;
-            m_volume[num_notes_parsed] = m_curr_volume;
+            iss >> m_curr_gain;
+            m_gain[num_notes_parsed] = m_curr_gain;
           }
           else if (command == "LABEL")
           {
@@ -571,7 +571,7 @@ namespace beat
         }
         instrument.adsr_idx = adsr_nr;
         instrument.flt_idx = flt_nr;
-        instrument.volume = vol;
+        instrument.gain = vol;
       }
       else if (op.find("&") == 0)
       {
@@ -622,7 +622,7 @@ namespace beat
         }
         instr.adsr_idx = adsr_nr;
         instr.flt_idx = flt_nr;
-        instr.volume = vol;
+        instr.gain = vol;
       }
       else if (op.find("ring_mod_A:") == 0 || op.find("ring_mod_B:") == 0)
       {
@@ -1144,7 +1144,7 @@ namespace beat
                   {
                     note->adsr_idx = adsr_nr;
                     note->flt_idx = flt_nr;
-                    note->volume = vol;
+                    note->gain = vol;
                   }
                 }
               }
@@ -1295,35 +1295,35 @@ namespace beat
             {
               const auto& ib = m_instruments_basic[note->instrument_basic_idx];
               note->wave = create_instrument_basic(note.get(), ib);
-              note->volume *= ib.volume;
+              note->gain *= ib.gain;
               apply_post_effects(note->wave, ib.flt_idx, ib.adsr_idx);
             }
             else if (note->instrument_ring_mod_idx >= 0)
             {
               const auto& irm = m_instruments_ring_mod[note->instrument_ring_mod_idx];
               note->wave = create_instrument_ring_mod(note.get(), irm);
-              note->volume *= irm.volume;
+              note->gain *= irm.gain;
               apply_post_effects(note->wave, irm.flt_idx, irm.adsr_idx);
             }
             else if (note->instrument_conv_idx >= 0)
             {
               const auto& ic = m_instruments_conv[note->instrument_conv_idx];
               note->wave = create_instrument_conv(note.get(), ic);
-              note->volume *= ic.volume;
+              note->gain *= ic.gain;
               apply_post_effects(note->wave, ic.flt_idx, ic.adsr_idx);
             }
             else if (note->instrument_weight_avg_idx >= 0)
             {
               const auto& iwa = m_instruments_weight_avg[note->instrument_weight_avg_idx];
               note->wave = create_instrument_weight_avg(note.get(), iwa);
-              note->volume *= iwa.volume;
+              note->gain *= iwa.gain;
               apply_post_effects(note->wave, iwa.flt_idx, iwa.adsr_idx);
             }
             else if (note->instrument_lib_idx >= 0)
             {
               const auto& it = m_instruments_lib[note->instrument_lib_idx];
               note->wave = create_instrument_lib(note.get(), it);
-              note->volume *= it.volume;
+              note->gain *= it.gain;
               apply_post_effects(note->wave, it.flt_idx, it.adsr_idx);
             }
             
