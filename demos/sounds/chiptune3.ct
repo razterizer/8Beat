@@ -4,16 +4,16 @@
 ; Syntax:
 ; instrument <instrument_name> <waveform> ["params:"<params_id>]
 ;   ["ffx:"<freq_preset_effect>] ["afx:"<ampl_preset_effect>] ["pfx:"<phase_preset_effect>]
-;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<gain>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["gain:"<gain>]
 ; instrument <instrument_name> "ring_mod_A:"<ring_mod_instr_A> "ring_mod_B:"<ring_mod_instr_B>
-;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<gain>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["gain:"<gain>]
 ; instrument <instrument_name> "conv_A:"<conv_instr_A> "conv_B:"<conv_instr_B>
-;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<gain>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["gain:"<gain>]
 ; instrument <instrument_name> "(("<w0>, <instrument_name0>"), ("<w1>, <instrument_name1>")," ...")"
-;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<gain>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["gain:"<gain>]
 ; instrument <instrument_name> "&"<lib_instrument_name>
 ;   ["ffx:"<freq_preset_effect>] ["afx:"<ampl_preset_effect>] ["pfx:"<phase_preset_effect>]
-;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["vol:"<gain>]
+;   ["adsr:"<adsr_id>] ["flt:"<filter_id>] ["gain:"<gain>]
 ; <instrument_name> := [A-Za-z][A-Za-z0-9]*
 ; <waveform> := "SINE"|"SQUARE"|"TRIANGLE"|"SAWTOOTH"|"NOISE"
 ; <gain> := 0..1
@@ -22,10 +22,10 @@ instrument PIANO ring_mod_A:I0 ring_mod_B:I1 adsr:0
 instrument I0 SQUARE adsr:1 flt:0 afx:VIBRATO_0
 instrument I1 SQUARE params:0
 instrument ORGAN ((0.5, PIANO), (0.2, I0)) flt:0
-instrument FLUTE_VIB &FLUTE ffx:CONSTANT afx:VIBRATO_0 pfx:ZERO vol:0.5
-instrument TRUMPET &TRUMPET ffx:CONSTANT afx:CONSTANT pfx:ZERO vol:0.6
-instrument TRUMPET_VIB &TRUMPET ffx:CHIRP_2 afx:VIBRATO_0 pfx:ZERO vol:0.6
-instrument KDRUM &KICKDRUM vol:1
+instrument FLUTE_VIB &FLUTE ffx:CONSTANT afx:VIBRATO_0 pfx:ZERO gain:0.5
+instrument TRUMPET &TRUMPET ffx:CONSTANT afx:CONSTANT pfx:ZERO gain:0.6
+instrument TRUMPET_VIB &TRUMPET ffx:CHIRP_2 afx:VIBRATO_0 pfx:ZERO gain:0.6
+instrument KDRUM &KICKDRUM gain:1
 instrument SDRUM &SNAREDRUM
 instrument HIHAT &HIHAT
 instrument STEEL_PAN conv_A:FLUTE_VIB conv_B:SDRUM adsr:1
@@ -251,7 +251,7 @@ TAB | A6 20 HIHAT | G#2 50 PIANO
 TAB -
 TAB | - | Bb2 50 PIANO
 TAB -
-TAB | B4 50 SDRUM | C2 50 PIANO vol:2
+TAB | B4 50 SDRUM | C2 50 PIANO gain:2
 TAB -
 TAB -
 TAB -
@@ -382,7 +382,7 @@ TAB | A6 20 HIHAT | G#2 50 PIANO
 TAB | - | - | A3 45 TRUMPET
 TAB | - | Bb2 50 PIANO | D#4 45 TRUMPET
 TAB | - | - | F4 45 TRUMPET
-TAB | B4 50 SDRUM | C2 50 PIANO vol:2
+TAB | B4 50 SDRUM | C2 50 PIANO gain:2
 TAB | - | - | A3 45 TRUMPET
 TAB | - | - | D#4 45 TRUMPET
 TAB | - | - | F4 45 TRUMPET
@@ -512,7 +512,7 @@ TAB | A6 20 HIHAT | G#2 50 PIANO
 TAB | - | - | A3 45 TRUMPET
 TAB | - | Bb2 50 PIANO | D#4 45 TRUMPET
 TAB | - | - | F4 45 TRUMPET
-TAB | B4 50 SDRUM | C2 50 PIANO vol:2
+TAB | B4 50 SDRUM | C2 50 PIANO gain:2
 TAB | - | - | A3 45 TRUMPET
 TAB | - | - | D#4 45 TRUMPET
 TAB | - | - | F4 45 TRUMPET

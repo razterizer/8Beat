@@ -49,9 +49,9 @@ namespace beat
       
       auto f_reset_gain = [this](int goto_note_idx)
       {
-        for (const auto& vol_pair : m_gain)
-          if (vol_pair.first <= goto_note_idx)
-            m_curr_gain = vol_pair.second;
+        for (const auto& gain_pair : m_gain)
+          if (gain_pair.first <= goto_note_idx)
+            m_curr_gain = gain_pair.second;
       };
       auto f_reset_speed = [this](int goto_note_idx)
       {
@@ -325,9 +325,9 @@ namespace beat
       m_pause = false;
     }
     
-    void set_gain(float vol)
+    void set_gain(float gain)
     {
-      m_ext_gain = vol;
+      m_ext_gain = gain;
     }
     
     // #WARNING: Super-slow!!!

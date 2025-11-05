@@ -427,7 +427,7 @@ namespace beat
     
     bool parse_post_effects(const std::string& line,
                             const std::string& modifier_name, const std::string& modifier_val,
-                            int& adsr_nr, int& flt_nr, float& vol)
+                            int& adsr_nr, int& flt_nr, float& gain)
     {
       if (modifier_name == "adsr")
       {
@@ -441,10 +441,10 @@ namespace beat
           std::cerr << "Error parsing flt in instrument line: \"" << line << "\"." << std::endl;
         return true;
       }
-      if (modifier_name == "vol")
+      if (modifier_name == "gain")
       {
-        if (!(std::istringstream(modifier_val) >> vol))
-          std::cerr << "Error parsing vol in instrument line: \"" << line << "\"." << std::endl;
+        if (!(std::istringstream(modifier_val) >> gain))
+          std::cerr << "Error parsing gain in instrument line: \"" << line << "\"." << std::endl;
         return true;
       }
       return false;
@@ -512,7 +512,7 @@ namespace beat
     {
       std::string instrument_name, waveform_name, modifier;
       std::string op;
-      float vol = 1.f;
+      float gain = 1.f;
       int params_nr = -1, adsr_nr = -1, flt_nr = -1;
       
       iss >> instrument_name;
@@ -525,7 +525,7 @@ namespace beat
         // Weighted average.
         auto idx = op.find("adsr");
         math::minimize(idx, op.find("flt"));
-        math::minimize(idx, op.find("vol"));
+        math::minimize(idx, op.find("gain"));
         idx = idx != std::string::npos ? idx - 1 : std::string::npos;
         std::string weighted_sum = op.substr(0, idx);
         str::remove_spaces(weighted_sum);
@@ -566,12 +566,12 @@ namespace beat
             auto modifier_val = modifier.substr(col_idx + 1);
             
             parse_post_effects(line, modifier_name, modifier_val,
-              adsr_nr, flt_nr, vol);
+              adsr_nr, flt_nr, gain);
           }
         }
         instrument.adsr_idx = adsr_nr;
         instrument.flt_idx = flt_nr;
-        instrument.gain = vol;
+        instrument.gain = gain;
       }
       else if (op.find("&") == 0)
       {
@@ -616,13 +616,13 @@ namespace beat
               instr.freq_effect, instr.ampl_effect, instr.phase_effect))
             {}
             else if (parse_post_effects(line, modifier_name, modifier_val,
-              adsr_nr, flt_nr, vol))
+              adsr_nr, flt_nr, gain))
             {}
           }
         }
         instr.adsr_idx = adsr_nr;
         instr.flt_idx = flt_nr;
-        instr.gain = vol;
+        instr.gain = gain;
       }
       else if (op.find("ring_mod_A:") == 0 || op.find("ring_mod_B:") == 0)
       {
@@ -648,13 +648,13 @@ namespace beat
             }
             else
               parse_post_effects(line, modifier_name, modifier_val,
-                adsr_nr, flt_nr, vol);
+                adsr_nr, flt_nr, gain);
           }
         }
         if (ring_mod_A.empty() || ring_mod_B.empty())
           std::cerr << "Must specify both attributes ring_mod_A and ring_mod_B in instrument line: \"" << line << "\"." << std::endl;
         else
-          m_instruments_ring_mod.push_back({ { instrument_name, adsr_nr, flt_nr, vol }, ring_mod_A, ring_mod_B });
+          m_instruments_ring_mod.push_back({ { instrument_name, adsr_nr, flt_nr, gain }, ring_mod_A, ring_mod_B });
       }
       else if (op.find("conv_A:") == 0 || op.find("conv_B:") == 0)
       {
@@ -680,13 +680,13 @@ namespace beat
             }
             else
               parse_post_effects(line, modifier_name, modifier_val,
-                adsr_nr, flt_nr, vol);
+                adsr_nr, flt_nr, gain);
           }
         }
         if (conv_A.empty() || conv_B.empty())
           std::cerr << "Must specify both attributes ring_mod_A and ring_mod_B in instrument line: \"" << line << "\"." << std::endl;
         else
-          m_instruments_conv.push_back({ { instrument_name, adsr_nr, flt_nr, vol }, conv_A, conv_B });
+          m_instruments_conv.push_back({ { instrument_name, adsr_nr, flt_nr, gain }, conv_A, conv_B });
       }
       else
       {
@@ -711,7 +711,7 @@ namespace beat
               freq_effect, ampl_effect, phase_effect))
             {}
             else if (parse_post_effects(line, modifier_name, modifier_val,
-              adsr_nr, flt_nr, vol))
+              adsr_nr, flt_nr, gain))
             {}
           }
         }
@@ -729,7 +729,7 @@ namespace beat
         else if (waveform_name_upper == "NOISE")
           wf_type = WaveformType::NOISE;
         
-        m_instruments_basic.push_back({ { instrument_name, adsr_nr, flt_nr, vol }, wf_type, params_nr,
+        m_instruments_basic.push_back({ { instrument_name, adsr_nr, flt_nr, gain }, wf_type, params_nr,
           freq_effect, ampl_effect, phase_effect });
       }
     }
@@ -1127,10 +1127,10 @@ namespace beat
             unread = iss.eof()  ?  "" : iss.str().substr(iss.tellg());
             op = str::ltrim_ret(unread);
             
-            if (op.find("adsr:") == 0 || op.find("flt:") == 0 || op.find("vol:") == 0)
+            if (op.find("adsr:") == 0 || op.find("flt:") == 0 || op.find("gain:") == 0)
             {
               int adsr_nr = -1, flt_nr = -1;
-              float vol = 1.f;
+              float gain = 1.f;
               while (iss >> modifier)
               {
                 auto col_idx = modifier.find(':');
@@ -1140,11 +1140,11 @@ namespace beat
                   auto modifier_val = modifier.substr(col_idx + 1);
                   
                   if (parse_post_effects(line, modifier_name, modifier_val,
-                                         adsr_nr, flt_nr, vol))
+                                         adsr_nr, flt_nr, gain))
                   {
                     note->adsr_idx = adsr_nr;
                     note->flt_idx = flt_nr;
-                    note->gain = vol;
+                    note->gain = gain;
                   }
                 }
               }
