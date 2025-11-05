@@ -961,6 +961,12 @@ namespace beat
           else if (f_parse_ofloat_val("max_freq_limit", params.max_frequency_limit)) {}
           else if (f_parse_ofloat_val("freq_slide_vel", params.freq_slide_vel)) {}
           else if (f_parse_ofloat_val("freq_slide_acc", params.freq_slide_acc)) {}
+          else if (f_parse_ofloat_val("freq_vib_depth", params.freq_vibrato_depth)) {}
+          else if (f_parse_ofloat_val("freq_vib_freq", params.freq_vibrato_freq)) {}
+          else if (f_parse_ofloat_val("freq_vib_freq_vel", params.freq_vibrato_freq_vel)) {}
+          else if (f_parse_ofloat_val("freq_vib_freq_acc", params.freq_vibrato_freq_acc)) {}
+          else if (f_parse_ofloat_val("freq_vib_freq_acc_max_vel_lim", params.freq_vibrato_freq_acc_max_vel_limit)) {}
+          else if (f_parse_ofloat_val("freq_vib_phase", params.freq_vibrato_phase)) {}
           else if (f_parse_ofloat_val("vib_depth", params.vibrato_depth)) {}
           else if (f_parse_ofloat_val("vib_freq", params.vibrato_freq)) {}
           else if (f_parse_ofloat_val("vib_freq_vel", params.vibrato_freq_vel)) {}
