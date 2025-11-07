@@ -249,7 +249,7 @@ namespace beat
               }
               else
                 voice.src->update_buffer(note->wave);
-              voice.src->set_gain(m_ext_gain * m_curr_gain * note->gain);
+              voice.src->set_gain(m_ext_gain_vol * m_ext_gain * m_curr_gain * note->gain);
               voice.src->play(PlaybackMode::NONE);
             }
           }
@@ -330,11 +330,14 @@ namespace beat
       m_ext_gain = gain;
     }
     
-    void set_volume_slider(float vol01)
+    void set_volume_slider(float vol01, float min_dB = -60.f, std::optional<float> nl_taper = std::nullopt)
     {
-      float vol_dB = -60.f + 60.f * vol01;
+      float t = vol01;
+      if (nl_taper.has_value()) // Non-linear tapering.
+        t = std::pow(vol01, std::clamp(nl_taper.value(), 0.f, 1.f)); // nl_taper < 1 : Brightens mid-range.
+      float vol_dB = min_dB * (1.f - t);
       float gain = std::pow(10.f, vol_dB/20.f);
-      m_ext_gain = gain;
+      m_ext_gain_vol = gain;
     }
     
     // #WARNING: Super-slow!!!
@@ -354,6 +357,7 @@ namespace beat
     std::atomic<bool> m_pause = false;
     std::atomic<bool> m_enable_print_notes = false;
     std::atomic<float> m_ext_gain = 1.f;
+    std::atomic<float> m_ext_gain_vol = 1.f;
     std::atomic<Waveform const *> m_ir_sound = nullptr;
     std::atomic<bool> m_use_reverb = false;
   };
