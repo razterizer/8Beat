@@ -123,9 +123,9 @@ namespace beat
       m_audio_lib.set_source_volume_dB(m_sourceID, vol_dB);
     }
     
-    void set_volume_slider(float vol01)
+    void set_volume_slider(float vol01, float min_dB = -60.f, std::optional<float> nl_taper = std::nullopt)
     {
-      m_audio_lib.set_source_volume_slider(m_sourceID, vol01);
+      m_audio_lib.set_source_volume_slider(m_sourceID, vol01, min_dB, nl_taper);
     }
     
     void set_pitch(float pitch)
