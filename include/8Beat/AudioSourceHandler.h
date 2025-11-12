@@ -9,7 +9,7 @@
 
 #include "Waveform.h"
 
-#include <Core/Math.h>
+#include <Core/MathUtils.h>
 #include <Core/Rand.h>
 #include <Core/Delay.h>
 //#define USE_APPLAUDIO // To be set via the compiler flag -DUSE_APPLAUDIO instead.

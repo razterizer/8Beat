@@ -12,7 +12,7 @@
 #include "ADSR.h"
 
 #include <TrainOfThought/ann_cnn.h>
-#include <Core/Math.h>
+#include <Core/MathUtils.h>
 #include <Core/StlOperators.h>
 
 #include <complex>
