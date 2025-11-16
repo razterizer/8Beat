@@ -174,9 +174,9 @@ namespace beat
         if (!params.arpeggio.empty())
         {
           for (int a_idx = 0; a_idx < Narp - 1; ++a_idx)
-            if (math::in_range<float>(t, params.arpeggio[a_idx].time, params.arpeggio[a_idx + 1].time, Range::ClosedOpen))
+            if (math::in_range(t, params.arpeggio[a_idx].time, params.arpeggio[a_idx + 1].time, Range::ClosedOpen))
               freq_mod *= params.arpeggio[a_idx].freq_mult;
-          if (math::in_range<float>(t, params.arpeggio.back().time, {}, Range::ClosedFree))
+          if (math::in_range(t, params.arpeggio.back().time, {}, Range::ClosedFree))
             freq_mod *= params.arpeggio.back().freq_mult;
         }
         // Ensure frequency doesn't go below min_frequency_cutoff or above max_frequency_cutoff.

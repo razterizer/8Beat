@@ -736,7 +736,7 @@ namespace beat
         float p = 0.f; // Param.
         float pl = 0.f; // Linear Param.
         
-        if (math::in_range<float>(t, t_a, t_ad, Range::Closed))
+        if (math::in_range(t, t_a, t_ad, Range::Closed))
         {
           //std::cout << "A";
           pl = math::value_to_param(t, t_a, t_ad);
@@ -757,7 +757,7 @@ namespace beat
           }
           env = math::lerp(p, adsr.get_level_A0(), adsr.get_level_A1());
         }
-        else if (math::in_range<float>(t, t_ad, t_ds, Range::OpenClosed))
+        else if (math::in_range(t, t_ad, t_ds, Range::OpenClosed))
         {
           //std::cout << "D";
           pl = math::value_to_param(t, t_ad, t_ds);
@@ -778,12 +778,12 @@ namespace beat
           }
           env = math::lerp(p, adsr.get_level_D0(), adsr.get_level_D1());
         }
-        else if (math::in_range<float>(t, t_ds, t_sr, Range::OpenClosed))
+        else if (math::in_range(t, t_ds, t_sr, Range::OpenClosed))
         {
           //std::cout << "S";
           env = adsr.get_level_S();
         }
-        else if (math::in_range<float>(t, t_sr, t_r, Range::OpenClosed))
+        else if (math::in_range(t, t_sr, t_r, Range::OpenClosed))
         {
           //std::cout << "R";
           pl = math::value_to_param(t, t_sr, t_r);
