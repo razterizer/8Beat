@@ -9,14 +9,12 @@
 #include "WaveformGeneration.h"
 #include "WaveformHelper.h"
 #include "WaveformIO.h"
-#include <Termin8or/input/Keyboard.h>
+#include <Core/Keyboard.h>
 #include <filesystem>
 
 
 int main(int argc, char** argv)
 {
-  t8::StreamKeyboard keyboard;
-
   beat::AudioSourceHandler src_handler;
   beat::WaveformGeneration wave_gen;
   
@@ -68,8 +66,9 @@ int main(int argc, char** argv)
       }
     }
   }
- 
-  keyboard.pressAnyKey();
+  
+  if (!keyboard::press_any_key_or_quit())
+    return 0;
   
   return 0;
 }

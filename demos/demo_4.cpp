@@ -7,15 +7,13 @@
 
 #include "AudioSourceHandler.h"
 #include "WaveformHelper.h"
-#include <Termin8or/input/Keyboard.h>
+#include <Core/Keyboard.h>
 #include <Core/StringHelper.h>
 
 
 
 int main(int argc, char** argv)
 {
-  t8::StreamKeyboard keyboard;
-
   std::cout << "Signal:\n";
   beat::Waveform wd_fft;
   wd_fft.buffer = { -4, 2, 1, -5 };
@@ -40,7 +38,8 @@ int main(int argc, char** argv)
   std::cout << "Sample Rate (IFFT): " << wd_ifft.sample_rate << std::endl;
   std::cout << str::rep_char('-', 20) << std::endl;
   
-  keyboard.pressAnyKey();
-  
+  if (!keyboard::press_any_key_or_quit())
+    return 0;
+    
   return 0;
 }

@@ -9,14 +9,12 @@
 #include "WaveformGeneration.h"
 #include "WaveformHelper.h"
 #include "ADSR.h"
-#include <Termin8or/input/Keyboard.h>
+#include <Core/Keyboard.h>
 
 
 
 int main(int argc, char** argv)
 {
-  t8::StreamKeyboard keyboard;
-  
   beat::AudioSourceHandler src_handler;
   beat::WaveformGeneration wave_gen;
   
@@ -33,7 +31,8 @@ int main(int argc, char** argv)
   src_wd_adsr->set_gain(0.5);
   src_wd_adsr->play(beat::PlaybackMode::STATE_WAIT);
   
-  keyboard.pressAnyKey();
+  if (!keyboard::press_any_key_or_quit())
+    return 0;
   
   wd_adsr = beat::WaveformHelper::envelope_adsr(wd,
       { beat::ADSRMode::LIN, 300, 0.2f, 0.5f }, { beat::ADSRMode::EXP, 500, 1.f }, 0.4f, { beat::ADSRMode::EXP, 360, 0.3f, 0.8f });
@@ -41,8 +40,9 @@ int main(int argc, char** argv)
   src_wd_adsr = src_handler.create_source_from_waveform(wd_adsr);
   src_wd_adsr->set_gain(0.5);
   src_wd_adsr->play(beat::PlaybackMode::STATE_WAIT);
-
-  keyboard.pressAnyKey();
+  
+  if (!keyboard::press_any_key_or_quit())
+    return 0;
   
   return 0;
 }

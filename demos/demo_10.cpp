@@ -9,14 +9,12 @@
 #include "WaveformGeneration.h"
 #include "WaveformHelper.h"
 #include "SFX.h"
-#include <Termin8or/input/Keyboard.h>
+#include <Core/Keyboard.h>
 
 
 
 int main(int argc, char** argv)
 {
-  t8::StreamKeyboard keyboard;
-
   using namespace beat;
   AudioSourceHandler src_handler;
   WaveformGeneration wave_gen;
@@ -26,7 +24,8 @@ int main(int argc, char** argv)
   // Arpeggio
   {
     std::cout << "Arpeggio" << std::endl;
-    keyboard.pressAnyKey();
+    if (!keyboard::press_any_key_or_quit())
+      return 0;
     
     WaveformGenerationParams params;
     params.arpeggio.emplace_back(0.1f, 1.26f);
@@ -52,7 +51,8 @@ int main(int argc, char** argv)
   // Vibrato
   {
     std::cout << "Vibrato" << std::endl;
-    keyboard.pressAnyKey();
+    if (!keyboard::press_any_key_or_quit())
+      return 0;
     
     WaveformGenerationParams params;
     params.vibrato_depth = 0.3f;
@@ -75,7 +75,8 @@ int main(int argc, char** argv)
   // Noise @ Frequency
   {
     std::cout << "Noise @ Frequency" << std::endl;
-    keyboard.pressAnyKey();
+    if (!keyboard::press_any_key_or_quit())
+      return 0;
     
     WaveformGenerationParams params;
     params.freq_slide_vel = 1.f;
@@ -94,7 +95,8 @@ int main(int argc, char** argv)
   // Pickup/coin
   {
     std::cout << "Pickup / Coin" << std::endl;
-    keyboard.pressAnyKey();
+    if (!keyboard::press_any_key_or_quit())
+      return 0;
 
     for (int i = 0; i < 10; ++i)
     {
@@ -124,7 +126,8 @@ int main(int argc, char** argv)
   // Laser/shoot
   {
     std::cout << "Laser / Shoot" << std::endl;
-    keyboard.pressAnyKey();
+    if (!keyboard::press_any_key_or_quit())
+      return 0;
     
     for (int i = 0; i < 10; ++i)
     {
@@ -156,7 +159,8 @@ int main(int argc, char** argv)
   // Explosion
   {
     std::cout << "Explosion" << std::endl;
-    keyboard.pressAnyKey();
+    if (!keyboard::press_any_key_or_quit())
+      return 0;
     
     for (int i = 0; i < 10; ++i)
     {
@@ -189,7 +193,8 @@ int main(int argc, char** argv)
   }
   #endif
   
-  keyboard.pressAnyKey();
+  if (!keyboard::press_any_key_or_quit())
+    return 0;
   
   return 0;
 }

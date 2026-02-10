@@ -8,14 +8,12 @@
 #include "AudioSourceHandler.h"
 #include "WaveformGeneration.h"
 #include "WaveformHelper.h"
-#include <Termin8or/input/Keyboard.h>
+#include <Core/Keyboard.h>
 
 
 
 int main(int argc, char** argv)
 {
-  t8::StreamKeyboard keyboard;
-  
   beat::AudioSourceHandler src_handler;
   beat::WaveformGeneration wave_gen;
   
@@ -29,7 +27,8 @@ int main(int argc, char** argv)
   auto src = src_handler.create_source_from_waveform(wd_flanger);
   src->play(beat::PlaybackMode::STATE_WAIT);
   
-  keyboard.pressAnyKey();
+  if (!keyboard::press_any_key_or_quit())
+    return 0;
   
   return 0;
 }

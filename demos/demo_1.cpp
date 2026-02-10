@@ -8,13 +8,11 @@
 #include "AudioSourceHandler.h"
 #include "WaveformGeneration.h"
 #include "WaveformHelper.h"
-#include <Termin8or/input/Keyboard.h>
+#include <Core/Keyboard.h>
 
 
 int main(int argc, char** argv)
 {
-  t8::StreamKeyboard keyboard;
-
   beat::AudioSourceHandler src_handler;
   beat::WaveformGeneration wave_gen;
   
@@ -74,7 +72,8 @@ int main(int argc, char** argv)
     auto label = test_labels[test_idx];
     std::cout << label << ":" << std::endl;
     
-    keyboard.pressAnyKey();
+    if (!keyboard::press_any_key_or_quit())
+      return 0;
     
     beat::WaveformGenerationParams params;
     
