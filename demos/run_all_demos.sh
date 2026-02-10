@@ -1,0 +1,10 @@
+./bin/demo_1
+./bin/demo_2
+./bin/demo_3
+./bin/demo_4
+./bin/demo_5
+./bin/demo_6
+./bin/demo_7
+./bin/demo_8
+./bin/demo_9
+./bin/demo_10

@@ -1,0 +1,110 @@
+name: build macos
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-demos:
+    runs-on: macos-latest
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # Step 2: Move to the parent directory and fetch dependencies
+      - name: Fetch dependencies
+        run: |
+          cd ..
+          git clone https://github.com/razterizer/Core.git
+          git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
+          git clone https://github.com/razterizer/AudioLibSwitcher_applaudio.git --recurse-submodules
+          git clone https://github.com/razterizer/applaudio.git
+          git clone https://github.com/razterizer/TrainOfThought.git
+
+      # Step 3: Install OpenAL
+      - name: Install OpenAL
+        if: true
+        run: brew install openal-soft
+        
+      # Step 4: Install libsndfile
+      - name: Install libsndfile
+        run: brew install libsndfile
+        # run: sudo apt install libsndfile1-dev
+      
+      # Step 5: Change to the correct directory and build
+      - name: Build project (applaudio)
+        run: |
+          cd demos
+          ./build_demo_1_applaudio.sh
+          ./build_demo_2_applaudio.sh
+          ./build_demo_3_applaudio.sh
+          ./build_demo_4_applaudio.sh
+          ./build_demo_5_applaudio.sh
+          ./build_demo_6_applaudio.sh
+          ./build_demo_7_applaudio.sh
+          ./build_demo_8_applaudio.sh
+          ./build_demo_9_applaudio.sh
+          ./build_demo_10_applaudio.sh
+        continue-on-error: false # Ensure errors are not bypassed
+        
+      # Step 6: Change to the correct directory and build
+      - name: Build project (OpenAL)
+        run: |
+          cd demos
+          ./build_demo_1_openal.sh
+          ./build_demo_2_openal.sh
+          ./build_demo_3_openal.sh
+          ./build_demo_4_openal.sh
+          ./build_demo_5_openal.sh
+          ./build_demo_6_openal.sh
+          ./build_demo_7_openal.sh
+          ./build_demo_8_openal.sh
+          ./build_demo_9_openal.sh
+          ./build_demo_10_openal.sh
+        continue-on-error: false # Ensure errors are not bypassed
+  
+  build-demos-with-locked-dependencies:
+    runs-on: macos-latest
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # Step 2: Move to the parent directory and fetch dependencies
+      - name: Fetch dependencies
+        run: |
+          cd ..
+          ./8Beat/fetch-dependencies.py 8Beat/dependencies_applaudio -y
+          
+      # Step 3: Install OpenAL
+      - name: Install OpenAL
+        if: true
+        run: brew install openal-soft
+        
+      # Step 4: Install libsndfile
+      - name: Install libsndfile
+        run: brew install libsndfile
+        # run: sudo apt install libsndfile1-dev
+      
+      # Step 5: Change to the correct directory and build
+      - name: Build
+        run: |
+          cd demos
+          ./build_demo_1_applaudio.sh
+          ./build_demo_2_applaudio.sh
+          ./build_demo_3_applaudio.sh
+          ./build_demo_4_applaudio.sh
+          ./build_demo_5_applaudio.sh
+          ./build_demo_6_applaudio.sh
+          ./build_demo_7_applaudio.sh
+          ./build_demo_8_applaudio.sh
+          ./build_demo_9_applaudio.sh
+          ./build_demo_10_applaudio.sh
+        continue-on-error: false # Ensure errors are not bypassed
