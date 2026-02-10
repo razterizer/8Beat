@@ -22,7 +22,6 @@ jobs:
         run: |
           cd ..
           git clone https://github.com/razterizer/Core.git
-          git clone https://github.com/razterizer/Termin8or.git
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
           git clone https://github.com/razterizer/AudioLibSwitcher_applaudio.git --recurse-submodules
           git clone https://github.com/razterizer/applaudio.git
