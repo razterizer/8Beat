@@ -6,7 +6,6 @@ if [[ $os_name == *"Darwin"* ]]; then
   additional_flags="\
     -I../include/8Beat \
     -I../../Core/include \
-    -I../../Termin8or/include \
     -I../../TrainOfThought/include \
     -I/opt/homebrew/opt/libsndfile/include \
     -L/opt/homebrew/opt/libsndfile/lib \
@@ -18,7 +17,6 @@ else
   additional_flags="\
     -I../include/8Beat \
     -I../../Core/include \
-    -I../../Termin8or/include \
     -I../../TrainOfThought/include \
     -I../../AudioLibSwitcher_OpenAL/include"
   export BUILD_PKG_CONFIG_MODULES='openal sndfile'
