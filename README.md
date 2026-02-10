@@ -172,8 +172,6 @@ or this set of header-only libraries if you intend to use it with applaudio (now
 * [`applaudio`](https://github.com/razterizer/applaudio)
 * Windows: [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) (only necessary for `WaveformIO.h`)
 
-and uses the header-only library [`Termin8or`](https://github.com/razterizer/Termin8or) only for the demos in either case.
-
 These libs are expected to be located in checkout dirs with the same names and next to each other. Like this for OpenAL Soft:
 ```xml
 <my_source_code_dir>/lib/Core/
@@ -181,7 +179,6 @@ These libs are expected to be located in checkout dirs with the same names and n
 <my_source_code_dir>/lib/AudioLibSwitcher_OpenAL/     ; Allows you to choose between applaudio and OpenAL Soft. Minimal common API.
 <my_source_code_dir>/lib/3rdparty_OpenAL/             ; Windows only. The OpenAL-Soft libs/dlls necessary for the **Windows** build.
 <my_source_code_dir>/lib/3rdparty_libsndfile/         ; Windows only. The libsndfile libs/dlls necessary for `WaveformIO.h` to work on windows.
-<my_source_code_dir>/lib/Termin8or/                   ; Only for the demos.
 <my_source_code_dir>/lib/8Beat/
 ```
 or like this for applaudio:
@@ -191,7 +188,6 @@ or like this for applaudio:
 <my_source_code_dir>/lib/AudioLibSwitcher_applaudio/  ; Allows you to choose between applaudio and OpenAL Soft. Minimal common API.
 <my_source_code_dir>/lib/applaudio/                   ; Header-only audio library. No libs/dlls except for the ones from the backends.
 <my_source_code_dir>/lib/3rdparty_libsndfile/         ; Windows only. The libsndfile libs/dlls necessary for `WaveformIO.h` to work on windows.
-<my_source_code_dir>/lib/Termin8or/                   ; Only for the demos.
 <my_source_code_dir>/lib/8Beat/
 ```
 where `<my_source_code_dir>` is where you normally put your git repos and `<lib>` is recommended to be "`lib`" but can be named something different or left out all-together. However, the following programs requires them to be located in a sub-folder called "`lib`" or else these programs will not build (unless you change the header search paths for the xcode/vcxproj projects):
@@ -249,7 +245,6 @@ To make 8Beat work with applaudio then make sure that the define `USE_APPLAUDIO`
 The `dependencies` file of your application repo can now look like this:
 ```
 lib/Core                       https://github.com/razterizer/Core.git                   dbe2f701a255d578308c254839a3641786777658
-lib/Termin8or                  https://github.com/razterizer/Termin8or.git              fb8e4ce8efabe83167192c5d82c4448e6ec8b45f
 lib/8Beat                      https://github.com/razterizer/8Beat                      041761531cdc6721d4aea07da63c0b2a5b7403d7
 lib/AudioLibSwitcher_applaudio https://github.com/razterizer/AudioLibSwitcher_applaudio db2648c00533a8894339095b0e727989e3ae7425
 # lib/AudioLibSwitcher_OpenAL    https://github.com/razterizer/AudioLibSwitcher_OpenAL    811c60c23a446d5f2894e9379c938df19f889c41
@@ -292,7 +287,6 @@ os_name=$(uname)
 if [[ $os_name == *"Darwin"* ]]; then
   additional_flags="\
     -I../../lib/Core/include \
-    -I../../lib/Termin8or/include \
     -I../../lib/8Beat/include \
     -I../../lib/TrainOfThought/include \
     -I../../lib/AudioLibSwitcher_applaudio/include \
@@ -302,7 +296,6 @@ if [[ $os_name == *"Darwin"* ]]; then
 else
   additional_flags="\
     -I../../lib/Core/include \
-    -I../../lib/Termin8or/include \
     -I../../lib/8Beat/include \
     -I../../lib/TrainOfThought/include \
     -I../../lib/AudioLibSwitcher_applaudio/include \
@@ -324,9 +317,6 @@ fi
 
 ### Post-Build Actions ###
 
-mkdir -p bin/fonts/
-cp ../../lib/Termin8or/include/Termin8or/title/fonts/* bin/fonts/
-
 cp music.ct bin/
 ```
 
@@ -339,13 +329,13 @@ For Linux, the important bits above are those concerning `AudioLibSwitcher_appla
 Then finally for the Windows build you need to change the external include paths from this (OpenAL-based):
 
 ```xml
-<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\Termin8or\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_OpenAL\include;$(SolutionDir)\..\..\lib\3rdparty_OpenAL\include</ExternalIncludePath>
+<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_OpenAL\include;$(SolutionDir)\..\..\lib\3rdparty_OpenAL\include</ExternalIncludePath>
 ```
 
 to this (applaudio-based)
 
 ```xml
-<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\Termin8or\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_applaudio\include;$(SolutionDir)\..\..\lib\applaudio\include</ExternalIncludePath>
+<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_applaudio\include;$(SolutionDir)\..\..\lib\applaudio\include</ExternalIncludePath>
 ```
 
 You also need to change the linkage from this (OpenAL-based):
@@ -366,7 +356,6 @@ And remove the copying of the OpenAL dll:
 ```xml
 <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)\music.ct" "$(TargetDir)" /Y
-xcopy "$(SolutionDir)\..\..\lib\Termin8or\include\Termin8or\title\fonts\*" "$(TargetDir)\fonts\" /Y
 xcopy "$(SolutionDir)..\..\lib\3rdparty_OpenAL\lib\OpenAL32.dll" "$(TargetDir)" /Y</Command>
     </PostBuildEvent>
 ```
@@ -376,7 +365,6 @@ so it becomes:
 ```xml
 <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)\music.ct" "$(TargetDir)" /Y
-xcopy "$(SolutionDir)\..\..\lib\Termin8or\include\Termin8or\title\fonts\*" "$(TargetDir)\fonts\" /Y
     </PostBuildEvent>
 ```
 
