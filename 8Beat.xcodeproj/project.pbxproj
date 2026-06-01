@@ -28,6 +28,7 @@
 		0709B9BF2C95831C00A43834 /* build-macos.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-macos.yml"; path = ".github/workflows/build-macos.yml"; sourceTree = "<group>"; };
 		0709B9C02C95831C00A43834 /* build-windows.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-windows.yml"; path = ".github/workflows/build-windows.yml"; sourceTree = "<group>"; };
 		0709B9C12C95831C00A43834 /* build-and-test-ubuntu.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = "build-and-test-ubuntu.yml"; path = ".github/workflows/build-and-test-ubuntu.yml"; sourceTree = "<group>"; };
+		073221A42FCD049B00DF0AE9 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		0739D9C12BA2434200964E96 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		0739D9C32BA59D0200964E96 /* demo_1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_1.cpp; sourceTree = "<group>"; };
 		0739D9C42BA6111D00964E96 /* demo_2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = demo_2.cpp; sourceTree = "<group>"; };
@@ -215,6 +216,7 @@
 				0709B9BE2C9582E600A43834 /* workflows */,
 				07FDE9852CA8D2F200116BA7 /* Tests */,
 				0739D9C92BA61E5900964E96 /* Frameworks */,
+				073221A42FCD049B00DF0AE9 /* CMakeLists.txt */,
 				0739DB822BC35B6900964E96 /* lib8-Bit Audio Emulator Lib.a */,
 			);
 			sourceTree = "<group>";
