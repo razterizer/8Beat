@@ -15,6 +15,7 @@
 ![Commit Activity](https://img.shields.io/github/commit-activity/t/razterizer/8Beat)
 ![Last Commit](https://img.shields.io/github/last-commit/razterizer/8Beat?color=blue)
 ![Contributors](https://img.shields.io/github/contributors/razterizer/8Beat?color=blue)
+![Static Badge](https://img.shields.io/badge/ai_usage-barely_some_(advisory_only)-lightblue)
 
 This library is a cross-platform and header only library (except for 3rd-party libs necessary).
 This library is for synthesizing, loading and saving sound and also has a chip-tune engine which allow you full flexibility to design instruments and to use these instruments when composing your chip-tune tune.
