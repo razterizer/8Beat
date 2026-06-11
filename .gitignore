@@ -1,0 +1,35 @@
+demos/bin/
+demos/bin_linux/
+demos/bin_windows/
+
+demos/sounds/cat meow saved.wav
+demos/sounds/cat meow reverb saved.wav
+
+Tests/bin/
+
+### XCode ###
+
+# Ignore Xcode worspace settings
+*.xcsettings
+
+# Ignore Xcode user-specific files
+xcuserdata/
+*.xcuserstate
+
+# Ignore Xcode project shared data, including xcshareddata and xcdebugger
+xcshareddata/
+xcdebugger/
+
+### Visual Studio ###
+
+.vs/
+*.vcxproj.user
+
+x64/
+x86/
+Debug/
+Release/
+
+### External Tools ###
+
+.aider*
