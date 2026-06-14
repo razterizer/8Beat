@@ -11,9 +11,10 @@
 #include "Spectrum.h"
 #include "ADSR.h"
 
-#include <TrainOfThought/ann_cnn.h>
 #include <Core/MathUtils.h>
 #include <Core/StlOperators.h>
+#include <Core/StlUtils.h>
+#include <Core/Rand.h>
 
 #include <complex>
 #include <iostream>
@@ -61,6 +62,56 @@ namespace beat
   
   class WaveformHelper
   {
+    enum class ConvRange { Full, Same, Valid };
+    enum class ConvType { Convolution, Correlation };
+    
+    // Copy from TrainOfThought to avoid having all of TrainOfThough as dependency.
+    static std::vector<float> conv_1d(const std::vector<float>& x,
+                                      const std::vector<float>& w_kernel, float bias = 0.f,
+                                      ConvRange range = ConvRange::Full,
+                                      ConvType type = ConvType::Convolution)
+    {
+      auto Ni = static_cast<int>(x.size());
+      auto Nk = static_cast<int>(w_kernel.size());
+      int No = 0;
+      int pad_L = 0;
+      int pad_R = 0;
+      switch (range)
+      {
+        case ConvRange::Full:
+          No = Ni + Nk - 1;
+          pad_L = Nk - 1;
+          pad_R = pad_L;
+          break;
+        case ConvRange::Same:
+          No = Ni;
+          if (Nk % 2 == 1)
+          {
+            pad_L = std::max(0, Nk/2);
+            pad_R = pad_L;
+          }
+          else
+          {
+            pad_L = std::max(0, Nk/2 - 1);
+            pad_R = pad_L + 1;
+          }
+          break;
+        case ConvRange::Valid:
+          No = std::max(0, Ni - Nk + 1);
+          break;
+      }
+      auto pad_vec_L = stlutils::repval<float>(0, pad_L);
+      auto pad_vec_R = stlutils::repval<float>(0, pad_R);
+      auto xx = stlutils::cat(pad_vec_L, x, pad_vec_R);
+      auto kk = w_kernel;
+      if (type == ConvType::Convolution)
+        std::reverse(kk.begin(), kk.end());
+      std::vector<float> y(No);
+      for (int o_idx = 0; o_idx < No; ++o_idx)
+        y[o_idx] = stlutils::dot(stlutils::subset(xx, o_idx, o_idx + Nk - 1), kk) + bias;
+      return y;
+    }
+  
   public:
     static Waveform subset(const Waveform& wave, size_t start_idx, size_t length = static_cast<size_t>(-1))
     {
@@ -188,8 +239,8 @@ namespace beat
       conv.sample_rate = common_sample_rate;
       conv.frequency = calc_fundamental_frequency(res_wave.frequency, res_kernel.frequency);
       
-      conv.buffer = ml::ann::conv_1d(res_wave.buffer, res_kernel.buffer, 0.f,
-                                       ml::ann::ConvRange::Full, ml::ann::ConvType::Convolution);
+      conv.buffer = conv_1d(res_wave.buffer, res_kernel.buffer, 0.f,
+                            ConvRange::Full, ConvType::Convolution);
                                        
       normalize_over(conv);
       //auto [minval, maxval] = WaveformHelper::find_min_max(conv, true);

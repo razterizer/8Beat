@@ -161,14 +161,12 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 This header-only library depends on the following set of header-only libraries if you intend to use it with OpenAL Soft:
 * [`Core`](https://github.com/razterizer/Core)
-* [`TrainOfThrought`](https://github.com/razterizer/TrainOfThought)
 * [`AudioLibSwitcher_OpenAL`](https://github.com/razterizer/AudioLibSwitcher_OpenAL)
 * Windows: [`3rdparty_OpenAL`](https://github.com/razterizer/3rdparty_OpenAL)
 * Windows: [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) (only necessary for `WaveformIO.h`)
 
 or this set of header-only libraries if you intend to use it with applaudio (now by default):
 * [`Core`](https://github.com/razterizer/Core)
-* [`TrainOfThrought`](https://github.com/razterizer/TrainOfThought)
 * [`AudioLibSwitcher_applaudio`](https://github.com/razterizer/AudioLibSwitcher_applaudio)
 * [`applaudio`](https://github.com/razterizer/applaudio)
 * Windows: [`3rdparty_libsndfile`](https://github.com/razterizer/3rdparty_libsndfile) (only necessary for `WaveformIO.h`)
@@ -176,7 +174,6 @@ or this set of header-only libraries if you intend to use it with applaudio (now
 These libs are expected to be located in checkout dirs with the same names and next to each other. Like this for OpenAL Soft:
 ```xml
 <my_source_code_dir>/lib/Core/
-<my_source_code_dir>/lib/TrainOfThought/              ; Used by `WaveformHelper.h`.
 <my_source_code_dir>/lib/AudioLibSwitcher_OpenAL/     ; Allows you to choose between applaudio and OpenAL Soft. Minimal common API.
 <my_source_code_dir>/lib/3rdparty_OpenAL/             ; Windows only. The OpenAL-Soft libs/dlls necessary for the **Windows** build.
 <my_source_code_dir>/lib/3rdparty_libsndfile/         ; Windows only. The libsndfile libs/dlls necessary for `WaveformIO.h` to work on windows.
@@ -185,7 +182,6 @@ These libs are expected to be located in checkout dirs with the same names and n
 or like this for applaudio:
 ```xml
 <my_source_code_dir>/lib/Core/
-<my_source_code_dir>/lib/TrainOfThought/              ; Used by `WaveformHelper.h`.
 <my_source_code_dir>/lib/AudioLibSwitcher_applaudio/  ; Allows you to choose between applaudio and OpenAL Soft. Minimal common API.
 <my_source_code_dir>/lib/applaudio/                   ; Header-only audio library. No libs/dlls except for the ones from the backends.
 <my_source_code_dir>/lib/3rdparty_libsndfile/         ; Windows only. The libsndfile libs/dlls necessary for `WaveformIO.h` to work on windows.
@@ -249,7 +245,6 @@ lib/Core                       https://github.com/razterizer/Core.git           
 lib/8Beat                      https://github.com/razterizer/8Beat                      041761531cdc6721d4aea07da63c0b2a5b7403d7
 lib/AudioLibSwitcher_applaudio https://github.com/razterizer/AudioLibSwitcher_applaudio db2648c00533a8894339095b0e727989e3ae7425
 # lib/AudioLibSwitcher_OpenAL    https://github.com/razterizer/AudioLibSwitcher_OpenAL    811c60c23a446d5f2894e9379c938df19f889c41
-lib/TrainOfThought             https://github.com/razterizer/TrainOfThought             fe8a5f0fd7e492bb1e8dfffac9aef1ee888735da
 lib/applaudio                  https://github.com/razterizer/applaudio                  702d425e551f19717baed605ae7983ceddb1587b
 # lib/3rdparty_OpenAL            https://github.com/razterizer/3rdparty_OpenAL            d8361648d7b505154109f1ba074922555a96e5de                    win
 ```
@@ -289,7 +284,6 @@ if [[ $os_name == *"Darwin"* ]]; then
   additional_flags="\
     -I../../lib/Core/include \
     -I../../lib/8Beat/include \
-    -I../../lib/TrainOfThought/include \
     -I../../lib/AudioLibSwitcher_applaudio/include \
     -I../../lib/applaudio/include -framework AudioToolbox -framework CoreAudio -framework CoreFoundation -DUSE_APPLAUDIO"
   # -I../../lib/AudioLibSwitcher_OpenAL/include \
@@ -298,7 +292,6 @@ else
   additional_flags="\
     -I../../lib/Core/include \
     -I../../lib/8Beat/include \
-    -I../../lib/TrainOfThought/include \
     -I../../lib/AudioLibSwitcher_applaudio/include \
     -I../../lib/applaudio/include -DUSE_APPLAUDIO"
   # -I../../lib/AudioLibSwitcher_OpenAL/include"
@@ -330,13 +323,13 @@ For Linux, the important bits above are those concerning `AudioLibSwitcher_appla
 Then finally for the Windows build you need to change the external include paths from this (OpenAL-based):
 
 ```xml
-<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_OpenAL\include;$(SolutionDir)\..\..\lib\3rdparty_OpenAL\include</ExternalIncludePath>
+<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_OpenAL\include;$(SolutionDir)\..\..\lib\3rdparty_OpenAL\include</ExternalIncludePath>
 ```
 
 to this (applaudio-based)
 
 ```xml
-<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\TrainOfThought\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_applaudio\include;$(SolutionDir)\..\..\lib\applaudio\include</ExternalIncludePath>
+<ExternalIncludePath>$(SolutionDir)\..\..\lib\Core\include;$(SolutionDir)\..\..\lib\8Beat\include;$(SolutionDir)\..\..\lib\AudioLibSwitcher_applaudio\include;$(SolutionDir)\..\..\lib\applaudio\include</ExternalIncludePath>
 ```
 
 You also need to change the linkage from this (OpenAL-based):

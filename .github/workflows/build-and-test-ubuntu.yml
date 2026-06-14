@@ -25,7 +25,6 @@ jobs:
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
           git clone https://github.com/razterizer/AudioLibSwitcher_applaudio.git --recurse-submodules
           git clone https://github.com/razterizer/applaudio.git
-          git clone https://github.com/razterizer/TrainOfThought.git
 
       # Step 3: Install OpenAL
       - name: Install OpenAL
@@ -134,7 +133,6 @@ jobs:
         run: |
           cd ..
           git clone https://github.com/razterizer/Core.git
-          git clone https://github.com/razterizer/TrainOfThought.git
 
       # Step 3: Change to the correct directory and build
       - name: Build
@@ -201,7 +199,6 @@ jobs:
         run: |
           cd ..
           git clone https://github.com/razterizer/Core.git
-          git clone https://github.com/razterizer/TrainOfThought.git
           git clone https://github.com/razterizer/AudioLibSwitcher_OpenAL.git --recurse-submodules
           git clone https://github.com/razterizer/AudioLibSwitcher_applaudio.git --recurse-submodules
           git clone https://github.com/razterizer/applaudio.git
@@ -225,12 +222,12 @@ jobs:
       # Run Clang Static Analyzer on static_analysis.cpp
       - name: Run Clang Static Analyzer (applaudio)
         run: |
-          scan-build clang++ -std=c++20 -c static_analysis.cpp -Iinclude/8Beat -I../Core/include -I../TrainOfThought/include -I../AudioLibSwitcher_applaudio/include -I../applaudio/include -DUSE_APPLAUDIO
+          scan-build clang++ -std=c++20 -c static_analysis.cpp -Iinclude/8Beat -I../Core/include -I../AudioLibSwitcher_applaudio/include -I../applaudio/include -DUSE_APPLAUDIO
           
       # Run Clang Static Analyzer on static_analysis.cpp
       - name: Run Clang Static Analyzer (OpenAL)
         run: |
-          scan-build clang++ -std=c++20 -c static_analysis.cpp -Iinclude/8Beat -I../Core/include -I../TrainOfThought/include -I../AudioLibSwitcher_OpenAL/include
+          scan-build clang++ -std=c++20 -c static_analysis.cpp -Iinclude/8Beat -I../Core/include -I../AudioLibSwitcher_OpenAL/include
 
   generate-loc-badge:
     runs-on: ubuntu-latest
