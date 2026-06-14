@@ -502,7 +502,6 @@
 				HEADER_SEARCH_PATHS = (
 					../Core/include/,
 					../Termin8or/include/,
-					../TrainOfThought/include/,
 					../AudioLibSwitcher_OpenAL/include/,
 					../AudioLibSwitcher_applaudio/include/,
 					../applaudio/include/,
@@ -525,7 +524,6 @@
 				HEADER_SEARCH_PATHS = (
 					../Core/include/,
 					../Termin8or/include/,
-					../TrainOfThought/include/,
 					../AudioLibSwitcher_OpenAL/include/,
 					../AudioLibSwitcher_applaudio/include/,
 					../applaudio/include/,
