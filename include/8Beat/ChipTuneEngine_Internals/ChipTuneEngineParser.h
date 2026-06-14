@@ -9,6 +9,7 @@
 
 #include "../Synthesizer.h"
 #include <Core/Utils.h>
+#include <Core/StringHelper.h>
 
 #include <iostream>
 #include <fstream>
