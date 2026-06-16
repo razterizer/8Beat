@@ -339,7 +339,7 @@ namespace beat
       
       sf_close(file);
       
-      if (written_frames != buffer_size * wd_channels.size())
+      if (written_frames < 0 || static_cast<size_t>(written_frames) != buffer_size * wd_channels.size())
       {
         std::cout << written_frames << std::endl;
         std::cout << sf_info.frames << std::endl;
@@ -487,7 +487,7 @@ namespace beat
       for (int ch = 0; ch < num_channels; ++ch)
       {
         auto& wd = wd_channels[ch];
-        for (size_t i = 0; i < buffer_size; ++i)
+        for (int i = 0; i < buffer_size; ++i)
         {
           auto scaled_value = wd.buffer[i] * scale_factor;
           buffer[i*num_channels + ch] = static_cast<T>(std::clamp(scaled_value, min_val, max_val));
@@ -517,7 +517,7 @@ namespace beat
       for (int ch = 0; ch < num_channels; ++ch)
       {
         auto& wd = wd_channels[ch];
-        for (size_t i = 0; i < buffer_size; ++i)
+        for (int i = 0; i < buffer_size; ++i)
           buffer[i*num_channels + ch] = wd.buffer[i];
       }
       
@@ -539,7 +539,7 @@ namespace beat
       for (int ch = 0; ch < num_channels; ++ch)
       {
         auto& wd = wd_channels[ch];
-        for (size_t i = 0; i < buffer_size; ++i)
+        for (int i = 0; i < buffer_size; ++i)
           buffer_double[i*num_channels + ch] = static_cast<double>(wd.buffer[i]);
       }
       
@@ -636,7 +636,7 @@ namespace beat
       for (int ch = 0; ch < num_channels; ++ch)
       {
         auto& wd = wd_channels[ch];
-        for (size_t i = 0; i < buffer_size; ++i)
+        for (int i = 0; i < buffer_size; ++i)
           buffer_ulaw[i*num_channels + ch] = linear_to_ulaw(wd.buffer[i]);
       }
       
@@ -660,7 +660,7 @@ namespace beat
       for (int ch = 0; ch < num_channels; ++ch)
       {
         auto& wd = wd_channels[ch];
-        for (size_t i = 0; i < buffer_size; ++i)
+        for (int i = 0; i < buffer_size; ++i)
           buffer_alaw[i*num_channels + ch] = linear_to_alaw(wd.buffer[i]);
       }
       
