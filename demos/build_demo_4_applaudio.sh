@@ -7,12 +7,14 @@ if [[ $os_name == *"Darwin"* ]]; then
     -I../include/8Beat \
     -I../../Core/include \
     -I../../AudioLibSwitcher_applaudio/include \
+    -I../../AudioLibSwitcher_applaudio/AudioLibSwitcher/include \
     -I../../applaudio/include -framework AudioToolbox -framework CoreAudio -framework CoreFoundation -DUSE_APPLAUDIO"
 else
   additional_flags="\
     -I../include/8Beat \
     -I../../Core/include \
     -I../../AudioLibSwitcher_applaudio/include \
+    -I../../AudioLibSwitcher_applaudio/AudioLibSwitcher/include \
     -I../../applaudio/include -DUSE_APPLAUDIO"
   export BUILD_PKG_CONFIG_MODULES='alsa'
 fi
