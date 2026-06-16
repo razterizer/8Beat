@@ -222,12 +222,12 @@ jobs:
       # Run Clang Static Analyzer on static_analysis.cpp
       - name: Run Clang Static Analyzer (applaudio)
         run: |
-          scan-build clang++ -std=c++20 -c static_analysis.cpp -Iinclude/8Beat -I../Core/include -I../AudioLibSwitcher_applaudio/include -I../applaudio/include -DUSE_APPLAUDIO
+          scan-build clang++ -std=c++20 -c static_analysis.cpp -Iinclude/8Beat -I../Core/include -I../AudioLibSwitcher_applaudio/include -I../AudioLibSwitcher_applaudio/AudioLibSwitcher/include -I../applaudio/include -DUSE_APPLAUDIO
           
       # Run Clang Static Analyzer on static_analysis.cpp
       - name: Run Clang Static Analyzer (OpenAL)
         run: |
-          scan-build clang++ -std=c++20 -c static_analysis.cpp -Iinclude/8Beat -I../Core/include -I../AudioLibSwitcher_OpenAL/include
+          scan-build clang++ -std=c++20 -c static_analysis.cpp -Iinclude/8Beat -I../Core/include -I../AudioLibSwitcher_OpenAL/include -I../AudioLibSwitcher_OpenAL/AudioLibSwitcher/include
 
   generate-loc-badge:
     runs-on: ubuntu-latest
