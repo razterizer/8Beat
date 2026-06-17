@@ -339,7 +339,7 @@ namespace beat
       
       sf_close(file);
       
-      if (written_frames < 0 || static_cast<size_t>(written_frames) != buffer_size * wd_channels.size())
+      if (static_cast<size_t>(written_frames) != buffer_size * wd_channels.size())
       {
         std::cout << written_frames << std::endl;
         std::cout << sf_info.frames << std::endl;
