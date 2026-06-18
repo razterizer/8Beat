@@ -1,0 +1,58 @@
+name: release windows
+
+on:
+  push:
+    tags:
+      - "release-*"
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve latest Forge release
+        id: forge-release
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: >-
+            return (await github.rest.repos.getLatestRelease({
+            owner: 'razterizer', repo: 'forge' })).data.tag_name
+
+      - name: Checkout Forge
+        uses: actions/checkout@v4
+        with:
+          repository: razterizer/forge
+          ref: ${{ steps.forge-release.outputs.result }}
+          path: .forge-bootstrap
+
+      - name: Set up MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Build Forge
+        run: >-
+          cmake -S .forge-bootstrap -B .forge-bootstrap/build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release -DFORGE_BUILD_TESTS=OFF -DCMAKE_CXX_COMPILER=cl
+          && cmake --build .forge-bootstrap/build
+
+      - name: Prepare hosted release assets
+        shell: pwsh
+        run: |
+          ./.forge-bootstrap/build/forge.exe workflow prepare-release --skip-unsupported
+
+      - name: Publish GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: .forge/release/*.zip,boxes/*.cbox,boxes/*.sha256
+          bodyFile: .forge/release/RELEASE_NOTES.md
+          tag: ${{ github.ref_name }}

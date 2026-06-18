@@ -1,0 +1,111 @@
+#:schema https://raw.githubusercontent.com/razterizer/forge/main/schemas/forge.recipe.schema.json
+
+[project]
+name = "8-Bit Audio Emulator Lib"
+version = "1.0.0"
+
+[target.8-Bit-Audio-Emulator-Lib]
+type = "header_only"
+cpp_std = 20
+sources = ["static_analysis.cpp"]
+public_headers = ["include/8Beat/ADSR.h", "include/8Beat/AudioSourceHandler.h", "include/8Beat/ChipTuneEngine.h", "include/8Beat/ChipTuneEngineListener.h", "include/8Beat/ChipTuneEngine_Internals/ChipTuneEngineParser.h", "include/8Beat/SFX.h", "include/8Beat/Spectrum.h", "include/8Beat/Synthesizer.h", "include/8Beat/Waveform.h", "include/8Beat/WaveformGeneration.h", "include/8Beat/WaveformHelper.h", "include/8Beat/WaveformIO.h"]
+include_dirs = ["include", "include/8Beat"]
+defines = ["USE_APPLAUDIO"]
+
+[target.unit_tests]
+type = "executable"
+cpp_std = 20
+sources = ["Tests/unit_tests.cpp", "static_analysis.cpp"]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+test = true
+
+[target.demo_1]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_1.cpp", "static_analysis.cpp"]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[target.demo_10]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_10.cpp", "static_analysis.cpp"]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[target.demo_2]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_2.cpp", "static_analysis.cpp"]
+runtime_files = [{ source = "demos/sounds/07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav", destination = "07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav" }, { source = "demos/sounds/Cat_Meow_2-Cat_Stevens-2034822903.wav", destination = "Cat_Meow_2-Cat_Stevens-2034822903.wav" }, { source = "demos/sounds/cat meow reverb saved.wav", destination = "cat meow reverb saved.wav" }]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[target.demo_3]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_3.cpp", "static_analysis.cpp"]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[target.demo_4]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_4.cpp", "static_analysis.cpp"]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[target.demo_5]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_5.cpp", "static_analysis.cpp"]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[target.demo_6]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_6.cpp", "static_analysis.cpp"]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[target.demo_7]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_7.cpp", "static_analysis.cpp"]
+runtime_files = [{ source = "demos/sounds/chiptune3.ct", destination = "chiptune3.ct" }]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[target.demo_8]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_8.cpp", "static_analysis.cpp"]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[target.demo_9]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_9.cpp", "static_analysis.cpp"]
+dependencies = ["8-Bit-Audio-Emulator-Lib"]
+
+[build]
+number = 1
+
+[release]
+build_number_format = "dotted"
+
+[dependencies]
+3rdparty_libsndfile = { path = "../3rdparty_libsndfile" }
+AudioLibSwitcher_OpenAL = { path = "../AudioLibSwitcher_OpenAL" }
+AudioLibSwitcher_applaudio = { path = "../AudioLibSwitcher_applaudio" }
+Core = { path = "../Core" }
+
+# TODO: Replace local dependencies with reproducible workflow dependencies.
+# [profile.workflow-release.dependencies]
+# 3rdparty_libsndfile = { github = "owner/3rdparty_libsndfile", version = "<published-version>" }
+# AudioLibSwitcher_OpenAL = { github = "owner/AudioLibSwitcher_OpenAL", version = "<published-version>" }
+# AudioLibSwitcher_applaudio = { github = "owner/AudioLibSwitcher_applaudio", version = "<published-version>" }
+# Core = { github = "owner/Core", version = "<published-version>" }
+
+[profile.workflow-release.build]
+configuration = "Release"
+
+[profile.Debug.build]
+configuration = "Debug"
+defines = ["DEBUG=1"]
+
+[profile.Release.build]
+configuration = "Release"

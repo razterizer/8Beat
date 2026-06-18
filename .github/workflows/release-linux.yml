@@ -1,0 +1,156 @@
+name: release linux
+
+on:
+  push:
+    tags:
+      - "release-*"
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-modern:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve latest Forge release
+        id: forge-release
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: >-
+            return (await github.rest.repos.getLatestRelease({
+            owner: 'razterizer', repo: 'forge' })).data.tag_name
+
+      - name: Checkout Forge
+        uses: actions/checkout@v4
+        with:
+          repository: razterizer/forge
+          ref: ${{ steps.forge-release.outputs.result }}
+          path: .forge-bootstrap
+
+      - name: Build Forge
+        run: >-
+          cmake -S .forge-bootstrap -B .forge-bootstrap/build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release -DFORGE_BUILD_TESTS=OFF
+          && cmake --build .forge-bootstrap/build
+
+      - name: Prepare hosted release assets
+        run: |
+          ./.forge-bootstrap/build/forge workflow prepare-release --skip-unsupported
+          mkdir hosted-assets
+          for archive in .forge/release/*.zip; do
+            [ -e "$archive" ] || continue
+            filename=$(basename "${archive%.zip}")
+            cp "$archive" "hosted-assets/${filename}-linux-modern.zip"
+          done
+          for box in boxes/*.cbox; do
+            [ -e "$box" ] || continue
+            case "$box" in
+              *-ho.cbox)
+                filename=$(basename "$box")
+                ;;
+              *)
+                filename=$(basename "${box%.cbox}")-linux-modern.cbox
+                ;;
+            esac
+            cp "$box" "hosted-assets/$filename"
+            (cd hosted-assets && sha256sum "$filename" > "$filename.sha256")
+          done
+          cp .forge/release/RELEASE_NOTES.md hosted-assets/
+
+      - name: Upload Linux release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-modern
+          path: hosted-assets/
+          retention-days: 1
+
+  build-legacy:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve latest Forge release
+        id: forge-release
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: >-
+            return (await github.rest.repos.getLatestRelease({
+            owner: 'razterizer', repo: 'forge' })).data.tag_name
+
+      - name: Checkout Forge
+        uses: actions/checkout@v4
+        with:
+          repository: razterizer/forge
+          ref: ${{ steps.forge-release.outputs.result }}
+          path: .forge-bootstrap
+
+      - name: Build Forge
+        run: >-
+          cmake -S .forge-bootstrap -B .forge-bootstrap/build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release -DFORGE_BUILD_TESTS=OFF
+          && cmake --build .forge-bootstrap/build
+
+      - name: Prepare hosted release assets
+        run: |
+          ./.forge-bootstrap/build/forge workflow prepare-release --skip-unsupported
+          mkdir hosted-assets
+          for archive in .forge/release/*.zip; do
+            [ -e "$archive" ] || continue
+            filename=$(basename "${archive%.zip}")
+            cp "$archive" "hosted-assets/${filename}-linux-legacy.zip"
+          done
+          for box in boxes/*.cbox; do
+            [ -e "$box" ] || continue
+            case "$box" in
+              *-ho.cbox)
+                continue
+                ;;
+              *)
+                filename=$(basename "${box%.cbox}")-linux-legacy.cbox
+                ;;
+            esac
+            cp "$box" "hosted-assets/$filename"
+            (cd hosted-assets && sha256sum "$filename" > "$filename.sha256")
+          done
+          cp .forge/release/RELEASE_NOTES.md hosted-assets/
+
+      - name: Upload Linux release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-legacy
+          path: hosted-assets/
+          retention-days: 1
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build-modern, build-legacy]
+
+    steps:
+      - name: Download modern Linux assets
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-modern
+          path: linux-modern
+
+      - name: Download legacy Linux assets
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-legacy
+          path: linux-legacy
+
+      - name: Publish GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: linux-modern/*.zip,linux-modern/*.cbox,linux-modern/*.sha256,linux-legacy/*.zip,linux-legacy/*.cbox,linux-legacy/*.sha256
+          bodyFile: linux-modern/RELEASE_NOTES.md
+          tag: ${{ github.ref_name }}
