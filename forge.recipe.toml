@@ -7,7 +7,6 @@ version = "1.0.0"
 [target.8-Bit-Audio-Emulator-Lib]
 type = "header_only"
 cpp_std = 20
-sources = ["static_analysis.cpp"]
 public_headers = ["include/8Beat/ADSR.h", "include/8Beat/AudioSourceHandler.h", "include/8Beat/ChipTuneEngine.h", "include/8Beat/ChipTuneEngineListener.h", "include/8Beat/ChipTuneEngine_Internals/ChipTuneEngineParser.h", "include/8Beat/SFX.h", "include/8Beat/Spectrum.h", "include/8Beat/Synthesizer.h", "include/8Beat/Waveform.h", "include/8Beat/WaveformGeneration.h", "include/8Beat/WaveformHelper.h", "include/8Beat/WaveformIO.h"]
 include_dirs = ["include", "include/8Beat"]
 defines = ["USE_APPLAUDIO"]
@@ -89,14 +88,12 @@ build_number_format = "dotted"
 
 [dependencies]
 3rdparty_libsndfile = { path = "../3rdparty_libsndfile" }
-AudioLibSwitcher_OpenAL = { path = "../AudioLibSwitcher_OpenAL" }
 AudioLibSwitcher_applaudio = { path = "../AudioLibSwitcher_applaudio" }
 Core = { path = "../Core" }
 
 # TODO: Replace local dependencies with reproducible workflow dependencies.
 # [profile.workflow-release.dependencies]
 # 3rdparty_libsndfile = { github = "owner/3rdparty_libsndfile", version = "<published-version>" }
-# AudioLibSwitcher_OpenAL = { github = "owner/AudioLibSwitcher_OpenAL", version = "<published-version>" }
 # AudioLibSwitcher_applaudio = { github = "owner/AudioLibSwitcher_applaudio", version = "<published-version>" }
 # Core = { github = "owner/Core", version = "<published-version>" }
 

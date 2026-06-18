@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../Synthesizer.h"
+#include "../AudioSourceHandler.h"
 #include <Core/Utils.h>
 #include <Core/StringHelper.h>
 
