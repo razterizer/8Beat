@@ -10,6 +10,7 @@
 #include "Waveform.h"
 #include "WaveformHelper.h"
 
+#include <climits>
 #include <sndfile.h>
 //#include <typeinfo>
 #include <type_traits>
