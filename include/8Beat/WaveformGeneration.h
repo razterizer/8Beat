@@ -9,6 +9,9 @@
 
 #include "Waveform.h"
 #include "WaveformHelper.h"
+#include <functional>
+#include <optional>
+#include <variant>
 #include <vector>
 
 // phi, param
