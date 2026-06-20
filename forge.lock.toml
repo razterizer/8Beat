@@ -4,28 +4,28 @@ format = 2
 name = "3rdparty_libsndfile"
 github = "razterizer/3rdparty_libsndfile"
 package = "3rdparty_libsndfile"
-version = "1.0.0+build.2"
+version = "1.0.0+build.3"
 target = "linux-x86_64"
-url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.2/3rdparty_libsndfile-1.0.0+build.2-linux-x86_64.cbox"
-sha256 = "8eae5692839789adac9d0dda339cf273a566bfee4b38b7bd31951d99940bd384"
+url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.3/3rdparty_libsndfile-1.0.0+build.3-linux-x86_64.cbox"
+sha256 = "971b48974da413007ab3bf22910bf2afa5f88725e4abcb95fafe2eb0eddd146f"
 
 [[dependency]]
 name = "3rdparty_libsndfile"
 github = "razterizer/3rdparty_libsndfile"
 package = "3rdparty_libsndfile"
-version = "1.0.0+build.2"
+version = "1.0.0+build.3"
 target = "macos-arm64"
-url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.2/3rdparty_libsndfile-1.0.0+build.2-macos-arm64.cbox"
-sha256 = "2bebd9fc10fcf00faa22f0c68d747696a126806972ba3fd06d4083dd3c9b1ff1"
+url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.3/3rdparty_libsndfile-1.0.0+build.3-macos-arm64.cbox"
+sha256 = "ed48eacbb65d0521afa1db17138b58482b5dd4997b87f3d04ce765c1161b2126"
 
 [[dependency]]
 name = "3rdparty_libsndfile"
 github = "razterizer/3rdparty_libsndfile"
 package = "3rdparty_libsndfile"
-version = "1.0.0+build.2"
+version = "1.0.0+build.3"
 target = "windows-x86_64"
-url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.2/3rdparty_libsndfile-1.0.0+build.2-windows-x86_64.cbox"
-sha256 = "a64a8e9e2f85945a2b2bded1ee451a43c2d1becdf4e6903f071929b9832284f5"
+url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.3/3rdparty_libsndfile-1.0.0+build.3-windows-x86_64.cbox"
+sha256 = "fe41fa41a3d8ad18dead8219caaaec6ed05065185a93fa6ae4e014af412f2289"
 
 [[dependency]]
 name = "AudioLibSwitcher_OpenAL"

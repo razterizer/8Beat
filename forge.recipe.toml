@@ -104,7 +104,7 @@ Core = { path = "../Core" }
 defines = ["USE_APPLAUDIO"]
 
 [profile.workflow-release.dependencies]
-3rdparty_libsndfile = { github = "razterizer/3rdparty_libsndfile", version = "1.0.0+build.2" }
+3rdparty_libsndfile = { github = "razterizer/3rdparty_libsndfile", version = "1.0.0+build.3" }
 AudioLibSwitcher_OpenAL = { github = "razterizer/AudioLibSwitcher_OpenAL", version = "1.0.0+build.11" }
 Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
 
