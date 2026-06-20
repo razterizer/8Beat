@@ -61,14 +61,14 @@ jobs:
       - name: Prepare Forge release log asset
         if: failure()
         shell: pwsh
-        run: Copy-Item forge-prepare-release.log forge-prepare-release-windows.log
+        run: Copy-Item forge-prepare-release.log forge-prepare-release-windows-${{ github.run_id }}.log
 
       - name: Upload Forge release log to release
         if: failure()
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts: forge-prepare-release-windows.log
+          artifacts: forge-prepare-release-windows-${{ github.run_id }}.log
           artifactContentType: text/plain
           artifactErrorsFailBuild: false
           replacesArtifacts: false
