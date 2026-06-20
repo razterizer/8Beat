@@ -47,7 +47,16 @@ jobs:
       - name: Prepare hosted release assets
         shell: pwsh
         run: |
-          ./.forge-bootstrap/build/forge.exe workflow prepare-release --skip-unsupported
+          ./.forge-bootstrap/build/forge.exe workflow prepare-release --skip-unsupported 2>&1 | Tee-Object -FilePath forge-prepare-release.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Upload Forge release log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-release-log-windows
+          path: forge-prepare-release.log
+          retention-days: 7
 
       - name: Publish GitHub release
         uses: ncipollo/release-action@v1

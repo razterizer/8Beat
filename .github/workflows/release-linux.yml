@@ -44,7 +44,8 @@ jobs:
 
       - name: Prepare hosted release assets
         run: |
-          ./.forge-bootstrap/build/forge workflow prepare-release --skip-unsupported
+          set -o pipefail
+          ./.forge-bootstrap/build/forge workflow prepare-release --skip-unsupported 2>&1 | tee forge-prepare-release.log
           mkdir hosted-assets
           for archive in .forge/release/*.zip; do
             [ -e "$archive" ] || continue
@@ -65,6 +66,14 @@ jobs:
             (cd hosted-assets && sha256sum "$filename" > "$filename.sha256")
           done
           cp .forge/release/RELEASE_NOTES.md hosted-assets/
+
+      - name: Upload Forge release log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-release-log-linux-modern
+          path: forge-prepare-release.log
+          retention-days: 7
 
       - name: Upload Linux release assets
         uses: actions/upload-artifact@v4
@@ -107,7 +116,8 @@ jobs:
 
       - name: Prepare hosted release assets
         run: |
-          ./.forge-bootstrap/build/forge workflow prepare-release --skip-unsupported
+          set -o pipefail
+          ./.forge-bootstrap/build/forge workflow prepare-release --skip-unsupported 2>&1 | tee forge-prepare-release.log
           mkdir hosted-assets
           for archive in .forge/release/*.zip; do
             [ -e "$archive" ] || continue
@@ -128,6 +138,14 @@ jobs:
             (cd hosted-assets && sha256sum "$filename" > "$filename.sha256")
           done
           cp .forge/release/RELEASE_NOTES.md hosted-assets/
+
+      - name: Upload Forge release log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-release-log-linux-legacy
+          path: forge-prepare-release.log
+          retention-days: 7
 
       - name: Upload Linux release assets
         uses: actions/upload-artifact@v4
