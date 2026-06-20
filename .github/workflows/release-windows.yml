@@ -58,6 +58,22 @@ jobs:
           path: forge-prepare-release.log
           retention-days: 7
 
+      - name: Prepare Forge release log asset
+        if: failure()
+        shell: pwsh
+        run: Copy-Item forge-prepare-release.log forge-prepare-release-windows.log
+
+      - name: Upload Forge release log to release
+        if: failure()
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: forge-prepare-release-windows.log
+          artifactContentType: text/plain
+          artifactErrorsFailBuild: false
+          replacesArtifacts: false
+          tag: ${{ github.ref_name }}
+
       - name: Publish GitHub release
         uses: ncipollo/release-action@v1
         with:

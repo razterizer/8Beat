@@ -75,6 +75,21 @@ jobs:
           path: forge-prepare-release.log
           retention-days: 7
 
+      - name: Prepare Forge release log asset
+        if: failure()
+        run: cp forge-prepare-release.log forge-prepare-release-linux-modern.log
+
+      - name: Upload Forge release log to release
+        if: failure()
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: forge-prepare-release-linux-modern.log
+          artifactContentType: text/plain
+          artifactErrorsFailBuild: false
+          replacesArtifacts: false
+          tag: ${{ github.ref_name }}
+
       - name: Upload Linux release assets
         uses: actions/upload-artifact@v4
         with:
@@ -146,6 +161,21 @@ jobs:
           name: forge-release-log-linux-legacy
           path: forge-prepare-release.log
           retention-days: 7
+
+      - name: Publish Forge release log
+        if: failure()
+        run: cp forge-prepare-release.log forge-prepare-release-linux-legacy.log
+
+      - name: Upload Forge release log to release
+        if: failure()
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: forge-prepare-release-linux-legacy.log
+          artifactContentType: text/plain
+          artifactErrorsFailBuild: false
+          replacesArtifacts: false
+          tag: ${{ github.ref_name }}
 
       - name: Upload Linux release assets
         uses: actions/upload-artifact@v4
