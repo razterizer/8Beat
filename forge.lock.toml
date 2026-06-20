@@ -5,9 +5,36 @@ name = "3rdparty_libsndfile"
 github = "razterizer/3rdparty_libsndfile"
 package = "3rdparty_libsndfile"
 version = "1.0.0+build.2"
+target = "linux-x86_64"
+url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.2/3rdparty_libsndfile-1.0.0+build.2-linux-x86_64.cbox"
+sha256 = "8eae5692839789adac9d0dda339cf273a566bfee4b38b7bd31951d99940bd384"
+
+[[dependency]]
+name = "3rdparty_libsndfile"
+github = "razterizer/3rdparty_libsndfile"
+package = "3rdparty_libsndfile"
+version = "1.0.0+build.2"
 target = "macos-arm64"
 url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.2/3rdparty_libsndfile-1.0.0+build.2-macos-arm64.cbox"
 sha256 = "2bebd9fc10fcf00faa22f0c68d747696a126806972ba3fd06d4083dd3c9b1ff1"
+
+[[dependency]]
+name = "3rdparty_libsndfile"
+github = "razterizer/3rdparty_libsndfile"
+package = "3rdparty_libsndfile"
+version = "1.0.0+build.2"
+target = "windows-x86_64"
+url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.2/3rdparty_libsndfile-1.0.0+build.2-windows-x86_64.cbox"
+sha256 = "a64a8e9e2f85945a2b2bded1ee451a43c2d1becdf4e6903f071929b9832284f5"
+
+[[dependency]]
+name = "AudioLibSwitcher_OpenAL"
+github = "razterizer/AudioLibSwitcher_OpenAL"
+package = "AudioLibSwitcher_OpenAL"
+version = "1.0.0+build.11"
+target = "linux-x86_64"
+url = "https://github.com/razterizer/AudioLibSwitcher_OpenAL/releases/download/release-1.0.0.11/AudioLibSwitcher_OpenAL-1.0.0+build.11-linux-x86_64.cbox"
+sha256 = "08d20cb51033837ee5b9d2c26dbb7a03f349c905d21845092f4a5e10aa8422ed"
 
 [[dependency]]
 name = "AudioLibSwitcher_OpenAL"
@@ -17,6 +44,15 @@ version = "1.0.0+build.11"
 target = "macos-arm64"
 url = "https://github.com/razterizer/AudioLibSwitcher_OpenAL/releases/download/release-1.0.0.11/AudioLibSwitcher_OpenAL-1.0.0+build.11-macos-arm64.cbox"
 sha256 = "c577954f64ae632de973f47f719416334a5dac060e76a11a8030a7d456acbefc"
+
+[[dependency]]
+name = "AudioLibSwitcher_OpenAL"
+github = "razterizer/AudioLibSwitcher_OpenAL"
+package = "AudioLibSwitcher_OpenAL"
+version = "1.0.0+build.11"
+target = "windows-x86_64"
+url = "https://github.com/razterizer/AudioLibSwitcher_OpenAL/releases/download/release-1.0.0.11/AudioLibSwitcher_OpenAL-1.0.0+build.11-windows-x86_64.cbox"
+sha256 = "fcafc48414d23acd0132590b6ca8b553a955b01de18f4e50b26b13ca3a428f48"
 
 [[dependency]]
 name = "Core"
