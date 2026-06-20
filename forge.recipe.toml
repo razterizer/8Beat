@@ -33,7 +33,7 @@ dependencies = ["8Beat"]
 type = "executable"
 cpp_std = 20
 sources = ["demos/demo_2.cpp"]
-runtime_files = [{ source = "demos/sounds/07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav", destination = "07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav" }, { source = "demos/sounds/Cat_Meow_2-Cat_Stevens-2034822903.wav", destination = "Cat_Meow_2-Cat_Stevens-2034822903.wav" }, { source = "demos/sounds/cat meow reverb saved.wav", destination = "cat meow reverb saved.wav" }]
+runtime_files = [{ source = "demos/sounds/07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav", destination = "07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav" }, { source = "demos/sounds/Cat_Meow_2-Cat_Stevens-2034822903.wav", destination = "Cat_Meow_2-Cat_Stevens-2034822903.wav" }]
 dependencies = ["8Beat"]
 
 [target.demo_3]
