@@ -103,11 +103,10 @@ Core = { path = "../Core" }
 [profile.applaudio.build]
 defines = ["USE_APPLAUDIO"]
 
-# TODO: Replace local dependencies with reproducible workflow dependencies.
-# [profile.workflow-release.dependencies]
-# 3rdparty_libsndfile = { github = "owner/3rdparty_libsndfile", version = "<published-version>" }
-# AudioLibSwitcher_OpenAL = { github = "owner/AudioLibSwitcher_OpenAL", version = "<published-version>" }
-# Core = { github = "owner/Core", version = "<published-version>" }
+[profile.workflow-release.dependencies]
+3rdparty_libsndfile = { github = "razterizer/3rdparty_libsndfile", version = "1.0.0+build.2" }
+AudioLibSwitcher_OpenAL = { github = "razterizer/AudioLibSwitcher_OpenAL", version = "1.0.0+build.11" }
+Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
 
 [profile.workflow-release.build]
 configuration = "Release"

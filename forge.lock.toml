@@ -1,0 +1,28 @@
+format = 2
+
+[[dependency]]
+name = "3rdparty_libsndfile"
+github = "razterizer/3rdparty_libsndfile"
+package = "3rdparty_libsndfile"
+version = "1.0.0+build.2"
+target = "macos-arm64"
+url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.2/3rdparty_libsndfile-1.0.0+build.2-macos-arm64.cbox"
+sha256 = "2bebd9fc10fcf00faa22f0c68d747696a126806972ba3fd06d4083dd3c9b1ff1"
+
+[[dependency]]
+name = "AudioLibSwitcher_OpenAL"
+github = "razterizer/AudioLibSwitcher_OpenAL"
+package = "AudioLibSwitcher_OpenAL"
+version = "1.0.0+build.11"
+target = "macos-arm64"
+url = "https://github.com/razterizer/AudioLibSwitcher_OpenAL/releases/download/release-1.0.0.11/AudioLibSwitcher_OpenAL-1.0.0+build.11-macos-arm64.cbox"
+sha256 = "c577954f64ae632de973f47f719416334a5dac060e76a11a8030a7d456acbefc"
+
+[[dependency]]
+name = "Core"
+github = "razterizer/Core"
+package = "Core"
+version = "1.5.0+build.8"
+target = "any"
+url = "https://github.com/razterizer/Core/releases/download/release-1.5.0.8/Core-1.5.0+build.8-ho.cbox"
+sha256 = "2cd79c0936fb55cd5e5f8d77efe77cc53d58d969d22ece92b7ffa84e24b1d310"
