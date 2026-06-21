@@ -55,6 +55,15 @@ url = "https://github.com/razterizer/AudioLibSwitcher_OpenAL/releases/download/r
 sha256 = "fcafc48414d23acd0132590b6ca8b553a955b01de18f4e50b26b13ca3a428f48"
 
 [[dependency]]
+name = "AudioLibSwitcher_applaudio"
+github = "razterizer/AudioLibSwitcher_applaudio"
+package = "AudioLibSwitcher_applaudio"
+version = "1.0.0+build.2"
+target = "any"
+url = "https://github.com/razterizer/AudioLibSwitcher_applaudio/releases/download/release-1.0.0.2/AudioLibSwitcher_applaudio-1.0.0+build.2-ho.cbox"
+sha256 = "f49e8f389822668e9909d7c7ec2e6eb117b51b52a322bb4e4222f9d720626ab7"
+
+[[dependency]]
 name = "Core"
 github = "razterizer/Core"
 package = "Core"
