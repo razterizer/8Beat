@@ -50,7 +50,14 @@ jobs:
           for archive in .forge/release/*.zip; do
             [ -e "$archive" ] || continue
             filename=$(basename "${archive%.zip}")
-            cp "$archive" "hosted-assets/${filename}-linux-modern.zip"
+            case "$filename" in
+              *-linux)
+                cp "$archive" "hosted-assets/${filename}-modern.zip"
+                ;;
+              *)
+                cp "$archive" "hosted-assets/${filename}-linux-modern.zip"
+                ;;
+            esac
           done
           for box in boxes/*.cbox; do
             [ -e "$box" ] || continue
@@ -137,7 +144,14 @@ jobs:
           for archive in .forge/release/*.zip; do
             [ -e "$archive" ] || continue
             filename=$(basename "${archive%.zip}")
-            cp "$archive" "hosted-assets/${filename}-linux-legacy.zip"
+            case "$filename" in
+              *-linux)
+                cp "$archive" "hosted-assets/${filename}-legacy.zip"
+                ;;
+              *)
+                cp "$archive" "hosted-assets/${filename}-linux-legacy.zip"
+                ;;
+            esac
           done
           for box in boxes/*.cbox; do
             [ -e "$box" ] || continue
@@ -201,10 +215,28 @@ jobs:
           name: linux-legacy
           path: linux-legacy
 
+      - name: Assemble Linux release assets
+        run: |
+          mkdir release-assets
+          cp linux-modern/RELEASE_NOTES.md release-assets/
+          cp linux-modern/*.cbox linux-modern/*.sha256 release-assets/ 2>/dev/null || true
+          cp linux-legacy/*.cbox linux-legacy/*.sha256 release-assets/ 2>/dev/null || true
+          for archive in linux-modern/*-linux-modern.zip; do
+            [ -e "$archive" ] || continue
+            base=$(basename "${archive%-modern.zip}")
+            legacy="linux-legacy/${base}-legacy.zip"
+            [ -e "$legacy" ] || continue
+            rm -rf linux-bundle
+            mkdir -p "linux-bundle/${base}-modern" "linux-bundle/${base}-legacy"
+            unzip -q "$archive" -d "linux-bundle/${base}-modern"
+            unzip -q "$legacy" -d "linux-bundle/${base}-legacy"
+            tar -czf "release-assets/${base}.tar.gz" -C linux-bundle "${base}-modern" "${base}-legacy"
+          done
+
       - name: Publish GitHub release
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts: linux-modern/*.zip,linux-modern/*.cbox,linux-modern/*.sha256,linux-legacy/*.zip,linux-legacy/*.cbox,linux-legacy/*.sha256
-          bodyFile: linux-modern/RELEASE_NOTES.md
+          artifacts: release-assets/*
+          bodyFile: release-assets/RELEASE_NOTES.md
           tag: ${{ github.ref_name }}
