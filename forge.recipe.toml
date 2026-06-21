@@ -85,6 +85,7 @@ number = 1
 [release]
 bundle_name = "8beat"
 variants = [{ profile = "workflow-release", suffix = "openal" }, { profile = "applaudio-release", suffix = "applaudio" }]
+readme = { linux = "demos/README_LINUX.md", macos = "demos/README_MACOS.md", windows = "demos/README_WINDOWS.md" }
 build_number_format = "dotted"
 
 [dependencies]
