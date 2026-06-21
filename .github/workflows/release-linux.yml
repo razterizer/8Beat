@@ -237,6 +237,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts: release-assets/*
+          artifacts: release-assets/*.tar.gz,release-assets/*.cbox,release-assets/*.sha256
           bodyFile: release-assets/RELEASE_NOTES.md
           tag: ${{ github.ref_name }}
