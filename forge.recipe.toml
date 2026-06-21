@@ -115,7 +115,7 @@ configuration = "Release"
 
 [profile.applaudio-release.dependencies]
 3rdparty_libsndfile = { github = "razterizer/3rdparty_libsndfile", version = "1.0.0+build.3" }
-AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.0+build.2" }
+AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.0+build.3" }
 Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
 
 [profile.applaudio-release.build]
