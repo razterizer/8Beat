@@ -83,6 +83,7 @@ dependencies = ["8Beat"]
 number = 1
 
 [release]
+bundle_name = "8beat"
 build_number_format = "dotted"
 
 [dependencies]
