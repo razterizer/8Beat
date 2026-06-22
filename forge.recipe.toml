@@ -2,7 +2,7 @@
 
 [project]
 name = "8-Bit Audio Emulator Lib"
-version = "1.0.0"
+version = "1.0.1"
 
 [target.8Beat]
 type = "header_only"
@@ -80,13 +80,16 @@ sources = ["demos/demo_9.cpp"]
 dependencies = ["8Beat"]
 
 [build]
-number = 1
+number = 2
 
 [release]
 bundle_name = "8beat"
 variants = [{ profile = "workflow-release", suffix = "openal" }, { profile = "applaudio-release", suffix = "applaudio" }]
 readme = { linux = "demos/README_LINUX.md", macos = "demos/README_MACOS.md", windows = "demos/README_WINDOWS.md" }
 build_number_format = "dotted"
+
+[box]
+variants = [{ profile = "workflow-release", suffix = "openal" }, { profile = "applaudio-release", suffix = "applaudio" }]
 
 [dependencies]
 3rdparty_libsndfile = { path = "../3rdparty_libsndfile" }
