@@ -7,7 +7,7 @@ version = "1.0.1"
 [target.8Beat]
 type = "header_only"
 cpp_std = 20
-public_headers = ["include/8Beat/ADSR.h", "include/8Beat/AudioSourceHandler.h", "include/8Beat/ChipTuneEngine.h", "include/8Beat/ChipTuneEngineListener.h", "include/8Beat/ChipTuneEngine_Internals/ChipTuneEngineParser.h", "include/8Beat/SFX.h", "include/8Beat/Spectrum.h", "include/8Beat/Synthesizer.h", "include/8Beat/Waveform.h", "include/8Beat/WaveformGeneration.h", "include/8Beat/WaveformHelper.h", "include/8Beat/WaveformIO.h"]
+public_headers = ["include/8Beat/ADSR.h", "include/8Beat/AudioSourceHandler.h", "include/8Beat/ChipTuneEngine.h", "include/8Beat/ChipTuneEngineListener.h", "include/8Beat/ChipTuneEngine_Internals/ChipTuneEngineParser.h", "include/8Beat/SFX.h", "include/8Beat/Spectrum.h", "include/8Beat/Synthesizer.h", "include/8Beat/Waveform.h", "include/8Beat/WaveformGeneration.h", "include/8Beat/WaveformHelper.h"]
 include_dirs = ["include", "include/8Beat"]
 
 [target.unit_tests]
@@ -27,13 +27,6 @@ dependencies = ["8Beat"]
 type = "executable"
 cpp_std = 20
 sources = ["demos/demo_10.cpp"]
-dependencies = ["8Beat"]
-
-[target.demo_2]
-type = "executable"
-cpp_std = 20
-sources = ["demos/demo_2.cpp"]
-runtime_files = [{ source = "demos/sounds/07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav", destination = "07a-AirRaidShelterCentre-DPA 4061-Stereo-48K-BURST.wav" }, { source = "demos/sounds/Cat_Meow_2-Cat_Stevens-2034822903.wav", destination = "Cat_Meow_2-Cat_Stevens-2034822903.wav" }]
 dependencies = ["8Beat"]
 
 [target.demo_3]
@@ -80,7 +73,7 @@ sources = ["demos/demo_9.cpp"]
 dependencies = ["8Beat"]
 
 [build]
-number = 2
+number = 3
 
 [release]
 bundle_name = "8beat"
@@ -96,17 +89,14 @@ build_number_format = "dotted"
 variants = [{ profile = "applaudio-release", suffix = "applaudio" }]
 
 [dependencies]
-3rdparty_libsndfile = { path = "../3rdparty_libsndfile" }
 AudioLibSwitcher_OpenAL = { path = "../AudioLibSwitcher_OpenAL" }
 Core = { path = "../Core" }
 
 [profile.openal.dependencies]
-3rdparty_libsndfile = { path = "../3rdparty_libsndfile" }
 AudioLibSwitcher_OpenAL = { path = "../AudioLibSwitcher_OpenAL" }
 Core = { path = "../Core" }
 
 [profile.applaudio.dependencies]
-3rdparty_libsndfile = { path = "../3rdparty_libsndfile" }
 AudioLibSwitcher_applaudio = { path = "../AudioLibSwitcher_applaudio" }
 Core = { path = "../Core" }
 
@@ -114,7 +104,6 @@ Core = { path = "../Core" }
 defines = ["USE_APPLAUDIO"]
 
 [profile.workflow-release.dependencies]
-3rdparty_libsndfile = { github = "razterizer/3rdparty_libsndfile", version = "1.0.0+build.3" }
 AudioLibSwitcher_OpenAL = { github = "razterizer/AudioLibSwitcher_OpenAL", version = "1.0.0+build.11" }
 Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
 
@@ -122,7 +111,6 @@ Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
 configuration = "Release"
 
 [profile.applaudio-release.dependencies]
-3rdparty_libsndfile = { github = "razterizer/3rdparty_libsndfile", version = "1.0.0+build.3" }
 AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.0+build.3" }
 Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
 

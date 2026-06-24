@@ -17,8 +17,8 @@
 ![Contributors](https://img.shields.io/github/contributors/razterizer/8Beat?color=blue)
 ![Static Badge](https://img.shields.io/badge/ai_usage-some_(advisory_only)-lightblue)
 
-This library is a cross-platform and header only library (except for 3rd-party libs necessary).
-This library is for synthesizing, loading and saving sound and also has a chip-tune engine which allow you full flexibility to design instruments and to use these instruments when composing your chip-tune tune.
+This library is a cross-platform and header-only library.
+This library is for synthesizing sound and also has a chip-tune engine which allow you full flexibility to design instruments and to use these instruments when composing your chip-tune tune. Optional waveform file loading and saving is available through `WaveformIO.h`, but that header requires libsndfile and is not part of the standard Forge-published cbox surface.
 The library depends on an implementation of the interface `AudioLibSwitcher`. See below for more info.
 
 Documentation is a work in progress for the moment being. For example on how to use this lib, please clone repo [`Pilot Episode`](https://github.com/razterizer/Pilot-Episode) and follow the instructions there.
@@ -27,10 +27,10 @@ Documentation is a work in progress for the moment being. For example on how to 
 
 ### LibSndFile
 
-`WaveformIO.h` uses [`libsndfile`](https://github.com/libsndfile/libsndfile?tab=LGPL-2.1-1-ov-file) which is under the LGPL-2.1 license. There is no derivative work of the library whatsoever. `libsndfile` is only a dependency. 
-In order to be able to use `WaveformIO.h` you need to supply the libsnd binaries (libs or dlls) and headers yourself. These are not included.
+`WaveformIO.h` uses [`libsndfile`](https://github.com/libsndfile/libsndfile?tab=LGPL-2.1-1-ov-file), which is under the LGPL-2.1 license. There is no derivative work of the library whatsoever. `libsndfile` is only a dependency.
+In order to use `WaveformIO.h` you need to supply the libsndfile binaries, libraries, and headers yourself. These are not included in the standard Forge-published cboxes or release artifacts, and demos that require libsndfile, such as `demo_2`, are excluded from those artifacts.
 
-Since `libsndfile` is under LGPL, this means that whenever a release build is created, its source code has to be included as well. So that is important to remember.
+Since `libsndfile` is under LGPL, this means that whenever a release build includes it, its source code has to be included as well. So that is important to remember.
 
 See this online discussion for more info: https://softwareengineering.stackexchange.com/questions/141847/how-does-using-a-lgpl-gem-affect-my-mit-licensed-application
 
@@ -68,7 +68,7 @@ We'll often use the term `waveform` as meaning an audio signal here.
 
 * `Waveform.h` <br/> contains the struct `Waveform` that contains an audio buffer, and variables `frequency`, `sample_rate` and `duration`. This struct is very central as it holds the PCM audio waveform representation itself. This holds one mono-sound audio buffer so if you want stereo, then you need to form a `std::vector` of these. Use `WaveformHelper::apply_channelwise()` to apply binary operations over stereo / mono waveform-vectors or any combination of these.
 
-* `WaveformIO.h` <br/> contains class `WaveformIO` that has two static public functions: `load()` and `save()`. These functions rely on the [`sndfile`](https://github.com/libsndfile/libsndfile) library which allows you to import and export a `Waveform` object to many different types and formats.
+* `WaveformIO.h` <br/> contains class `WaveformIO` that has two static public functions: `load()` and `save()`. These functions rely on the [`sndfile`](https://github.com/libsndfile/libsndfile) library which allows you to import and export a `Waveform` object to many different types and formats. This optional header is kept in the source tree for manual libsndfile builds, but is not exported by the standard Forge cbox.
 * `WaveformGeneration.h` <br/> contains class `WaveformGeneration` with a single public function `generate_waveform()`.
   * You can control the created waveform via these optional parameters in struct `WaveformGenerationParams`:
     ```C++
@@ -193,7 +193,7 @@ where `<my_source_code_dir>` is where you normally put your git repos and `<lib>
 * [`Asciiroids`](https://github.com/razterizer/Asciiroids)
 
 There are currently ten demos under the `demos` folder that you can build and run under debian-based / macos / windows.
-First cd to folder `demos`. To build `demo_1` type `./build_demo_1.sh`. Then run by typing `./bin/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh` (debian-based / macos) or `build_all_demos.bat` (windows).
+First cd to folder `demos`. To build `demo_1` type `./build_demo_1.sh`. Then run by typing `./bin/demo_1`. The same applies for the other demos. You can build all demos by running the script `./build_all_demos.sh` (debian-based / macos) or `build_all_demos.bat` (windows). Standard Forge release artifacts exclude `demo_2` because it requires libsndfile through `WaveformIO.h`.
 
 An easier way to get started is to use any of the scripts `setup_and_build_demos_applaudio_debian.sh`, `setup_and_build_demos_applaudio_macos.sh` or `setup_and_build_demos_applaudio.bat`. If you use these, you can then skip the section below. These scripts automatically clones the repos necessary for your platform.
 
