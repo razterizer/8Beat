@@ -2,7 +2,7 @@
 
 [project]
 name = "8-Bit Audio Emulator Lib"
-version = "1.0.1"
+version = "1.0.2"
 
 [target.8Beat]
 type = "header_only"
@@ -73,7 +73,7 @@ sources = ["demos/demo_9.cpp"]
 dependencies = ["8Beat"]
 
 [build]
-number = 3
+number = 4
 
 [release]
 bundle_name = "8beat"
@@ -111,7 +111,7 @@ Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
 configuration = "Release"
 
 [profile.applaudio-release.dependencies]
-AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.0+build.3" }
+AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.1+build.4" }
 Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
 
 [profile.applaudio-release.build]

@@ -67,10 +67,10 @@ sha256 = "8d953a8eacf2bd28a9c846f9ac67ccf7ee53f9eca1677b834189cc382a0b8f20"
 name = "AudioLibSwitcher_applaudio"
 github = "razterizer/AudioLibSwitcher_applaudio"
 package = "AudioLibSwitcher_applaudio"
-version = "1.0.0+build.3"
+version = "1.0.1+build.4"
 target = "macos-arm64"
-url = "https://github.com/razterizer/AudioLibSwitcher_applaudio/releases/download/release-1.0.0.3/AudioLibSwitcher_applaudio-1.0.0+build.3-macos-arm64.cbox"
-sha256 = "9bf1ff5714ef32b13a2d47bb0f9fd4d58bc7c9687e7a88a5ffdb84b1453461b9"
+url = "https://github.com/razterizer/AudioLibSwitcher_applaudio/releases/download/release-1.0.1.4/AudioLibSwitcher_applaudio-1.0.1+build.4-macos-arm64.cbox"
+sha256 = "372fa2bd96afd667a03688b2a462acb7496f1c5241c26780f7fa37acdacae2a2"
 
 [[dependency]]
 name = "AudioLibSwitcher_applaudio"

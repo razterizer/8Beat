@@ -1,5 +1,9 @@
 # Release notes
 
+## 1.0.2.4
+
+- Transitive dependency to applaudio now has the one with the windows lib "ksguid" addition.
+
 ## 1.0.1.3
 
 - Removed libsndfile from Forge-published dependency metadata and cbox headers.
