@@ -61,7 +61,7 @@ package = "AudioLibSwitcher_applaudio"
 version = "1.0.1+build.4"
 target = "linux-x86_64"
 url = "https://github.com/razterizer/AudioLibSwitcher_applaudio/releases/download/release-1.0.1.4/AudioLibSwitcher_applaudio-1.0.1+build.4-linux-x86_64.cbox"
-sha256 = "64b8692283b5493fff71f8fee815a6940ecaa91fc8e6042235d6413e88f4d945"
+sha256 = "a62258fa0889b4b8fedd6fe5ac2521dea084e57b5c49455ebe19d379927983a0"
 
 [[dependency]]
 name = "AudioLibSwitcher_applaudio"
@@ -70,7 +70,7 @@ package = "AudioLibSwitcher_applaudio"
 version = "1.0.1+build.4"
 target = "macos-arm64"
 url = "https://github.com/razterizer/AudioLibSwitcher_applaudio/releases/download/release-1.0.1.4/AudioLibSwitcher_applaudio-1.0.1+build.4-macos-arm64.cbox"
-sha256 = "804a174b12cf0053892f0ed9f83a451e11475e097e939ffcd045e901ea34cfea"
+sha256 = "76844a3fbdd82c67b8d853f80e59f564b34ba8daf29d1fa3a6b5e5290ab46375"
 
 [[dependency]]
 name = "AudioLibSwitcher_applaudio"
@@ -79,7 +79,7 @@ package = "AudioLibSwitcher_applaudio"
 version = "1.0.1+build.4"
 target = "windows-x86_64"
 url = "https://github.com/razterizer/AudioLibSwitcher_applaudio/releases/download/release-1.0.1.4/AudioLibSwitcher_applaudio-1.0.1+build.4-windows-x86_64.cbox"
-sha256 = "69de5ef51772f81c71ecc1129e36da2f753b08fd9ec25b52165f94e8e55772de"
+sha256 = "a43e3bed413df268a2ccbdc3c8f04892d4609b6cffa2adc6964bc2778439bacf"
 
 [[dependency]]
 name = "Core"
