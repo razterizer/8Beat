@@ -1,0 +1,4 @@
+Core                       https://github.com/razterizer/Core.git                   d989655699f6b59c8c482411deafcca9d208fc0b
+AudioLibSwitcher_OpenAL    https://github.com/razterizer/AudioLibSwitcher_OpenAL    672463ced73c55f9ba7d5b7c13f5d98fb95fb7af
+3rdparty_OpenAL            https://github.com/razterizer/3rdparty_OpenAL            61f2031fa42a9e5311c35ab83bd3485b5d75b321                    win
+3rdparty_libsndfile        https://github.com/razterizer/3rdparty_libsndfile        868cf5ad53291f31097a91fa2e00c19784b7c3fc                    win

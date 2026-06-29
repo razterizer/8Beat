@@ -1,0 +1,126 @@
+#:schema https://raw.githubusercontent.com/razterizer/forge/main/schemas/forge.recipe.schema.json
+
+[project]
+name = "8-Bit Audio Emulator Lib"
+version = "1.0.3"
+
+[target.8Beat]
+type = "header_only"
+cpp_std = 20
+public_headers = ["include/8Beat/ADSR.h", "include/8Beat/AudioSourceHandler.h", "include/8Beat/ChipTuneEngine.h", "include/8Beat/ChipTuneEngineListener.h", "include/8Beat/ChipTuneEngine_Internals/ChipTuneEngineParser.h", "include/8Beat/SFX.h", "include/8Beat/Spectrum.h", "include/8Beat/Synthesizer.h", "include/8Beat/Waveform.h", "include/8Beat/WaveformGeneration.h", "include/8Beat/WaveformHelper.h"]
+include_dirs = ["include", "include/8Beat"]
+
+[target.unit_tests]
+type = "executable"
+cpp_std = 20
+sources = ["Tests/unit_tests.cpp"]
+dependencies = ["8Beat"]
+test = true
+
+[target.demo_1]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_1.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_10]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_10.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_3]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_3.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_4]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_4.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_5]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_5.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_6]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_6.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_7]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_7.cpp"]
+runtime_files = [{ source = "demos/sounds/chiptune3.ct", destination = "sounds/chiptune3.ct" }]
+dependencies = ["8Beat"]
+
+[target.demo_8]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_8.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_9]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_9.cpp"]
+dependencies = ["8Beat"]
+
+[build]
+number = 5
+
+[release]
+bundle_name = "8beat"
+# OpenAL publishing intentionally disabled because OpenAL-based release assets carry different licensing expectations.
+# variants = [{ profile = "workflow-release", suffix = "openal" }, { profile = "applaudio-release", suffix = "applaudio" }]
+variants = [{ profile = "applaudio-release", suffix = "applaudio" }]
+readme = { linux = "demos/README_LINUX.md", macos = "demos/README_MACOS.md", windows = "demos/README_WINDOWS.md" }
+build_number_format = "dotted"
+
+[box]
+# OpenAL publishing intentionally disabled because OpenAL-based release assets carry different licensing expectations.
+# variants = [{ profile = "workflow-release", suffix = "openal" }, { profile = "applaudio-release", suffix = "applaudio" }]
+variants = [{ profile = "applaudio-release", suffix = "applaudio" }]
+
+[dependencies]
+AudioLibSwitcher_OpenAL = { path = "../AudioLibSwitcher_OpenAL" }
+Core = { path = "../Core" }
+
+[profile.openal.dependencies]
+AudioLibSwitcher_OpenAL = { path = "../AudioLibSwitcher_OpenAL" }
+Core = { path = "../Core" }
+
+[profile.applaudio.dependencies]
+AudioLibSwitcher_applaudio = { path = "../AudioLibSwitcher_applaudio" }
+Core = { path = "../Core" }
+
+[profile.applaudio.build]
+defines = ["USE_APPLAUDIO"]
+
+[profile.workflow-release.dependencies]
+AudioLibSwitcher_OpenAL = { github = "razterizer/AudioLibSwitcher_OpenAL", version = "1.0.0+build.12" }
+Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
+
+[profile.workflow-release.build]
+configuration = "Release"
+
+[profile.applaudio-release.dependencies]
+AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.1+build.4" }
+Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
+
+[profile.applaudio-release.build]
+configuration = "Release"
+defines = ["USE_APPLAUDIO"]
+
+[profile.Debug.build]
+configuration = "Debug"
+defines = ["DEBUG=1"]
+
+[profile.Release.build]
+configuration = "Release"
