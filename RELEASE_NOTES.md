@@ -1,5 +1,9 @@
 # Release notes
 
+## 1.0.3.5
+
+- Bumped AudioLibSwitcher_OpenAL dependency version.
+
 ## 1.0.2.4
 
 - Transitive dependency to applaudio now has the one with the windows lib "ksguid" addition.

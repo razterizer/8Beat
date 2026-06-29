@@ -2,7 +2,7 @@
 
 [project]
 name = "8-Bit Audio Emulator Lib"
-version = "1.0.2"
+version = "1.0.3"
 
 [target.8Beat]
 type = "header_only"
@@ -73,7 +73,7 @@ sources = ["demos/demo_9.cpp"]
 dependencies = ["8Beat"]
 
 [build]
-number = 4
+number = 5
 
 [release]
 bundle_name = "8beat"
