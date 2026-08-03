@@ -20,6 +20,9 @@ xcuserdata/
 xcshareddata/
 xcdebugger/
 
+# Misc MacOS
+.DS_Store
+
 ### Visual Studio ###
 
 .vs/
