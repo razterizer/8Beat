@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 REPO_DIR="8Beat"
 BUILD_DIR="demos"
 
