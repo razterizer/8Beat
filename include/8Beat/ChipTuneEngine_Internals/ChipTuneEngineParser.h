@@ -134,7 +134,7 @@ namespace beat
       }
       static Note create_separator()
       {
-        Note n;
+        Note n = create_pause();
         n.separator = true;
         return n;
       }
@@ -1297,7 +1297,7 @@ namespace beat
       {
         for (auto& note : voice.notes)
         {
-          if (!note->pause)
+          if (!note->pause && !note->separator)
           {
             if (note->instrument_basic_idx >= 0)
             {

@@ -31,7 +31,10 @@ namespace beat
     ChipTuneEngine(AudioSourceHandler& audio_handler, const WaveformGeneration& waveform_gen)
       : ChipTuneEngineParser(audio_handler, waveform_gen)
     {}
-    ~ChipTuneEngine() = default;
+    ~ChipTuneEngine() override
+    {
+      stop_tune_async();
+    }
 
     // Play the loaded tune
     bool play_tune(bool interrupt_unfinished_note = true, bool verbose = false)
@@ -238,7 +241,7 @@ namespace beat
           auto* note = voice.notes[note_idx].get();
           if (voice.src != nullptr)
           {
-            if (!note->pause && (interrupt_unfinished_note || !voice.src->is_playing()))
+            if (!note->pause && !note->separator && (interrupt_unfinished_note || !voice.src->is_playing()))
             {
               if (interrupt_unfinished_note)
                 voice.src->stop();
@@ -280,20 +283,15 @@ namespace beat
     // Play the loaded tune in a separate thread
     void play_tune_async(bool interrupt_unfinished_note = true, bool verbose = false)
     {
-      // Use std::thread and std::atomic_flag to safely start and stop the thread
+      stop_tune_async();
       m_stop_audio_thread = false;
       m_audio_thread = std::thread([this, interrupt_unfinished_note, verbose] { play_tune(interrupt_unfinished_note, verbose); });
-    
-      // Detach the audio thread, allowing it to run independently
-      m_audio_thread.detach();
     }
 
     // Stop the audio playback thread
     void stop_tune_async()
     {
       m_stop_audio_thread = true;
-
-      // Optionally, you can join the thread here if you want to wait for it to finish
       if (m_audio_thread.joinable())
         m_audio_thread.join();
     }

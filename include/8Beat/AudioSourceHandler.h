@@ -256,6 +256,9 @@ namespace beat
     bool update_buffer(const Waveform& wave_mono)
     {
       num_channels = 1;
+      if (wave_mono.buffer.empty() || wave_mono.sample_rate <= 0)
+        return false;
+
       m_audio_lib.stop_source(m_sourceID);
       
       m_duration_s = wave_mono.duration;
@@ -275,15 +278,23 @@ namespace beat
       //if (m_bufferID == 0)
       //m_bufferID = m_audio_lib.create_buffer();
       
-      SET_BUFFER_DATA(m_bufferID, m_buffer_i, num_channels, wave_mono.sample_rate);
+      if (!SET_BUFFER_DATA(m_bufferID, m_buffer_i, num_channels, wave_mono.sample_rate))
+        return false;
+
+      if (const auto error = m_audio_lib.check_error(); !error.empty())
+      {
+        std::cerr << "Error updating audio buffer: " << error << std::endl;
+        return false;
+      }
       
       // Attach buffer to source
       m_audio_lib.attach_buffer_to_source(m_sourceID, m_bufferID);
-      
-      // Check for errors
-      auto error_msg = m_audio_lib.check_error();
-      if (!error_msg.empty())
-        std::cerr << "Error creating audio source: " << error_msg << std::endl;
+
+      if (const auto error = m_audio_lib.check_error(); !error.empty())
+      {
+        std::cerr << "Error attaching audio buffer: " << error << std::endl;
+        return false;
+      }
       return true;
     }
     
@@ -295,6 +306,8 @@ namespace beat
       m_duration_s = std::max(wave_stereo_left.duration, wave_stereo_right.duration);
       auto N = std::max(stlutils::sizeI(wave_stereo_left.buffer), stlutils::sizeI(wave_stereo_right.buffer));
       int common_sample_rate = std::max(wave_stereo_left.sample_rate, wave_stereo_right.sample_rate);
+      if (N == 0 || common_sample_rate <= 0)
+        return false;
       
       // Load buffer data
 #ifdef USE_APPLAUDIO
@@ -318,15 +331,23 @@ namespace beat
       //if (m_bufferID == 0)
       //m_bufferID = m_audio_lib.create_buffer();
       
-      SET_BUFFER_DATA(m_bufferID, m_buffer_i, num_channels, common_sample_rate);
+      if (!SET_BUFFER_DATA(m_bufferID, m_buffer_i, num_channels, common_sample_rate))
+        return false;
+
+      if (const auto error = m_audio_lib.check_error(); !error.empty())
+      {
+        std::cerr << "Error updating audio buffer: " << error << std::endl;
+        return false;
+      }
       
       // Attach buffer to source
       m_audio_lib.attach_buffer_to_source(m_sourceID, m_bufferID);
-      
-      // Check for errors
-      auto error_msg = m_audio_lib.check_error();
-      if (!error_msg.empty())
-        std::cerr << "Error creating audio source: " << error_msg << std::endl;
+
+      if (const auto error = m_audio_lib.check_error(); !error.empty())
+      {
+        std::cerr << "Error attaching audio buffer: " << error << std::endl;
+        return false;
+      }
       return true;
     }
     
