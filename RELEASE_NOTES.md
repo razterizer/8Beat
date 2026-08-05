@@ -1,5 +1,10 @@
 # Release notes
 
+## Next
+
+- Pin the OpenAL source profile to the adapter fix that keeps non-spatial
+  sources listener-relative when the listener moves.
+
 ## 1.0.3.6
 
 - Keep command separators out of waveform generation and playback.
