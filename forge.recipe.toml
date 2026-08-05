@@ -73,7 +73,7 @@ sources = ["demos/demo_9.cpp"]
 dependencies = ["8Beat"]
 
 [build]
-number = 5
+number = 6
 
 [defaults]
 style = "github-package"
@@ -81,15 +81,11 @@ profile = "applaudio"
 
 [release]
 bundle_name = "8beat"
-# OpenAL publishing intentionally disabled because OpenAL-based release assets carry different licensing expectations.
-# variants = [{ profile = "workflow-release", suffix = "openal" }, { profile = "applaudio-release", suffix = "applaudio" }]
 variants = [{ profile = "applaudio-release", suffix = "applaudio" }]
 readme = { linux = "demos/README_LINUX.md", macos = "demos/README_MACOS.md", windows = "demos/README_WINDOWS.md" }
 build_number_format = "dotted"
 
 [box]
-# OpenAL publishing intentionally disabled because OpenAL-based release assets carry different licensing expectations.
-# variants = [{ profile = "workflow-release", suffix = "openal" }, { profile = "applaudio-release", suffix = "applaudio" }]
 variants = [{ profile = "applaudio-release", suffix = "applaudio" }]
 
 [dependencies.style.local-source]
@@ -115,16 +111,6 @@ Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
 
 [dependencies.style.github-package.profile.applaudio]
 AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.1+build.4" }
-
-[dependencies.style.github-package.profile.openal]
-AudioLibSwitcher_OpenAL = { github = "razterizer/AudioLibSwitcher_OpenAL", version = "1.0.0+build.12" }
-
-[profile.workflow-release.dependencies]
-AudioLibSwitcher_OpenAL = { github = "razterizer/AudioLibSwitcher_OpenAL", version = "1.0.0+build.12" }
-Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
-
-[profile.workflow-release.build]
-configuration = "Release"
 
 [profile.applaudio-release.dependencies]
 AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.1+build.4" }

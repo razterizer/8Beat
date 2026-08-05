@@ -1,5 +1,14 @@
 # Release notes
 
+## 1.0.3.6
+
+- Keep command separators out of waveform generation and playback.
+- Reject empty or invalid audio buffers before passing them to the selected
+  backend.
+- Keep asynchronous tune playback joinable for safe stopping and destruction.
+- Restrict hosted release and cbox publication to the MIT-licensed applaudio
+  backend; OpenAL remains available through local and pinned Git sources.
+
 ## 1.0.3.5
 
 - Bumped AudioLibSwitcher_OpenAL dependency version.
