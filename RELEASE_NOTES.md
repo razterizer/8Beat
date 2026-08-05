@@ -2,8 +2,8 @@
 
 ## Next
 
-- Pin the OpenAL source profile to the adapter fix that keeps non-spatial
-  sources listener-relative when the listener moves.
+- Pin the OpenAL source profile to adapter release 1.0.1.14, which keeps
+  non-spatial sources listener-relative when the listener moves.
 
 ## 1.0.3.6
 

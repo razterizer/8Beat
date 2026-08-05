@@ -104,7 +104,7 @@ Core = { git = "https://github.com/razterizer/Core.git", commit = "3f9f712457427
 AudioLibSwitcher_applaudio = { git = "https://github.com/razterizer/AudioLibSwitcher_applaudio.git", commit = "490f6894f0f0f5a0ad921f248ac470dddfa6cd27" }
 
 [dependencies.style.git-source.profile.openal]
-AudioLibSwitcher_OpenAL = { git = "https://github.com/razterizer/AudioLibSwitcher_OpenAL.git", commit = "ce8bf3973edb99444581ab2d8eff6cf825644fd1" }
+AudioLibSwitcher_OpenAL = { git = "https://github.com/razterizer/AudioLibSwitcher_OpenAL.git", commit = "0ab0446f5098c071537c047daa5cc8bf2105a9cf" }
 
 [dependencies.style.github-package]
 Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
