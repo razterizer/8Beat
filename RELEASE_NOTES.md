@@ -1,6 +1,6 @@
 # Release notes
 
-## Next
+## 1.0.4.7
 
 - Allow tune-ended listeners to queue another asynchronous tune without the
   playback thread attempting to join itself.
