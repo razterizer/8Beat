@@ -14,6 +14,7 @@ include_dirs = ["include", "include/8Beat"]
 type = "executable"
 cpp_std = 20
 sources = ["Tests/unit_tests.cpp"]
+runtime_files = [{ source = "Tests/fixtures/async_chain.ct", destination = "async_chain.ct" }]
 dependencies = ["8Beat"]
 test = true
 

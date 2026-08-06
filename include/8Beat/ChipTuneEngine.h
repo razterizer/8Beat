@@ -275,7 +275,11 @@ namespace beat
       do {}
       while (stlutils::contains_if(m_voices, [](const auto& voice) { return voice.src->is_playing(); }));
       
-      broadcast([this](auto* listener) { listener->on_tune_ended(this, m_curr_file_path); });
+      const auto completed_tune_filepath = m_curr_file_path;
+      broadcast([this, &completed_tune_filepath](auto* listener)
+      {
+        listener->on_tune_ended(this, completed_tune_filepath);
+      });
       
       return true;
     }
@@ -283,9 +287,31 @@ namespace beat
     // Play the loaded tune in a separate thread
     void play_tune_async(bool interrupt_unfinished_note = true, bool verbose = false)
     {
+      if (m_audio_thread.joinable() && m_audio_thread.get_id() == std::this_thread::get_id())
+      {
+        m_next_interrupt_unfinished_note.store(interrupt_unfinished_note, std::memory_order_relaxed);
+        m_next_verbose.store(verbose, std::memory_order_relaxed);
+        m_restart_audio_thread.store(true, std::memory_order_release);
+        return;
+      }
+
       stop_tune_async();
       m_stop_audio_thread = false;
-      m_audio_thread = std::thread([this, interrupt_unfinished_note, verbose] { play_tune(interrupt_unfinished_note, verbose); });
+      m_restart_audio_thread = false;
+      m_audio_thread = std::thread([this, interrupt_unfinished_note, verbose]
+      {
+        auto next_interrupt_unfinished_note = interrupt_unfinished_note;
+        auto next_verbose = verbose;
+        do
+        {
+          play_tune(next_interrupt_unfinished_note, next_verbose);
+          if (!m_restart_audio_thread.exchange(false, std::memory_order_acquire))
+            break;
+          next_interrupt_unfinished_note = m_next_interrupt_unfinished_note.load(std::memory_order_relaxed);
+          next_verbose = m_next_verbose.load(std::memory_order_relaxed);
+        }
+        while (!m_stop_audio_thread);
+      });
     }
 
     // Stop the audio playback thread
@@ -293,14 +319,22 @@ namespace beat
     {
       m_stop_audio_thread = true;
       if (m_audio_thread.joinable())
+      {
+        if (m_audio_thread.get_id() == std::this_thread::get_id())
+          return;
         m_audio_thread.join();
+      }
     }
 
     // Wait for the audio playback thread to finish
     void wait_for_completion()
     {
       if (m_audio_thread.joinable())
+      {
+        if (m_audio_thread.get_id() == std::this_thread::get_id())
+          return;
         m_audio_thread.join();
+      }
     }
     
     void enable_print_notes()
@@ -352,6 +386,9 @@ namespace beat
   private:
     std::thread m_audio_thread;
     std::atomic<bool> m_stop_audio_thread = false;
+    std::atomic<bool> m_restart_audio_thread = false;
+    std::atomic<bool> m_next_interrupt_unfinished_note = true;
+    std::atomic<bool> m_next_verbose = false;
     std::atomic<bool> m_pause = false;
     std::atomic<bool> m_enable_print_notes = false;
     std::atomic<float> m_ext_gain = 1.f;

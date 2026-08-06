@@ -22,8 +22,18 @@ namespace beat
 
   class ChipTuneEngineParser
   {
+    void remove_voice_sources()
+    {
+      for (auto& voice : m_voices)
+      {
+        m_audio_handler.remove_source(voice.src);
+        voice.src = nullptr;
+      }
+    }
+
     void clear()
     {
+      remove_voice_sources();
       m_instruments_basic.clear();
       m_instruments_ring_mod.clear();
       m_instruments_conv.clear();
@@ -63,8 +73,7 @@ namespace beat
     }
     virtual ~ChipTuneEngineParser()
     {
-      for (const auto& voice : m_voices)
-        m_audio_handler.remove_source(voice.src);
+      remove_voice_sources();
     }
   
     // Load tune from a text file with a specific format
