@@ -6,6 +6,7 @@
 #include <atomic>
 #include <cassert>
 #include <chrono>
+#include <iostream>
 #include <string>
 #include <thread>
 
@@ -57,5 +58,10 @@ namespace beat
     engine.play_tune_async();
     std::this_thread::sleep_for(std::chrono::milliseconds(1100));
     engine.stop_tune_async();
+
+    const auto audio_error = m_audio_lib.check_error();
+    if (!audio_error.empty())
+      std::cerr << "Audio backend error after chained tune cleanup: " << audio_error << '\n';
+    assert(audio_error.empty());
   }
 }

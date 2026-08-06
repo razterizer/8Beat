@@ -71,8 +71,10 @@ namespace beat
     }
     virtual ~AudioSourceBase()
     {
-      m_audio_lib.destroy_buffer(m_bufferID);
+      // Destroying the source first guarantees that OpenAL no longer considers
+      // its static buffer attached when the buffer itself is deleted.
       m_audio_lib.destroy_source(m_sourceID);
+      m_audio_lib.destroy_buffer(m_bufferID);
     }
   
     virtual void play(PlaybackMode playback_mode = PlaybackMode::NONE)
