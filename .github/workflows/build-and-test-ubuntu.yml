@@ -133,6 +133,13 @@ jobs:
         run: |
           cd ..
           git clone https://github.com/razterizer/Core.git
+          git clone https://github.com/razterizer/AudioLibSwitcher_applaudio.git --recurse-submodules
+          git clone https://github.com/razterizer/applaudio.git
+
+      - name: Install ALSA development packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install libasound2-dev pkg-config
 
       # Step 3: Change to the correct directory and build
       - name: Build
