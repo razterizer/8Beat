@@ -5,7 +5,9 @@
 
 #include <atomic>
 #include <cassert>
+#include <chrono>
 #include <string>
+#include <thread>
 
 namespace beat
 {
@@ -49,5 +51,11 @@ namespace beat
 
     assert(listener.m_reload_succeeded);
     assert(listener.m_completion_count == 2);
+
+    assert(engine.load_tune(tune_filepath));
+    engine.pause();
+    engine.play_tune_async();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1100));
+    engine.stop_tune_async();
   }
 }

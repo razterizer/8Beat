@@ -267,19 +267,23 @@ namespace beat
         if (!is_separator)
           Delay::sleep(static_cast<int>(m_curr_time_step_ms*1e3f));
         
-        do {}
-        while (m_pause);
+        while (m_pause && !m_stop_audio_thread)
+          std::this_thread::yield();
       }
 
       // Cooldown.
-      do {}
-      while (stlutils::contains_if(m_voices, [](const auto& voice) { return voice.src->is_playing(); }));
+      while (!m_stop_audio_thread
+             && stlutils::contains_if(m_voices, [](const auto& voice) { return voice.src->is_playing(); }))
+        std::this_thread::yield();
       
-      const auto completed_tune_filepath = m_curr_file_path;
-      broadcast([this, &completed_tune_filepath](auto* listener)
+      if (!m_stop_audio_thread)
       {
-        listener->on_tune_ended(this, completed_tune_filepath);
-      });
+        const auto completed_tune_filepath = m_curr_file_path;
+        broadcast([this, completed_tune_filepath](auto* listener)
+        {
+          listener->on_tune_ended(this, completed_tune_filepath);
+        });
+      }
       
       return true;
     }
@@ -318,6 +322,7 @@ namespace beat
     void stop_tune_async()
     {
       m_stop_audio_thread = true;
+      m_pause = false;
       if (m_audio_thread.joinable())
       {
         if (m_audio_thread.get_id() == std::this_thread::get_id())

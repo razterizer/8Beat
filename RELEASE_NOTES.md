@@ -4,6 +4,8 @@
 
 - Allow tune-ended listeners to queue another asynchronous tune without the
   playback thread attempting to join itself.
+- Allow a paused playback thread to stop cleanly and suppress tune-ended
+  callbacks for cancelled playback.
 - Release voice sources when replacing a loaded tune.
 - Pin the OpenAL source profile to adapter release 1.0.1.14, which keeps
   non-spatial sources listener-relative when the listener moves.
