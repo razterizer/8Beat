@@ -504,19 +504,19 @@ namespace beat
       if (source == nullptr)
         return;
     
-      auto it = std::remove_if(m_sources.begin(), m_sources.end(),
-                               [source](const auto& ptr) { return ptr.get() == source; });
+      auto it = std::find_if(m_sources.begin(), m_sources.end(),
+                             [source](const auto& ptr) { return ptr.get() == source; });
       
       if (it != m_sources.end())
       {
         // Stop playing the source
-        source->stop();
+        (*it)->stop();
         
         // Detach buffer from the source
-        source->detach();
+        (*it)->detach();
         
         // Erase the source from the vector
-        m_sources.erase(it, m_sources.end());
+        m_sources.erase(it);
       }
       else
       {
@@ -530,19 +530,19 @@ namespace beat
       if (source == nullptr)
         return;
         
-      auto it = std::remove_if(m_stream_sources.begin(), m_stream_sources.end(),
-                               [source](const auto& ptr) { return ptr.get() == source; });
+      auto it = std::find_if(m_stream_sources.begin(), m_stream_sources.end(),
+                             [source](const auto& ptr) { return ptr.get() == source; });
       
       if (it != m_stream_sources.end())
       {
         // Stop playing the source
-        source->stop();
+        (*it)->stop();
         
         // Detach buffer from the source
-        source->detach();
+        (*it)->detach();
         
         // Erase the source from the vector
-        m_stream_sources.erase(it, m_stream_sources.end());
+        m_stream_sources.erase(it);
       }
       else
       {

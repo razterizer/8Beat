@@ -7,6 +7,7 @@
 #include <cassert>
 #include <chrono>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <thread>
 
@@ -39,6 +40,9 @@ namespace beat
 
   inline void chiptune_engine_unit_tests(const std::string& tune_filepath)
   {
+    std::ostringstream backend_errors;
+    auto* original_error_buffer = std::cerr.rdbuf(backend_errors.rdbuf());
+
     AudioSourceHandler audio_handler(false);
     WaveformGeneration waveform_generation;
     ChipTuneEngine engine(audio_handler, waveform_generation);
@@ -62,6 +66,11 @@ namespace beat
     const auto audio_error = m_audio_lib.check_error();
     if (!audio_error.empty())
       std::cerr << "Audio backend error after chained tune cleanup: " << audio_error << '\n';
+
+    std::cerr.rdbuf(original_error_buffer);
+    if (!backend_errors.str().empty())
+      std::cerr << backend_errors.str();
+    assert(backend_errors.str().empty());
     assert(audio_error.empty());
   }
 }

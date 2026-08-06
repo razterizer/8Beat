@@ -8,6 +8,8 @@
   callbacks for cancelled playback.
 - Destroy audio sources before their buffers so OpenAL can release attached
   buffers cleanly between chained tunes.
+- Remove audio sources without invalidating their raw pointer before stop and
+  detach operations.
 - Release voice sources when replacing a loaded tune.
 - Pin the OpenAL source profile to adapter release 1.0.1.14, which keeps
   non-spatial sources listener-relative when the listener moves.
