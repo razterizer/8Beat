@@ -17,6 +17,8 @@
 ![Contributors](https://img.shields.io/github/contributors/razterizer/8Beat?color=blue)
 <!-- ![Static Badge](https://img.shields.io/badge/ai_usage-some_(advisory_only)-lightblue) -->
 
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/razterizer/8Beat/total)
+
 This library is a cross-platform and header-only library.
 This library is for synthesizing sound and also has a chip-tune engine which allow you full flexibility to design instruments and to use these instruments when composing your chip-tune tune. Optional waveform file loading and saving is available through `WaveformIO.h`, but that header requires libsndfile and is not part of the standard Forge-published cbox surface.
 The library depends on an implementation of the interface `AudioLibSwitcher`. See below for more info.
