@@ -1,0 +1,132 @@
+#:schema https://raw.githubusercontent.com/razterizer/forge/main/schemas/forge.recipe.schema.json
+
+[project]
+name = "8-Bit Audio Emulator Lib"
+version = "1.0.4"
+
+[target.8Beat]
+type = "header_only"
+cpp_std = 20
+public_headers = ["include/8Beat/ADSR.h", "include/8Beat/AudioSourceHandler.h", "include/8Beat/ChipTuneEngine.h", "include/8Beat/ChipTuneEngineListener.h", "include/8Beat/ChipTuneEngine_Internals/ChipTuneEngineParser.h", "include/8Beat/SFX.h", "include/8Beat/Spectrum.h", "include/8Beat/Synthesizer.h", "include/8Beat/Waveform.h", "include/8Beat/WaveformGeneration.h", "include/8Beat/WaveformHelper.h"]
+include_dirs = ["include", "include/8Beat"]
+
+[target.unit_tests]
+type = "executable"
+cpp_std = 20
+sources = ["Tests/unit_tests.cpp"]
+runtime_files = [{ source = "Tests/fixtures/async_chain.ct", destination = "async_chain.ct" }]
+dependencies = ["8Beat"]
+test = true
+
+[target.demo_1]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_1.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_10]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_10.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_3]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_3.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_4]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_4.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_5]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_5.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_6]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_6.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_7]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_7.cpp"]
+runtime_files = [{ source = "demos/sounds/chiptune3.ct", destination = "sounds/chiptune3.ct" }]
+dependencies = ["8Beat"]
+
+[target.demo_8]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_8.cpp"]
+dependencies = ["8Beat"]
+
+[target.demo_9]
+type = "executable"
+cpp_std = 20
+sources = ["demos/demo_9.cpp"]
+dependencies = ["8Beat"]
+
+[build]
+number = 7
+
+[defaults]
+style = "github-package"
+profile = "applaudio"
+
+[release]
+bundle_name = "8beat"
+variants = [{ profile = "applaudio-release", suffix = "applaudio" }]
+readme = { linux = "demos/README_LINUX.md", macos = "demos/README_MACOS.md", windows = "demos/README_WINDOWS.md" }
+build_number_format = "dotted"
+
+[box]
+variants = [{ profile = "applaudio-release", suffix = "applaudio" }]
+
+[dependencies.style.local-source]
+Core = { path = "../Core" }
+
+[dependencies.style.local-source.profile.applaudio]
+AudioLibSwitcher_applaudio = { path = "../AudioLibSwitcher_applaudio" }
+
+[dependencies.style.local-source.profile.openal]
+AudioLibSwitcher_OpenAL = { path = "../AudioLibSwitcher_OpenAL" }
+
+[dependencies.style.git-source]
+Core = { git = "https://github.com/razterizer/Core.git", commit = "3f9f712457427fddd5eb7c47960a4d7399477598" }
+
+[dependencies.style.git-source.profile.applaudio]
+AudioLibSwitcher_applaudio = { git = "https://github.com/razterizer/AudioLibSwitcher_applaudio.git", commit = "490f6894f0f0f5a0ad921f248ac470dddfa6cd27" }
+
+[dependencies.style.git-source.profile.openal]
+AudioLibSwitcher_OpenAL = { git = "https://github.com/razterizer/AudioLibSwitcher_OpenAL.git", commit = "2d8b60679a794d39ca194188ffc87fde0d345801" }
+
+[dependencies.style.github-package]
+Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
+
+[dependencies.style.github-package.profile.applaudio]
+AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.1+build.4" }
+
+[profile.applaudio-release.dependencies]
+AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.1+build.4" }
+Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
+
+[profile.applaudio-release.build]
+configuration = "Release"
+defines = ["USE_APPLAUDIO"]
+
+[build.config.debug]
+configuration = "Debug"
+defines = ["DEBUG=1"]
+
+[build.config.release]
+configuration = "Release"
+
+[build.profile.applaudio]
+defines = ["USE_APPLAUDIO"]

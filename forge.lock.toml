@@ -1,0 +1,91 @@
+format = 2
+
+[[dependency]]
+name = "3rdparty_libsndfile"
+github = "razterizer/3rdparty_libsndfile"
+package = "3rdparty_libsndfile"
+version = "1.0.0+build.3"
+target = "linux-x86_64"
+url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.3/3rdparty_libsndfile-1.0.0+build.3-linux-x86_64.cbox"
+sha256 = "971b48974da413007ab3bf22910bf2afa5f88725e4abcb95fafe2eb0eddd146f"
+
+[[dependency]]
+name = "3rdparty_libsndfile"
+github = "razterizer/3rdparty_libsndfile"
+package = "3rdparty_libsndfile"
+version = "1.0.0+build.3"
+target = "macos-arm64"
+url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.3/3rdparty_libsndfile-1.0.0+build.3-macos-arm64.cbox"
+sha256 = "ed48eacbb65d0521afa1db17138b58482b5dd4997b87f3d04ce765c1161b2126"
+
+[[dependency]]
+name = "3rdparty_libsndfile"
+github = "razterizer/3rdparty_libsndfile"
+package = "3rdparty_libsndfile"
+version = "1.0.0+build.3"
+target = "windows-x86_64"
+url = "https://github.com/razterizer/3rdparty_libsndfile/releases/download/release-1.0.0.3/3rdparty_libsndfile-1.0.0+build.3-windows-x86_64.cbox"
+sha256 = "fe41fa41a3d8ad18dead8219caaaec6ed05065185a93fa6ae4e014af412f2289"
+
+[[dependency]]
+name = "AudioLibSwitcher_OpenAL"
+github = "razterizer/AudioLibSwitcher_OpenAL"
+package = "AudioLibSwitcher_OpenAL"
+version = "1.0.0+build.12"
+target = "linux-x86_64"
+url = "https://github.com/razterizer/AudioLibSwitcher_OpenAL/releases/download/release-1.0.0.12/AudioLibSwitcher_OpenAL-1.0.0+build.12-linux-x86_64.cbox"
+sha256 = "728811633ef71851e75ce9a1973c6fc2b0b43e2ea8dbbe1c55c68e1d6bb490d5"
+
+[[dependency]]
+name = "AudioLibSwitcher_OpenAL"
+github = "razterizer/AudioLibSwitcher_OpenAL"
+package = "AudioLibSwitcher_OpenAL"
+version = "1.0.0+build.12"
+target = "macos-arm64"
+url = "https://github.com/razterizer/AudioLibSwitcher_OpenAL/releases/download/release-1.0.0.12/AudioLibSwitcher_OpenAL-1.0.0+build.12-macos-arm64.cbox"
+sha256 = "c5ce158e01101e7a6118682f363ee12e2a857f16d9d2ecf5109b542b3088b008"
+
+[[dependency]]
+name = "AudioLibSwitcher_OpenAL"
+github = "razterizer/AudioLibSwitcher_OpenAL"
+package = "AudioLibSwitcher_OpenAL"
+version = "1.0.0+build.12"
+target = "windows-x86_64"
+url = "https://github.com/razterizer/AudioLibSwitcher_OpenAL/releases/download/release-1.0.0.12/AudioLibSwitcher_OpenAL-1.0.0+build.12-windows-x86_64.cbox"
+sha256 = "ba4af411e5b28810626dbbeeeea48c61836f4c21c2d291c0243f70ee03fd0b93"
+
+[[dependency]]
+name = "AudioLibSwitcher_applaudio"
+github = "razterizer/AudioLibSwitcher_applaudio"
+package = "AudioLibSwitcher_applaudio"
+version = "1.0.1+build.4"
+target = "linux-x86_64"
+url = "https://github.com/razterizer/AudioLibSwitcher_applaudio/releases/download/release-1.0.1.4/AudioLibSwitcher_applaudio-1.0.1+build.4-linux-x86_64.cbox"
+sha256 = "a62258fa0889b4b8fedd6fe5ac2521dea084e57b5c49455ebe19d379927983a0"
+
+[[dependency]]
+name = "AudioLibSwitcher_applaudio"
+github = "razterizer/AudioLibSwitcher_applaudio"
+package = "AudioLibSwitcher_applaudio"
+version = "1.0.1+build.4"
+target = "macos-arm64"
+url = "https://github.com/razterizer/AudioLibSwitcher_applaudio/releases/download/release-1.0.1.4/AudioLibSwitcher_applaudio-1.0.1+build.4-macos-arm64.cbox"
+sha256 = "76844a3fbdd82c67b8d853f80e59f564b34ba8daf29d1fa3a6b5e5290ab46375"
+
+[[dependency]]
+name = "AudioLibSwitcher_applaudio"
+github = "razterizer/AudioLibSwitcher_applaudio"
+package = "AudioLibSwitcher_applaudio"
+version = "1.0.1+build.4"
+target = "windows-x86_64"
+url = "https://github.com/razterizer/AudioLibSwitcher_applaudio/releases/download/release-1.0.1.4/AudioLibSwitcher_applaudio-1.0.1+build.4-windows-x86_64.cbox"
+sha256 = "a43e3bed413df268a2ccbdc3c8f04892d4609b6cffa2adc6964bc2778439bacf"
+
+[[dependency]]
+name = "Core"
+github = "razterizer/Core"
+package = "Core"
+version = "1.5.0+build.8"
+target = "any"
+url = "https://github.com/razterizer/Core/releases/download/release-1.5.0.8/Core-1.5.0+build.8-ho.cbox"
+sha256 = "2cd79c0936fb55cd5e5f8d77efe77cc53d58d969d22ece92b7ffa84e24b1d310"
