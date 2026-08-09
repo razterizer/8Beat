@@ -78,6 +78,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
+          replacesArtifacts: false
           artifacts: .forge/release/*.zip,boxes/*.cbox,boxes/*.sha256
           bodyFile: .forge/release/RELEASE_NOTES.md
           tag: ${{ github.ref_name }}
