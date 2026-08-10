@@ -99,7 +99,7 @@ AudioLibSwitcher_applaudio = { path = "../AudioLibSwitcher_applaudio" }
 AudioLibSwitcher_OpenAL = { path = "../AudioLibSwitcher_OpenAL" }
 
 [dependencies.style.git-source]
-Core = { git = "https://github.com/razterizer/Core.git", commit = "3f9f712457427fddd5eb7c47960a4d7399477598" }
+Core = { git = "https://github.com/razterizer/Core.git", commit = "2164a84e18fbb8fed18d318c7253f9a7a8d5c287" }
 
 [dependencies.style.git-source.profile.applaudio]
 AudioLibSwitcher_applaudio = { git = "https://github.com/razterizer/AudioLibSwitcher_applaudio.git", commit = "490f6894f0f0f5a0ad921f248ac470dddfa6cd27" }
@@ -108,14 +108,14 @@ AudioLibSwitcher_applaudio = { git = "https://github.com/razterizer/AudioLibSwit
 AudioLibSwitcher_OpenAL = { git = "https://github.com/razterizer/AudioLibSwitcher_OpenAL.git", commit = "2d8b60679a794d39ca194188ffc87fde0d345801" }
 
 [dependencies.style.github-package]
-Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
+Core = { github = "razterizer/Core", version = "1.5.1+build.9" }
 
 [dependencies.style.github-package.profile.applaudio]
 AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.1+build.4" }
 
 [profile.applaudio-release.dependencies]
 AudioLibSwitcher_applaudio = { github = "razterizer/AudioLibSwitcher_applaudio", version = "1.0.1+build.4" }
-Core = { github = "razterizer/Core", version = "1.5.0+build.8" }
+Core = { github = "razterizer/Core", version = "1.5.1+build.9" }
 
 [profile.applaudio-release.build]
 configuration = "Release"
