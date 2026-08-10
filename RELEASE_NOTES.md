@@ -1,5 +1,9 @@
 # Release notes
 
+## 1.0.5.8
+
+- Bumped Core to 1.5.1.9.
+
 ## 1.0.4.7
 
 - Allow tune-ended listeners to queue another asynchronous tune without the
